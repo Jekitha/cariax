@@ -6,7 +6,6 @@ __pycache__/
 # Virtual environment
 venv/
 env/
-.env
 
 # Database
 *.db
@@ -25,10 +24,8 @@ Thumbs.db
 # Logs
 *.log
 
-# Local data
+# Local outputs
 outputs/
-data/*.json
-data/*.csv
 
 # Secrets
 .env

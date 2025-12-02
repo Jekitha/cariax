@@ -1,0 +1,654 @@
+{
+    "careers": [
+        {
+            "id": 1,
+            "name": "Data Scientist",
+            "category": "Technology",
+            "description": "Analyze complex data to help organizations make better decisions",
+            "required_skills": ["Python", "Statistics", "Machine Learning", "SQL", "Data Visualization"],
+            "education": "Bachelor's/Master's in Computer Science, Statistics, or related field",
+            "difficulty": 8,
+            "automation_risk": 0.15,
+            "subjects": ["Mathematics", "Computer Science", "Statistics"],
+            "personality_fit": ["INTJ", "INTP", "ENTJ", "ENTP"],
+            "traits_required": {
+                "analytical": 0.9,
+                "creative": 0.6,
+                "detail_oriented": 0.8,
+                "communication": 0.6,
+                "technical": 0.9
+            },
+            "salary": {
+                "entry": {"USD": 70000, "INR": 600000, "EUR": 45000},
+                "mid": {"USD": 120000, "INR": 1500000, "EUR": 80000},
+                "senior": {"USD": 180000, "INR": 3000000, "EUR": 130000}
+            },
+            "job_growth_rate": 0.35,
+            "course_duration_years": 4
+        },
+        {
+            "id": 2,
+            "name": "Software Engineer",
+            "category": "Technology",
+            "description": "Design, develop, and maintain software applications",
+            "required_skills": ["Programming", "Problem Solving", "System Design", "Git", "Algorithms"],
+            "education": "Bachelor's in Computer Science or related field",
+            "difficulty": 7,
+            "automation_risk": 0.20,
+            "subjects": ["Mathematics", "Computer Science", "Physics"],
+            "personality_fit": ["INTJ", "INTP", "ISTJ", "ISTP"],
+            "traits_required": {
+                "analytical": 0.85,
+                "creative": 0.7,
+                "detail_oriented": 0.85,
+                "communication": 0.5,
+                "technical": 0.95
+            },
+            "salary": {
+                "entry": {"USD": 75000, "INR": 500000, "EUR": 48000},
+                "mid": {"USD": 130000, "INR": 1800000, "EUR": 85000},
+                "senior": {"USD": 200000, "INR": 3500000, "EUR": 140000}
+            },
+            "job_growth_rate": 0.25,
+            "course_duration_years": 4
+        },
+        {
+            "id": 3,
+            "name": "AI/ML Engineer",
+            "category": "Technology",
+            "description": "Build and deploy machine learning models and AI systems",
+            "required_skills": ["Python", "TensorFlow/PyTorch", "Deep Learning", "MLOps", "Mathematics"],
+            "education": "Bachelor's/Master's in Computer Science, AI, or related field",
+            "difficulty": 9,
+            "automation_risk": 0.10,
+            "subjects": ["Mathematics", "Computer Science", "Statistics"],
+            "personality_fit": ["INTJ", "INTP", "ENTJ"],
+            "traits_required": {
+                "analytical": 0.95,
+                "creative": 0.75,
+                "detail_oriented": 0.85,
+                "communication": 0.5,
+                "technical": 0.95
+            },
+            "salary": {
+                "entry": {"USD": 90000, "INR": 800000, "EUR": 55000},
+                "mid": {"USD": 150000, "INR": 2500000, "EUR": 100000},
+                "senior": {"USD": 250000, "INR": 5000000, "EUR": 170000}
+            },
+            "job_growth_rate": 0.45,
+            "course_duration_years": 4
+        },
+        {
+            "id": 4,
+            "name": "Medical Doctor",
+            "category": "Healthcare",
+            "description": "Diagnose and treat illnesses, prescribe medications",
+            "required_skills": ["Medical Knowledge", "Patient Care", "Diagnosis", "Communication", "Decision Making"],
+            "education": "MBBS + MD/MS specialization",
+            "difficulty": 10,
+            "automation_risk": 0.05,
+            "subjects": ["Biology", "Chemistry", "Physics"],
+            "personality_fit": ["ISFJ", "INFJ", "ESTJ", "ENFJ"],
+            "traits_required": {
+                "analytical": 0.8,
+                "creative": 0.4,
+                "detail_oriented": 0.95,
+                "communication": 0.9,
+                "technical": 0.7
+            },
+            "salary": {
+                "entry": {"USD": 60000, "INR": 800000, "EUR": 45000},
+                "mid": {"USD": 200000, "INR": 2500000, "EUR": 120000},
+                "senior": {"USD": 350000, "INR": 5000000, "EUR": 200000}
+            },
+            "job_growth_rate": 0.15,
+            "course_duration_years": 7
+        },
+        {
+            "id": 5,
+            "name": "Chartered Accountant",
+            "category": "Finance",
+            "description": "Handle financial accounts, auditing, taxation, and financial planning",
+            "required_skills": ["Accounting", "Taxation", "Auditing", "Financial Analysis", "Excel"],
+            "education": "CA certification",
+            "difficulty": 8,
+            "automation_risk": 0.40,
+            "subjects": ["Commerce", "Mathematics", "Economics"],
+            "personality_fit": ["ISTJ", "ESTJ", "INTJ"],
+            "traits_required": {
+                "analytical": 0.9,
+                "creative": 0.3,
+                "detail_oriented": 0.95,
+                "communication": 0.6,
+                "technical": 0.6
+            },
+            "salary": {
+                "entry": {"USD": 45000, "INR": 600000, "EUR": 35000},
+                "mid": {"USD": 90000, "INR": 1500000, "EUR": 70000},
+                "senior": {"USD": 180000, "INR": 4000000, "EUR": 130000}
+            },
+            "job_growth_rate": 0.10,
+            "course_duration_years": 5
+        },
+        {
+            "id": 6,
+            "name": "Graphic Designer",
+            "category": "Creative",
+            "description": "Create visual content for brands, marketing, and digital media",
+            "required_skills": ["Adobe Creative Suite", "Typography", "Color Theory", "UI/UX", "Creativity"],
+            "education": "Bachelor's in Design or related field",
+            "difficulty": 5,
+            "automation_risk": 0.35,
+            "subjects": ["Art", "Computer Applications", "English"],
+            "personality_fit": ["ISFP", "INFP", "ENFP", "ISTP"],
+            "traits_required": {
+                "analytical": 0.4,
+                "creative": 0.95,
+                "detail_oriented": 0.8,
+                "communication": 0.6,
+                "technical": 0.6
+            },
+            "salary": {
+                "entry": {"USD": 40000, "INR": 300000, "EUR": 30000},
+                "mid": {"USD": 70000, "INR": 700000, "EUR": 50000},
+                "senior": {"USD": 120000, "INR": 1500000, "EUR": 85000}
+            },
+            "job_growth_rate": 0.08,
+            "course_duration_years": 4
+        },
+        {
+            "id": 7,
+            "name": "Civil Engineer",
+            "category": "Engineering",
+            "description": "Design, construct, and maintain infrastructure projects",
+            "required_skills": ["AutoCAD", "Structural Analysis", "Project Management", "Mathematics", "Physics"],
+            "education": "Bachelor's in Civil Engineering",
+            "difficulty": 7,
+            "automation_risk": 0.25,
+            "subjects": ["Mathematics", "Physics", "Chemistry"],
+            "personality_fit": ["ISTJ", "ESTJ", "INTJ", "ISTP"],
+            "traits_required": {
+                "analytical": 0.85,
+                "creative": 0.5,
+                "detail_oriented": 0.9,
+                "communication": 0.6,
+                "technical": 0.85
+            },
+            "salary": {
+                "entry": {"USD": 55000, "INR": 400000, "EUR": 40000},
+                "mid": {"USD": 85000, "INR": 900000, "EUR": 65000},
+                "senior": {"USD": 130000, "INR": 2000000, "EUR": 100000}
+            },
+            "job_growth_rate": 0.12,
+            "course_duration_years": 4
+        },
+        {
+            "id": 8,
+            "name": "Mechanical Engineer",
+            "category": "Engineering",
+            "description": "Design and develop mechanical systems and machines",
+            "required_skills": ["CAD/CAM", "Thermodynamics", "Mechanics", "Problem Solving", "Manufacturing"],
+            "education": "Bachelor's in Mechanical Engineering",
+            "difficulty": 7,
+            "automation_risk": 0.30,
+            "subjects": ["Mathematics", "Physics", "Chemistry"],
+            "personality_fit": ["ISTJ", "ISTP", "INTJ", "ESTJ"],
+            "traits_required": {
+                "analytical": 0.85,
+                "creative": 0.6,
+                "detail_oriented": 0.85,
+                "communication": 0.5,
+                "technical": 0.9
+            },
+            "salary": {
+                "entry": {"USD": 60000, "INR": 450000, "EUR": 42000},
+                "mid": {"USD": 90000, "INR": 1000000, "EUR": 68000},
+                "senior": {"USD": 140000, "INR": 2200000, "EUR": 105000}
+            },
+            "job_growth_rate": 0.08,
+            "course_duration_years": 4
+        },
+        {
+            "id": 9,
+            "name": "Digital Marketing Specialist",
+            "category": "Marketing",
+            "description": "Plan and execute digital marketing campaigns across channels",
+            "required_skills": ["SEO/SEM", "Social Media", "Analytics", "Content Marketing", "Advertising"],
+            "education": "Bachelor's in Marketing or related field",
+            "difficulty": 5,
+            "automation_risk": 0.45,
+            "subjects": ["Commerce", "English", "Computer Applications"],
+            "personality_fit": ["ENFP", "ENTP", "ESFP", "ESTP"],
+            "traits_required": {
+                "analytical": 0.7,
+                "creative": 0.85,
+                "detail_oriented": 0.6,
+                "communication": 0.9,
+                "technical": 0.6
+            },
+            "salary": {
+                "entry": {"USD": 45000, "INR": 350000, "EUR": 32000},
+                "mid": {"USD": 75000, "INR": 800000, "EUR": 55000},
+                "senior": {"USD": 120000, "INR": 1800000, "EUR": 90000}
+            },
+            "job_growth_rate": 0.20,
+            "course_duration_years": 3
+        },
+        {
+            "id": 10,
+            "name": "Psychologist",
+            "category": "Healthcare",
+            "description": "Study human behavior and provide mental health support",
+            "required_skills": ["Counseling", "Assessment", "Research", "Communication", "Empathy"],
+            "education": "Master's/PhD in Psychology",
+            "difficulty": 8,
+            "automation_risk": 0.08,
+            "subjects": ["Psychology", "Biology", "Sociology"],
+            "personality_fit": ["INFJ", "ENFJ", "INFP", "ISFJ"],
+            "traits_required": {
+                "analytical": 0.75,
+                "creative": 0.5,
+                "detail_oriented": 0.7,
+                "communication": 0.95,
+                "technical": 0.3
+            },
+            "salary": {
+                "entry": {"USD": 50000, "INR": 400000, "EUR": 38000},
+                "mid": {"USD": 80000, "INR": 800000, "EUR": 60000},
+                "senior": {"USD": 130000, "INR": 1500000, "EUR": 95000}
+            },
+            "job_growth_rate": 0.18,
+            "course_duration_years": 6
+        },
+        {
+            "id": 11,
+            "name": "Lawyer",
+            "category": "Law",
+            "description": "Provide legal advice and represent clients in legal matters",
+            "required_skills": ["Legal Research", "Communication", "Critical Thinking", "Negotiation", "Writing"],
+            "education": "LLB + Bar certification",
+            "difficulty": 9,
+            "automation_risk": 0.15,
+            "subjects": ["History", "Political Science", "English"],
+            "personality_fit": ["ENTJ", "INTJ", "ESTJ", "ENTP"],
+            "traits_required": {
+                "analytical": 0.9,
+                "creative": 0.5,
+                "detail_oriented": 0.9,
+                "communication": 0.95,
+                "technical": 0.4
+            },
+            "salary": {
+                "entry": {"USD": 60000, "INR": 500000, "EUR": 45000},
+                "mid": {"USD": 120000, "INR": 1500000, "EUR": 90000},
+                "senior": {"USD": 250000, "INR": 4000000, "EUR": 180000}
+            },
+            "job_growth_rate": 0.10,
+            "course_duration_years": 5
+        },
+        {
+            "id": 12,
+            "name": "Architect",
+            "category": "Design",
+            "description": "Design buildings and structures with aesthetic and functional considerations",
+            "required_skills": ["AutoCAD", "3D Modeling", "Design Thinking", "Mathematics", "Visualization"],
+            "education": "Bachelor's in Architecture",
+            "difficulty": 8,
+            "automation_risk": 0.20,
+            "subjects": ["Mathematics", "Physics", "Art"],
+            "personality_fit": ["INTJ", "INFP", "INTP", "ISFP"],
+            "traits_required": {
+                "analytical": 0.8,
+                "creative": 0.95,
+                "detail_oriented": 0.9,
+                "communication": 0.7,
+                "technical": 0.8
+            },
+            "salary": {
+                "entry": {"USD": 50000, "INR": 400000, "EUR": 38000},
+                "mid": {"USD": 85000, "INR": 900000, "EUR": 65000},
+                "senior": {"USD": 150000, "INR": 2500000, "EUR": 110000}
+            },
+            "job_growth_rate": 0.08,
+            "course_duration_years": 5
+        },
+        {
+            "id": 13,
+            "name": "Product Manager",
+            "category": "Technology",
+            "description": "Guide product development from conception to launch",
+            "required_skills": ["Product Strategy", "User Research", "Analytics", "Communication", "Agile"],
+            "education": "Bachelor's in any field + MBA preferred",
+            "difficulty": 7,
+            "automation_risk": 0.10,
+            "subjects": ["Any", "Business Studies", "Computer Science"],
+            "personality_fit": ["ENTJ", "ENTP", "ENFJ", "INTJ"],
+            "traits_required": {
+                "analytical": 0.8,
+                "creative": 0.75,
+                "detail_oriented": 0.7,
+                "communication": 0.9,
+                "technical": 0.6
+            },
+            "salary": {
+                "entry": {"USD": 80000, "INR": 1000000, "EUR": 55000},
+                "mid": {"USD": 140000, "INR": 2500000, "EUR": 100000},
+                "senior": {"USD": 220000, "INR": 5000000, "EUR": 160000}
+            },
+            "job_growth_rate": 0.22,
+            "course_duration_years": 4
+        },
+        {
+            "id": 14,
+            "name": "Data Analyst",
+            "category": "Technology",
+            "description": "Collect, process, and analyze data to find insights",
+            "required_skills": ["Excel", "SQL", "Python/R", "Data Visualization", "Statistics"],
+            "education": "Bachelor's in Statistics, Economics, or related field",
+            "difficulty": 6,
+            "automation_risk": 0.35,
+            "subjects": ["Mathematics", "Statistics", "Computer Science"],
+            "personality_fit": ["ISTJ", "INTJ", "INTP", "ISTP"],
+            "traits_required": {
+                "analytical": 0.9,
+                "creative": 0.4,
+                "detail_oriented": 0.85,
+                "communication": 0.6,
+                "technical": 0.75
+            },
+            "salary": {
+                "entry": {"USD": 55000, "INR": 400000, "EUR": 38000},
+                "mid": {"USD": 85000, "INR": 900000, "EUR": 60000},
+                "senior": {"USD": 130000, "INR": 1800000, "EUR": 95000}
+            },
+            "job_growth_rate": 0.28,
+            "course_duration_years": 4
+        },
+        {
+            "id": 15,
+            "name": "UX Designer",
+            "category": "Design",
+            "description": "Design user-friendly interfaces and experiences for digital products",
+            "required_skills": ["Figma/Sketch", "User Research", "Prototyping", "Wireframing", "Psychology"],
+            "education": "Bachelor's in Design, HCI, or related field",
+            "difficulty": 6,
+            "automation_risk": 0.25,
+            "subjects": ["Art", "Psychology", "Computer Science"],
+            "personality_fit": ["INFP", "ENFP", "INFJ", "ISFP"],
+            "traits_required": {
+                "analytical": 0.7,
+                "creative": 0.9,
+                "detail_oriented": 0.8,
+                "communication": 0.75,
+                "technical": 0.65
+            },
+            "salary": {
+                "entry": {"USD": 60000, "INR": 500000, "EUR": 42000},
+                "mid": {"USD": 100000, "INR": 1200000, "EUR": 72000},
+                "senior": {"USD": 160000, "INR": 2500000, "EUR": 115000}
+            },
+            "job_growth_rate": 0.22,
+            "course_duration_years": 4
+        },
+        {
+            "id": 16,
+            "name": "Cybersecurity Analyst",
+            "category": "Technology",
+            "description": "Protect organizations from cyber threats and security breaches",
+            "required_skills": ["Network Security", "Ethical Hacking", "Risk Assessment", "SIEM", "Cryptography"],
+            "education": "Bachelor's in Computer Science/Cybersecurity",
+            "difficulty": 8,
+            "automation_risk": 0.12,
+            "subjects": ["Computer Science", "Mathematics", "Physics"],
+            "personality_fit": ["ISTJ", "INTJ", "ISTP", "INTP"],
+            "traits_required": {
+                "analytical": 0.9,
+                "creative": 0.6,
+                "detail_oriented": 0.95,
+                "communication": 0.5,
+                "technical": 0.95
+            },
+            "salary": {
+                "entry": {"USD": 70000, "INR": 600000, "EUR": 48000},
+                "mid": {"USD": 110000, "INR": 1500000, "EUR": 80000},
+                "senior": {"USD": 180000, "INR": 3000000, "EUR": 130000}
+            },
+            "job_growth_rate": 0.35,
+            "course_duration_years": 4
+        },
+        {
+            "id": 17,
+            "name": "Investment Banker",
+            "category": "Finance",
+            "description": "Advise on mergers, acquisitions, and capital raising",
+            "required_skills": ["Financial Modeling", "Valuation", "Excel", "Communication", "Analysis"],
+            "education": "Bachelor's/MBA in Finance or related field",
+            "difficulty": 9,
+            "automation_risk": 0.25,
+            "subjects": ["Mathematics", "Economics", "Commerce"],
+            "personality_fit": ["ENTJ", "ESTJ", "INTJ", "ENTP"],
+            "traits_required": {
+                "analytical": 0.95,
+                "creative": 0.4,
+                "detail_oriented": 0.9,
+                "communication": 0.85,
+                "technical": 0.7
+            },
+            "salary": {
+                "entry": {"USD": 100000, "INR": 1200000, "EUR": 70000},
+                "mid": {"USD": 200000, "INR": 3500000, "EUR": 150000},
+                "senior": {"USD": 400000, "INR": 8000000, "EUR": 300000}
+            },
+            "job_growth_rate": 0.10,
+            "course_duration_years": 4
+        },
+        {
+            "id": 18,
+            "name": "Fashion Designer",
+            "category": "Creative",
+            "description": "Create clothing and accessory designs for fashion industry",
+            "required_skills": ["Sketching", "Pattern Making", "Textile Knowledge", "Creativity", "Trend Analysis"],
+            "education": "Bachelor's in Fashion Design",
+            "difficulty": 6,
+            "automation_risk": 0.30,
+            "subjects": ["Art", "Home Science", "English"],
+            "personality_fit": ["ISFP", "ENFP", "INFP", "ESFP"],
+            "traits_required": {
+                "analytical": 0.3,
+                "creative": 0.98,
+                "detail_oriented": 0.8,
+                "communication": 0.7,
+                "technical": 0.4
+            },
+            "salary": {
+                "entry": {"USD": 35000, "INR": 250000, "EUR": 28000},
+                "mid": {"USD": 65000, "INR": 600000, "EUR": 50000},
+                "senior": {"USD": 120000, "INR": 1500000, "EUR": 90000}
+            },
+            "job_growth_rate": 0.05,
+            "course_duration_years": 4
+        },
+        {
+            "id": 19,
+            "name": "Biotechnologist",
+            "category": "Science",
+            "description": "Apply biological systems for developing products and processes",
+            "required_skills": ["Lab Techniques", "Genetics", "Biochemistry", "Research", "Data Analysis"],
+            "education": "Bachelor's/Master's in Biotechnology",
+            "difficulty": 8,
+            "automation_risk": 0.18,
+            "subjects": ["Biology", "Chemistry", "Mathematics"],
+            "personality_fit": ["INTP", "INTJ", "ISTJ", "INFJ"],
+            "traits_required": {
+                "analytical": 0.9,
+                "creative": 0.6,
+                "detail_oriented": 0.95,
+                "communication": 0.5,
+                "technical": 0.85
+            },
+            "salary": {
+                "entry": {"USD": 50000, "INR": 400000, "EUR": 38000},
+                "mid": {"USD": 80000, "INR": 900000, "EUR": 60000},
+                "senior": {"USD": 140000, "INR": 2000000, "EUR": 100000}
+            },
+            "job_growth_rate": 0.15,
+            "course_duration_years": 4
+        },
+        {
+            "id": 20,
+            "name": "Cloud Architect",
+            "category": "Technology",
+            "description": "Design and implement cloud computing strategies and infrastructure",
+            "required_skills": ["AWS/Azure/GCP", "DevOps", "Networking", "Security", "System Design"],
+            "education": "Bachelor's in Computer Science + Cloud certifications",
+            "difficulty": 8,
+            "automation_risk": 0.12,
+            "subjects": ["Computer Science", "Mathematics", "Physics"],
+            "personality_fit": ["INTJ", "INTP", "ISTJ", "ENTJ"],
+            "traits_required": {
+                "analytical": 0.9,
+                "creative": 0.6,
+                "detail_oriented": 0.85,
+                "communication": 0.6,
+                "technical": 0.95
+            },
+            "salary": {
+                "entry": {"USD": 90000, "INR": 1000000, "EUR": 60000},
+                "mid": {"USD": 150000, "INR": 2500000, "EUR": 105000},
+                "senior": {"USD": 220000, "INR": 4500000, "EUR": 160000}
+            },
+            "job_growth_rate": 0.38,
+            "course_duration_years": 4
+        },
+        {
+            "id": 21,
+            "name": "Journalist",
+            "category": "Media",
+            "description": "Research, investigate, and report news stories",
+            "required_skills": ["Writing", "Research", "Communication", "Critical Thinking", "Ethics"],
+            "education": "Bachelor's in Journalism or Mass Communication",
+            "difficulty": 6,
+            "automation_risk": 0.35,
+            "subjects": ["English", "Political Science", "History"],
+            "personality_fit": ["ENFP", "ENTP", "INFP", "ENFJ"],
+            "traits_required": {
+                "analytical": 0.7,
+                "creative": 0.8,
+                "detail_oriented": 0.75,
+                "communication": 0.95,
+                "technical": 0.4
+            },
+            "salary": {
+                "entry": {"USD": 35000, "INR": 300000, "EUR": 28000},
+                "mid": {"USD": 60000, "INR": 600000, "EUR": 45000},
+                "senior": {"USD": 100000, "INR": 1200000, "EUR": 75000}
+            },
+            "job_growth_rate": 0.02,
+            "course_duration_years": 3
+        },
+        {
+            "id": 22,
+            "name": "Pharmacist",
+            "category": "Healthcare",
+            "description": "Dispense medications and provide pharmaceutical care",
+            "required_skills": ["Pharmacology", "Patient Counseling", "Drug Interactions", "Attention to Detail", "Chemistry"],
+            "education": "Bachelor's/Doctor of Pharmacy",
+            "difficulty": 7,
+            "automation_risk": 0.35,
+            "subjects": ["Chemistry", "Biology", "Physics"],
+            "personality_fit": ["ISTJ", "ISFJ", "ESTJ", "INTJ"],
+            "traits_required": {
+                "analytical": 0.8,
+                "creative": 0.3,
+                "detail_oriented": 0.95,
+                "communication": 0.7,
+                "technical": 0.75
+            },
+            "salary": {
+                "entry": {"USD": 55000, "INR": 350000, "EUR": 40000},
+                "mid": {"USD": 90000, "INR": 700000, "EUR": 65000},
+                "senior": {"USD": 140000, "INR": 1500000, "EUR": 100000}
+            },
+            "job_growth_rate": 0.08,
+            "course_duration_years": 5
+        },
+        {
+            "id": 23,
+            "name": "Electrical Engineer",
+            "category": "Engineering",
+            "description": "Design and develop electrical systems and equipment",
+            "required_skills": ["Circuit Design", "Power Systems", "Electronics", "MATLAB", "Problem Solving"],
+            "education": "Bachelor's in Electrical Engineering",
+            "difficulty": 7,
+            "automation_risk": 0.22,
+            "subjects": ["Mathematics", "Physics", "Chemistry"],
+            "personality_fit": ["INTJ", "INTP", "ISTJ", "ISTP"],
+            "traits_required": {
+                "analytical": 0.9,
+                "creative": 0.55,
+                "detail_oriented": 0.85,
+                "communication": 0.5,
+                "technical": 0.9
+            },
+            "salary": {
+                "entry": {"USD": 65000, "INR": 450000, "EUR": 45000},
+                "mid": {"USD": 95000, "INR": 1000000, "EUR": 70000},
+                "senior": {"USD": 145000, "INR": 2200000, "EUR": 105000}
+            },
+            "job_growth_rate": 0.12,
+            "course_duration_years": 4
+        },
+        {
+            "id": 24,
+            "name": "Content Writer",
+            "category": "Media",
+            "description": "Create written content for various digital and print platforms",
+            "required_skills": ["Writing", "SEO", "Research", "Editing", "Creativity"],
+            "education": "Bachelor's in English, Journalism, or related field",
+            "difficulty": 4,
+            "automation_risk": 0.55,
+            "subjects": ["English", "Any Humanities", "Computer Applications"],
+            "personality_fit": ["INFP", "INFJ", "ENFP", "INTP"],
+            "traits_required": {
+                "analytical": 0.5,
+                "creative": 0.9,
+                "detail_oriented": 0.7,
+                "communication": 0.85,
+                "technical": 0.4
+            },
+            "salary": {
+                "entry": {"USD": 35000, "INR": 250000, "EUR": 28000},
+                "mid": {"USD": 55000, "INR": 500000, "EUR": 42000},
+                "senior": {"USD": 85000, "INR": 1000000, "EUR": 65000}
+            },
+            "job_growth_rate": 0.10,
+            "course_duration_years": 3
+        },
+        {
+            "id": 25,
+            "name": "Robotics Engineer",
+            "category": "Technology",
+            "description": "Design, build, and maintain robotic systems",
+            "required_skills": ["Programming", "Mechanical Design", "Electronics", "AI/ML", "Control Systems"],
+            "education": "Bachelor's in Robotics, Mechanical, or Electrical Engineering",
+            "difficulty": 9,
+            "automation_risk": 0.08,
+            "subjects": ["Mathematics", "Physics", "Computer Science"],
+            "personality_fit": ["INTP", "INTJ", "ISTP", "ENTP"],
+            "traits_required": {
+                "analytical": 0.92,
+                "creative": 0.75,
+                "detail_oriented": 0.88,
+                "communication": 0.5,
+                "technical": 0.95
+            },
+            "salary": {
+                "entry": {"USD": 75000, "INR": 700000, "EUR": 52000},
+                "mid": {"USD": 120000, "INR": 1500000, "EUR": 85000},
+                "senior": {"USD": 180000, "INR": 3000000, "EUR": 130000}
+            },
+            "job_growth_rate": 0.40,
+            "course_duration_years": 4
+        }
+    ]
+}

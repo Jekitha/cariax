@@ -1,0 +1,357 @@
+{
+    "mbti_types": {
+        "INTJ": {
+            "name": "Architect",
+            "description": "Strategic thinkers with a plan for everything",
+            "traits": ["Strategic", "Independent", "Determined", "Curious"],
+            "strengths": ["Planning", "Problem Solving", "Innovation"],
+            "weaknesses": ["Overly Critical", "Dismissive of emotions"],
+            "ideal_careers": ["Data Scientist", "Software Engineer", "Architect", "Lawyer", "Investment Banker"],
+            "career_match_weights": {
+                "analytical": 0.95,
+                "creative": 0.7,
+                "leadership": 0.8,
+                "social": 0.3
+            }
+        },
+        "INTP": {
+            "name": "Logician",
+            "description": "Innovative inventors with an unquenchable thirst for knowledge",
+            "traits": ["Analytical", "Objective", "Reserved", "Flexible"],
+            "strengths": ["Abstract Thinking", "Innovation", "Open-mindedness"],
+            "weaknesses": ["Overthinking", "Social situations"],
+            "ideal_careers": ["Software Engineer", "Data Scientist", "Research Scientist", "Robotics Engineer"],
+            "career_match_weights": {
+                "analytical": 0.95,
+                "creative": 0.8,
+                "leadership": 0.4,
+                "social": 0.2
+            }
+        },
+        "ENTJ": {
+            "name": "Commander",
+            "description": "Bold, imaginative and strong-willed leaders",
+            "traits": ["Efficient", "Energetic", "Self-Confident", "Strong-Willed"],
+            "strengths": ["Leadership", "Strategic Planning", "Determination"],
+            "weaknesses": ["Impatient", "Stubborn"],
+            "ideal_careers": ["Product Manager", "Investment Banker", "Lawyer", "Executive", "Entrepreneur"],
+            "career_match_weights": {
+                "analytical": 0.85,
+                "creative": 0.6,
+                "leadership": 0.95,
+                "social": 0.7
+            }
+        },
+        "ENTP": {
+            "name": "Debater",
+            "description": "Smart and curious thinkers who cannot resist an intellectual challenge",
+            "traits": ["Quick", "Bold", "Curious", "Original"],
+            "strengths": ["Innovation", "Debate", "Adaptability"],
+            "weaknesses": ["Argumentative", "Insensitive"],
+            "ideal_careers": ["Entrepreneur", "Lawyer", "Product Manager", "Marketing", "Consultant"],
+            "career_match_weights": {
+                "analytical": 0.8,
+                "creative": 0.85,
+                "leadership": 0.7,
+                "social": 0.8
+            }
+        },
+        "INFJ": {
+            "name": "Advocate",
+            "description": "Quiet and mystical, yet very inspiring and tireless idealists",
+            "traits": ["Insightful", "Principled", "Compassionate", "Creative"],
+            "strengths": ["Understanding people", "Writing", "Vision"],
+            "weaknesses": ["Perfectionism", "Burnout"],
+            "ideal_careers": ["Psychologist", "Counselor", "Writer", "Teacher", "HR Manager"],
+            "career_match_weights": {
+                "analytical": 0.7,
+                "creative": 0.85,
+                "leadership": 0.6,
+                "social": 0.9
+            }
+        },
+        "INFP": {
+            "name": "Mediator",
+            "description": "Poetic, kind and altruistic people, always eager to help a good cause",
+            "traits": ["Idealistic", "Empathetic", "Creative", "Dedicated"],
+            "strengths": ["Creativity", "Empathy", "Passion"],
+            "weaknesses": ["Unrealistic", "Self-isolating"],
+            "ideal_careers": ["Writer", "Graphic Designer", "UX Designer", "Counselor", "Artist"],
+            "career_match_weights": {
+                "analytical": 0.5,
+                "creative": 0.95,
+                "leadership": 0.4,
+                "social": 0.6
+            }
+        },
+        "ENFJ": {
+            "name": "Protagonist",
+            "description": "Charismatic and inspiring leaders, able to mesmerize their listeners",
+            "traits": ["Warm", "Genuine", "Supportive", "Ambitious"],
+            "strengths": ["Leadership", "Communication", "Empathy"],
+            "weaknesses": ["Overly idealistic", "Too selfless"],
+            "ideal_careers": ["Teacher", "HR Manager", "Psychologist", "Marketing Manager", "Counselor"],
+            "career_match_weights": {
+                "analytical": 0.6,
+                "creative": 0.7,
+                "leadership": 0.9,
+                "social": 0.95
+            }
+        },
+        "ENFP": {
+            "name": "Campaigner",
+            "description": "Enthusiastic, creative and sociable free spirits",
+            "traits": ["Enthusiastic", "Creative", "Sociable", "Free-spirited"],
+            "strengths": ["Communication", "Creativity", "Energy"],
+            "weaknesses": ["Unfocused", "Overthinking"],
+            "ideal_careers": ["Digital Marketing", "UX Designer", "Journalist", "Event Planner", "Actor"],
+            "career_match_weights": {
+                "analytical": 0.5,
+                "creative": 0.9,
+                "leadership": 0.6,
+                "social": 0.95
+            }
+        },
+        "ISTJ": {
+            "name": "Logistician",
+            "description": "Practical and fact-minded individuals, whose reliability cannot be doubted",
+            "traits": ["Responsible", "Sincere", "Analytical", "Reserved"],
+            "strengths": ["Reliability", "Organization", "Dedication"],
+            "weaknesses": ["Inflexible", "Judgmental"],
+            "ideal_careers": ["Accountant", "Data Analyst", "Civil Engineer", "Pharmacist", "Military Officer"],
+            "career_match_weights": {
+                "analytical": 0.9,
+                "creative": 0.3,
+                "leadership": 0.6,
+                "social": 0.4
+            }
+        },
+        "ISFJ": {
+            "name": "Defender",
+            "description": "Very dedicated and warm protectors, always ready to defend their loved ones",
+            "traits": ["Supportive", "Reliable", "Patient", "Observant"],
+            "strengths": ["Support", "Patience", "Reliability"],
+            "weaknesses": ["Overcommitting", "Reluctant to change"],
+            "ideal_careers": ["Nurse", "Teacher", "Social Worker", "HR", "Librarian"],
+            "career_match_weights": {
+                "analytical": 0.6,
+                "creative": 0.4,
+                "leadership": 0.5,
+                "social": 0.85
+            }
+        },
+        "ESTJ": {
+            "name": "Executive",
+            "description": "Excellent administrators, unsurpassed at managing things – or people",
+            "traits": ["Organized", "Loyal", "Hardworking", "Traditional"],
+            "strengths": ["Organization", "Leadership", "Dedication"],
+            "weaknesses": ["Inflexible", "Uncomfortable with unconventional"],
+            "ideal_careers": ["Manager", "Judge", "Financial Officer", "Police Officer", "Military"],
+            "career_match_weights": {
+                "analytical": 0.8,
+                "creative": 0.3,
+                "leadership": 0.9,
+                "social": 0.6
+            }
+        },
+        "ESFJ": {
+            "name": "Consul",
+            "description": "Extraordinarily caring, social and popular people",
+            "traits": ["Warm", "Caring", "Social", "Traditional"],
+            "strengths": ["Caring", "Social skills", "Reliability"],
+            "weaknesses": ["Need for approval", "Sensitive to criticism"],
+            "ideal_careers": ["Nurse", "Teacher", "Event Planner", "Real Estate Agent", "HR"],
+            "career_match_weights": {
+                "analytical": 0.5,
+                "creative": 0.5,
+                "leadership": 0.7,
+                "social": 0.95
+            }
+        },
+        "ISTP": {
+            "name": "Virtuoso",
+            "description": "Bold and practical experimenters, masters of all kinds of tools",
+            "traits": ["Practical", "Observant", "Analytical", "Versatile"],
+            "strengths": ["Troubleshooting", "Hands-on skills", "Logical thinking"],
+            "weaknesses": ["Insensitive", "Risk-taking"],
+            "ideal_careers": ["Mechanical Engineer", "Pilot", "Forensic Scientist", "Software Developer", "Carpenter"],
+            "career_match_weights": {
+                "analytical": 0.85,
+                "creative": 0.6,
+                "leadership": 0.4,
+                "social": 0.3
+            }
+        },
+        "ISFP": {
+            "name": "Adventurer",
+            "description": "Flexible and charming artists, always ready to explore and experience something new",
+            "traits": ["Charming", "Sensitive", "Artistic", "Curious"],
+            "strengths": ["Creativity", "Sensitivity", "Passion"],
+            "weaknesses": ["Unpredictable", "Easily stressed"],
+            "ideal_careers": ["Fashion Designer", "Artist", "Chef", "Interior Designer", "Photographer"],
+            "career_match_weights": {
+                "analytical": 0.4,
+                "creative": 0.95,
+                "leadership": 0.3,
+                "social": 0.5
+            }
+        },
+        "ESTP": {
+            "name": "Entrepreneur",
+            "description": "Smart, energetic and very perceptive people, who truly enjoy living on the edge",
+            "traits": ["Bold", "Direct", "Perceptive", "Sociable"],
+            "strengths": ["Bold action", "Practical skills", "Persuasion"],
+            "weaknesses": ["Impatient", "Risk-prone"],
+            "ideal_careers": ["Entrepreneur", "Sales Manager", "Paramedic", "Detective", "Athlete"],
+            "career_match_weights": {
+                "analytical": 0.6,
+                "creative": 0.5,
+                "leadership": 0.7,
+                "social": 0.85
+            }
+        },
+        "ESFP": {
+            "name": "Entertainer",
+            "description": "Spontaneous, energetic and enthusiastic people – life is never boring around them",
+            "traits": ["Bold", "Original", "Practical", "Observant"],
+            "strengths": ["Positivity", "Social skills", "Practical skills"],
+            "weaknesses": ["Sensitive", "Easily bored"],
+            "ideal_careers": ["Actor", "Event Planner", "Tour Guide", "Flight Attendant", "Chef"],
+            "career_match_weights": {
+                "analytical": 0.4,
+                "creative": 0.7,
+                "leadership": 0.5,
+                "social": 0.95
+            }
+        }
+    },
+    "big_five_traits": {
+        "openness": {
+            "description": "Reflects imagination, creativity, and curiosity",
+            "high_careers": ["Artist", "Writer", "Designer", "Research Scientist", "Entrepreneur"],
+            "low_careers": ["Accountant", "Administrative", "Data Entry"]
+        },
+        "conscientiousness": {
+            "description": "Reflects organization, dependability, and discipline",
+            "high_careers": ["Doctor", "Lawyer", "Engineer", "Accountant", "Manager"],
+            "low_careers": ["Artist", "Freelancer"]
+        },
+        "extraversion": {
+            "description": "Reflects sociability, assertiveness, and excitement-seeking",
+            "high_careers": ["Sales", "Marketing", "HR", "Event Planner", "Teacher"],
+            "low_careers": ["Researcher", "Writer", "Programmer", "Data Analyst"]
+        },
+        "agreeableness": {
+            "description": "Reflects cooperation, trust, and kindness",
+            "high_careers": ["Nurse", "Teacher", "Counselor", "Social Worker", "HR"],
+            "low_careers": ["Lawyer", "Critic", "Analyst"]
+        },
+        "neuroticism": {
+            "description": "Reflects emotional instability and anxiety",
+            "high_careers": ["Artist", "Writer", "Creative roles"],
+            "low_careers": ["Surgeon", "Pilot", "Air Traffic Controller", "Military"]
+        }
+    },
+    "personality_questions": [
+        {
+            "id": 1,
+            "question": "At a party, you tend to:",
+            "options": [
+                {"text": "Interact with many, including strangers", "scores": {"E": 2, "I": 0}},
+                {"text": "Interact with a few people you know", "scores": {"E": 0, "I": 2}},
+                {"text": "Mix of both depending on mood", "scores": {"E": 1, "I": 1}}
+            ],
+            "dimension": "E-I"
+        },
+        {
+            "id": 2,
+            "question": "When making decisions, you rely more on:",
+            "options": [
+                {"text": "Logic and objective analysis", "scores": {"T": 2, "F": 0}},
+                {"text": "Personal values and impact on others", "scores": {"T": 0, "F": 2}},
+                {"text": "A combination of both", "scores": {"T": 1, "F": 1}}
+            ],
+            "dimension": "T-F"
+        },
+        {
+            "id": 3,
+            "question": "In your work, you prefer:",
+            "options": [
+                {"text": "Clear guidelines and structure", "scores": {"J": 2, "P": 0}},
+                {"text": "Flexibility and spontaneity", "scores": {"J": 0, "P": 2}},
+                {"text": "A mix of both", "scores": {"J": 1, "P": 1}}
+            ],
+            "dimension": "J-P"
+        },
+        {
+            "id": 4,
+            "question": "You are more interested in:",
+            "options": [
+                {"text": "What is actual and present", "scores": {"S": 2, "N": 0}},
+                {"text": "What is possible and future", "scores": {"S": 0, "N": 2}},
+                {"text": "Both equally", "scores": {"S": 1, "N": 1}}
+            ],
+            "dimension": "S-N"
+        },
+        {
+            "id": 5,
+            "question": "After social interactions, you feel:",
+            "options": [
+                {"text": "Energized and want more", "scores": {"E": 2, "I": 0}},
+                {"text": "Drained and need alone time", "scores": {"E": 0, "I": 2}},
+                {"text": "Depends on the situation", "scores": {"E": 1, "I": 1}}
+            ],
+            "dimension": "E-I"
+        },
+        {
+            "id": 6,
+            "question": "When solving problems, you prefer:",
+            "options": [
+                {"text": "Proven, traditional methods", "scores": {"S": 2, "N": 0}},
+                {"text": "New, innovative approaches", "scores": {"S": 0, "N": 2}},
+                {"text": "Whatever works best", "scores": {"S": 1, "N": 1}}
+            ],
+            "dimension": "S-N"
+        },
+        {
+            "id": 7,
+            "question": "In conflicts, you tend to:",
+            "options": [
+                {"text": "Focus on being right", "scores": {"T": 2, "F": 0}},
+                {"text": "Focus on maintaining harmony", "scores": {"T": 0, "F": 2}},
+                {"text": "Balance both concerns", "scores": {"T": 1, "F": 1}}
+            ],
+            "dimension": "T-F"
+        },
+        {
+            "id": 8,
+            "question": "With deadlines, you typically:",
+            "options": [
+                {"text": "Plan ahead and complete early", "scores": {"J": 2, "P": 0}},
+                {"text": "Work best under pressure near deadline", "scores": {"J": 0, "P": 2}},
+                {"text": "Varies by project", "scores": {"J": 1, "P": 1}}
+            ],
+            "dimension": "J-P"
+        },
+        {
+            "id": 9,
+            "question": "How creative do you consider yourself?",
+            "options": [
+                {"text": "Very creative - always generating new ideas", "scores": {"openness": 2}},
+                {"text": "Somewhat creative when needed", "scores": {"openness": 1}},
+                {"text": "Prefer practical, proven approaches", "scores": {"openness": 0}}
+            ],
+            "dimension": "big5"
+        },
+        {
+            "id": 10,
+            "question": "How organized are you?",
+            "options": [
+                {"text": "Very organized with detailed plans", "scores": {"conscientiousness": 2}},
+                {"text": "Moderately organized", "scores": {"conscientiousness": 1}},
+                {"text": "Prefer going with the flow", "scores": {"conscientiousness": 0}}
+            ],
+            "dimension": "big5"
+        }
+    ]
+}

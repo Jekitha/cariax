@@ -1,0 +1,998 @@
+{
+  "education_levels": {
+    "10th": {
+      "name": "Class 10th Student",
+      "description": "Students completing secondary education",
+      "sections": ["aptitude", "interests", "personality", "academic_strengths"]
+    },
+    "12th": {
+      "name": "Class 12th Student",
+      "description": "Students completing higher secondary education",
+      "sections": ["aptitude", "subject_knowledge", "interests", "personality", "career_awareness"]
+    },
+    "undergraduate": {
+      "name": "Undergraduate Student",
+      "description": "Bachelor's degree students",
+      "sections": ["aptitude", "technical_skills", "soft_skills", "personality", "career_goals", "interview_prep"]
+    },
+    "graduate": {
+      "name": "Graduate",
+      "description": "Completed Bachelor's degree",
+      "sections": ["aptitude", "technical_assessment", "soft_skills", "personality", "career_goals", "interview_simulation"]
+    },
+    "postgraduate": {
+      "name": "Post Graduate",
+      "description": "Master's degree students or completed",
+      "sections": ["advanced_aptitude", "specialization", "research_aptitude", "leadership", "career_strategy"]
+    },
+    "working_professional": {
+      "name": "Working Professional",
+      "description": "Currently employed, seeking career change/growth",
+      "sections": ["skill_assessment", "leadership", "career_transition", "industry_knowledge"]
+    }
+  },
+  
+  "questions": {
+    "10th": {
+      "aptitude": [
+        {
+          "id": "10_apt_1",
+          "type": "mcq",
+          "question": "If a train travels 120 km in 2 hours, what is its speed?",
+          "options": ["40 km/h", "60 km/h", "80 km/h", "100 km/h"],
+          "correct": 1,
+          "category": "numerical",
+          "difficulty": "easy"
+        },
+        {
+          "id": "10_apt_2",
+          "type": "mcq",
+          "question": "Complete the series: 2, 6, 12, 20, ?",
+          "options": ["28", "30", "32", "36"],
+          "correct": 1,
+          "category": "logical",
+          "difficulty": "medium"
+        },
+        {
+          "id": "10_apt_3",
+          "type": "mcq",
+          "question": "Which word is most similar to 'ENORMOUS'?",
+          "options": ["Tiny", "Huge", "Quick", "Slow"],
+          "correct": 1,
+          "category": "verbal",
+          "difficulty": "easy"
+        },
+        {
+          "id": "10_apt_4",
+          "type": "mcq",
+          "question": "If APPLE is coded as ELPPA, how is MANGO coded?",
+          "options": ["OGNAM", "ONAGM", "NAGMO", "GMONA"],
+          "correct": 0,
+          "category": "logical",
+          "difficulty": "medium"
+        },
+        {
+          "id": "10_apt_5",
+          "type": "mcq",
+          "question": "A shopkeeper sells an item for ₹450 with 10% profit. What was the cost price?",
+          "options": ["₹400", "₹405", "₹409", "₹410"],
+          "correct": 2,
+          "category": "numerical",
+          "difficulty": "medium"
+        }
+      ],
+      "interests": [
+        {
+          "id": "10_int_1",
+          "type": "scale",
+          "question": "How much do you enjoy solving mathematical puzzles?",
+          "scale": {"min": 1, "max": 5, "labels": ["Not at all", "Slightly", "Moderately", "Very much", "Extremely"]},
+          "category": "analytical"
+        },
+        {
+          "id": "10_int_2",
+          "type": "scale",
+          "question": "How interested are you in learning about how machines work?",
+          "scale": {"min": 1, "max": 5, "labels": ["Not at all", "Slightly", "Moderately", "Very much", "Extremely"]},
+          "category": "technical"
+        },
+        {
+          "id": "10_int_3",
+          "type": "scale",
+          "question": "Do you enjoy creative activities like drawing, writing, or music?",
+          "scale": {"min": 1, "max": 5, "labels": ["Not at all", "Slightly", "Moderately", "Very much", "Extremely"]},
+          "category": "creative"
+        },
+        {
+          "id": "10_int_4",
+          "type": "scale",
+          "question": "How much do you like helping others solve their problems?",
+          "scale": {"min": 1, "max": 5, "labels": ["Not at all", "Slightly", "Moderately", "Very much", "Extremely"]},
+          "category": "social"
+        },
+        {
+          "id": "10_int_5",
+          "type": "scale",
+          "question": "Are you interested in business and making money?",
+          "scale": {"min": 1, "max": 5, "labels": ["Not at all", "Slightly", "Moderately", "Very much", "Extremely"]},
+          "category": "entrepreneurial"
+        },
+        {
+          "id": "10_int_6",
+          "type": "multiple_select",
+          "question": "Which activities do you enjoy most? (Select all that apply)",
+          "options": [
+            "Reading books and articles",
+            "Playing video games",
+            "Building or fixing things",
+            "Playing sports",
+            "Socializing with friends",
+            "Learning new technologies",
+            "Drawing or painting",
+            "Writing stories or poems"
+          ],
+          "category": "hobbies"
+        }
+      ],
+      "personality": [
+        {
+          "id": "10_per_1",
+          "type": "choice",
+          "question": "In a group project, you usually:",
+          "options": [
+            {"text": "Take charge and lead the team", "traits": {"E": 2, "J": 1}},
+            {"text": "Contribute ideas and help others", "traits": {"E": 1, "F": 1}},
+            {"text": "Work quietly on your assigned part", "traits": {"I": 2, "T": 1}},
+            {"text": "Make sure everyone gets along", "traits": {"F": 2, "E": 1}}
+          ]
+        },
+        {
+          "id": "10_per_2",
+          "type": "choice",
+          "question": "When faced with a difficult problem, you:",
+          "options": [
+            {"text": "Analyze it logically step by step", "traits": {"T": 2, "J": 1}},
+            {"text": "Trust your gut feeling", "traits": {"F": 1, "N": 1}},
+            {"text": "Ask others for their opinions", "traits": {"E": 1, "F": 1}},
+            {"text": "Try different approaches creatively", "traits": {"N": 2, "P": 1}}
+          ]
+        },
+        {
+          "id": "10_per_3",
+          "type": "choice",
+          "question": "Your ideal weekend would be:",
+          "options": [
+            {"text": "Going out with friends to a party or event", "traits": {"E": 2}},
+            {"text": "Staying home reading or playing games", "traits": {"I": 2}},
+            {"text": "Learning something new online", "traits": {"N": 1, "T": 1}},
+            {"text": "Helping family with household tasks", "traits": {"S": 1, "F": 1}}
+          ]
+        },
+        {
+          "id": "10_per_4",
+          "type": "choice",
+          "question": "When planning for something, you:",
+          "options": [
+            {"text": "Make a detailed plan and stick to it", "traits": {"J": 2, "S": 1}},
+            {"text": "Have a rough idea but stay flexible", "traits": {"P": 2, "N": 1}},
+            {"text": "Don't plan much, prefer spontaneity", "traits": {"P": 2}},
+            {"text": "Plan based on what feels right at the moment", "traits": {"F": 1, "P": 1}}
+          ]
+        }
+      ],
+      "academic_strengths": [
+        {
+          "id": "10_aca_1",
+          "type": "ranking",
+          "question": "Rank these subjects from your strongest (1) to weakest (5):",
+          "items": ["Mathematics", "Science", "English", "Social Studies", "Computer"],
+          "category": "subject_preference"
+        },
+        {
+          "id": "10_aca_2",
+          "type": "mcq",
+          "question": "Which type of questions do you find easiest in exams?",
+          "options": [
+            "Mathematical calculations",
+            "Memorization-based questions",
+            "Reasoning and logic",
+            "Creative writing",
+            "Practical/Experiment-based"
+          ],
+          "category": "learning_style"
+        }
+      ]
+    },
+    
+    "12th": {
+      "aptitude": [
+        {
+          "id": "12_apt_1",
+          "type": "mcq",
+          "question": "If the ratio of two numbers is 3:5 and their sum is 64, find the larger number.",
+          "options": ["24", "40", "48", "56"],
+          "correct": 1,
+          "category": "numerical",
+          "difficulty": "medium"
+        },
+        {
+          "id": "12_apt_2",
+          "type": "mcq",
+          "question": "A can complete a work in 12 days, B can complete it in 18 days. How many days will they take together?",
+          "options": ["6.2 days", "7.2 days", "8 days", "9 days"],
+          "correct": 1,
+          "category": "numerical",
+          "difficulty": "medium"
+        },
+        {
+          "id": "12_apt_3",
+          "type": "mcq",
+          "question": "Find the odd one out: 8, 27, 64, 100, 125",
+          "options": ["8", "27", "100", "125"],
+          "correct": 2,
+          "category": "logical",
+          "difficulty": "medium"
+        },
+        {
+          "id": "12_apt_4",
+          "type": "mcq",
+          "question": "If all roses are flowers and some flowers fade quickly, which statement must be true?",
+          "options": [
+            "All roses fade quickly",
+            "Some roses may fade quickly",
+            "No roses fade quickly",
+            "All flowers are roses"
+          ],
+          "correct": 1,
+          "category": "logical",
+          "difficulty": "hard"
+        },
+        {
+          "id": "12_apt_5",
+          "type": "mcq",
+          "question": "Select the word most opposite to 'OPTIMISTIC':",
+          "options": ["Hopeful", "Pessimistic", "Realistic", "Idealistic"],
+          "correct": 1,
+          "category": "verbal",
+          "difficulty": "easy"
+        },
+        {
+          "id": "12_apt_6",
+          "type": "mcq",
+          "question": "In a certain code, COMPUTER is written as RFUVQNPC. How is PRINTER written?",
+          "options": ["QSJOUFS", "SFUOSJQ", "QSJOFSF", "OFJSQUQ"],
+          "correct": 1,
+          "category": "logical",
+          "difficulty": "hard"
+        }
+      ],
+      "subject_knowledge": {
+        "science_pcm": [
+          {
+            "id": "12_sci_pcm_1",
+            "type": "mcq",
+            "question": "The derivative of sin(x) is:",
+            "options": ["cos(x)", "-cos(x)", "sin(x)", "-sin(x)"],
+            "correct": 0,
+            "subject": "mathematics"
+          },
+          {
+            "id": "12_sci_pcm_2",
+            "type": "mcq",
+            "question": "Which of these is NOT a vector quantity?",
+            "options": ["Velocity", "Force", "Temperature", "Acceleration"],
+            "correct": 2,
+            "subject": "physics"
+          },
+          {
+            "id": "12_sci_pcm_3",
+            "type": "mcq",
+            "question": "The process of converting a solid directly to gas is called:",
+            "options": ["Evaporation", "Sublimation", "Condensation", "Deposition"],
+            "correct": 1,
+            "subject": "chemistry"
+          }
+        ],
+        "science_pcb": [
+          {
+            "id": "12_sci_pcb_1",
+            "type": "mcq",
+            "question": "Which organelle is known as the 'powerhouse of the cell'?",
+            "options": ["Nucleus", "Ribosome", "Mitochondria", "Golgi body"],
+            "correct": 2,
+            "subject": "biology"
+          },
+          {
+            "id": "12_sci_pcb_2",
+            "type": "mcq",
+            "question": "DNA replication occurs in which phase of cell cycle?",
+            "options": ["G1 phase", "S phase", "G2 phase", "M phase"],
+            "correct": 1,
+            "subject": "biology"
+          }
+        ],
+        "commerce": [
+          {
+            "id": "12_com_1",
+            "type": "mcq",
+            "question": "Which of the following is a current asset?",
+            "options": ["Building", "Machinery", "Cash in hand", "Goodwill"],
+            "correct": 2,
+            "subject": "accountancy"
+          },
+          {
+            "id": "12_com_2",
+            "type": "mcq",
+            "question": "The law of demand shows the relationship between:",
+            "options": ["Price and supply", "Price and quantity demanded", "Income and demand", "Supply and demand"],
+            "correct": 1,
+            "subject": "economics"
+          }
+        ],
+        "arts": [
+          {
+            "id": "12_arts_1",
+            "type": "mcq",
+            "question": "Who wrote 'The Republic'?",
+            "options": ["Aristotle", "Plato", "Socrates", "Homer"],
+            "correct": 1,
+            "subject": "philosophy"
+          },
+          {
+            "id": "12_arts_2",
+            "type": "mcq",
+            "question": "The French Revolution began in which year?",
+            "options": ["1776", "1789", "1799", "1804"],
+            "correct": 1,
+            "subject": "history"
+          }
+        ]
+      },
+      "interests": [
+        {
+          "id": "12_int_1",
+          "type": "scale",
+          "question": "How interested are you in pursuing higher education abroad?",
+          "scale": {"min": 1, "max": 5, "labels": ["Not at all", "Slightly", "Moderately", "Very much", "Definitely"]}
+        },
+        {
+          "id": "12_int_2",
+          "type": "scale",
+          "question": "How important is a high salary in your career choice?",
+          "scale": {"min": 1, "max": 5, "labels": ["Not important", "Slightly", "Moderately", "Very", "Most important"]}
+        },
+        {
+          "id": "12_int_3",
+          "type": "multiple_select",
+          "question": "Which career fields interest you? (Select up to 3)",
+          "options": [
+            "Engineering & Technology",
+            "Medicine & Healthcare",
+            "Business & Finance",
+            "Law & Government",
+            "Arts & Design",
+            "Science & Research",
+            "Media & Communication",
+            "Education & Teaching"
+          ],
+          "max_selections": 3
+        }
+      ],
+      "career_awareness": [
+        {
+          "id": "12_car_1",
+          "type": "text",
+          "question": "What career are you currently considering and why?",
+          "max_length": 500
+        },
+        {
+          "id": "12_car_2",
+          "type": "mcq",
+          "question": "Which entrance exam are you preparing for?",
+          "options": ["JEE Main/Advanced", "NEET", "CUET", "CLAT", "NDA", "Other", "Not decided yet"]
+        }
+      ],
+      "personality": [
+        {
+          "id": "12_per_1",
+          "type": "choice",
+          "question": "When choosing between two options, you prefer to:",
+          "options": [
+            {"text": "Make a pros/cons list and decide logically", "traits": {"T": 2, "J": 1}},
+            {"text": "Go with what feels right emotionally", "traits": {"F": 2, "P": 1}},
+            {"text": "Seek advice from trusted people", "traits": {"E": 1, "F": 1}},
+            {"text": "Research extensively before deciding", "traits": {"T": 1, "J": 1, "I": 1}}
+          ]
+        },
+        {
+          "id": "12_per_2",
+          "type": "choice",
+          "question": "Your preferred learning style is:",
+          "options": [
+            {"text": "Reading textbooks and taking notes", "traits": {"I": 1, "S": 1}},
+            {"text": "Watching videos and visual content", "traits": {"N": 1}},
+            {"text": "Discussing with peers and teachers", "traits": {"E": 2}},
+            {"text": "Hands-on practice and experiments", "traits": {"S": 2, "P": 1}}
+          ]
+        }
+      ]
+    },
+    
+    "undergraduate": {
+      "aptitude": [
+        {
+          "id": "ug_apt_1",
+          "type": "mcq",
+          "question": "A man invested ₹10,000 at 10% p.a. compound interest. What amount will he get after 2 years?",
+          "options": ["₹11,000", "₹12,000", "₹12,100", "₹12,200"],
+          "correct": 2,
+          "category": "numerical",
+          "difficulty": "medium"
+        },
+        {
+          "id": "ug_apt_2",
+          "type": "mcq",
+          "question": "If 6 people can complete a project in 12 days, how many days will 9 people take?",
+          "options": ["6 days", "8 days", "10 days", "18 days"],
+          "correct": 1,
+          "category": "numerical",
+          "difficulty": "medium"
+        },
+        {
+          "id": "ug_apt_3",
+          "type": "mcq",
+          "question": "Statement: All managers are leaders. Some leaders are visionaries.\nConclusion: Some managers are visionaries.",
+          "options": ["Definitely true", "Probably true", "Definitely false", "Cannot be determined"],
+          "correct": 3,
+          "category": "logical",
+          "difficulty": "hard"
+        },
+        {
+          "id": "ug_apt_4",
+          "type": "mcq",
+          "question": "Choose the word that best completes: Benevolent is to Malevolent as Harmony is to ___",
+          "options": ["Peace", "Discord", "Music", "Unity"],
+          "correct": 1,
+          "category": "verbal",
+          "difficulty": "medium"
+        },
+        {
+          "id": "ug_apt_5",
+          "type": "mcq",
+          "question": "In a meeting of 5 people, everyone shakes hands with everyone else exactly once. How many handshakes occur?",
+          "options": ["5", "10", "15", "20"],
+          "correct": 1,
+          "category": "logical",
+          "difficulty": "medium"
+        },
+        {
+          "id": "ug_apt_6",
+          "type": "mcq",
+          "question": "A company's revenue grew by 20% in Year 1 and decreased by 10% in Year 2. What is the net change?",
+          "options": ["10% increase", "8% increase", "10% decrease", "No change"],
+          "correct": 1,
+          "category": "numerical",
+          "difficulty": "hard"
+        }
+      ],
+      "technical_skills": {
+        "computer_science": [
+          {
+            "id": "ug_cs_1",
+            "type": "mcq",
+            "question": "What is the time complexity of binary search?",
+            "options": ["O(n)", "O(log n)", "O(n²)", "O(1)"],
+            "correct": 1
+          },
+          {
+            "id": "ug_cs_2",
+            "type": "mcq",
+            "question": "Which data structure uses LIFO principle?",
+            "options": ["Queue", "Stack", "Array", "Linked List"],
+            "correct": 1
+          },
+          {
+            "id": "ug_cs_3",
+            "type": "mcq",
+            "question": "What does SQL stand for?",
+            "options": ["Structured Query Language", "Simple Query Language", "Standard Query Logic", "System Query Language"],
+            "correct": 0
+          }
+        ],
+        "engineering": [
+          {
+            "id": "ug_eng_1",
+            "type": "mcq",
+            "question": "What is the SI unit of force?",
+            "options": ["Joule", "Newton", "Watt", "Pascal"],
+            "correct": 1
+          },
+          {
+            "id": "ug_eng_2",
+            "type": "mcq",
+            "question": "Which law states that stress is proportional to strain within elastic limit?",
+            "options": ["Newton's Law", "Hooke's Law", "Boyle's Law", "Ohm's Law"],
+            "correct": 1
+          }
+        ],
+        "business": [
+          {
+            "id": "ug_bus_1",
+            "type": "mcq",
+            "question": "What does ROI stand for?",
+            "options": ["Return on Investment", "Rate of Interest", "Revenue on Income", "Risk of Investment"],
+            "correct": 0
+          },
+          {
+            "id": "ug_bus_2",
+            "type": "mcq",
+            "question": "Which of these is NOT one of Porter's Five Forces?",
+            "options": ["Threat of new entrants", "Bargaining power of suppliers", "Government regulation", "Threat of substitutes"],
+            "correct": 2
+          }
+        ]
+      },
+      "soft_skills": [
+        {
+          "id": "ug_soft_1",
+          "type": "scenario",
+          "question": "Your team member consistently misses deadlines, affecting the project. What do you do?",
+          "options": [
+            {"text": "Report directly to the manager", "skills": ["assertiveness"], "score": 2},
+            {"text": "Have a private conversation to understand the issue", "skills": ["empathy", "communication"], "score": 5},
+            {"text": "Take over their work to meet deadlines", "skills": ["responsibility"], "score": 3},
+            {"text": "Ignore and focus on your own tasks", "skills": [], "score": 1}
+          ]
+        },
+        {
+          "id": "ug_soft_2",
+          "type": "scenario",
+          "question": "You discover an error in your own work after submission. What do you do?",
+          "options": [
+            {"text": "Hope no one notices", "skills": [], "score": 1},
+            {"text": "Immediately inform your supervisor and propose a solution", "skills": ["integrity", "problem-solving"], "score": 5},
+            {"text": "Fix it quietly without telling anyone", "skills": ["responsibility"], "score": 3},
+            {"text": "Blame it on technical issues", "skills": [], "score": 1}
+          ]
+        },
+        {
+          "id": "ug_soft_3",
+          "type": "scenario",
+          "question": "During a presentation, someone asks a question you don't know the answer to. You:",
+          "options": [
+            {"text": "Admit you don't know and promise to find out", "skills": ["honesty", "professionalism"], "score": 5},
+            {"text": "Try to give an answer even if unsure", "skills": ["confidence"], "score": 2},
+            {"text": "Redirect to a colleague who might know", "skills": ["teamwork"], "score": 4},
+            {"text": "Change the topic smoothly", "skills": ["communication"], "score": 2}
+          ]
+        }
+      ],
+      "interview_prep": [
+        {
+          "id": "ug_int_1",
+          "type": "text",
+          "question": "Tell us about yourself and why you're interested in this career path.",
+          "max_length": 1000,
+          "evaluation": "structure_and_relevance"
+        },
+        {
+          "id": "ug_int_2",
+          "type": "text",
+          "question": "Describe a challenging situation you faced and how you overcame it.",
+          "max_length": 1000,
+          "evaluation": "star_method"
+        },
+        {
+          "id": "ug_int_3",
+          "type": "text",
+          "question": "Where do you see yourself in 5 years?",
+          "max_length": 500,
+          "evaluation": "goal_clarity"
+        }
+      ],
+      "career_goals": [
+        {
+          "id": "ug_goal_1",
+          "type": "scale",
+          "question": "How clear are you about your career goals?",
+          "scale": {"min": 1, "max": 5, "labels": ["Very unclear", "Somewhat unclear", "Neutral", "Somewhat clear", "Very clear"]}
+        },
+        {
+          "id": "ug_goal_2",
+          "type": "multiple_select",
+          "question": "What are your top priorities in a job? (Select up to 3)",
+          "options": [
+            "High salary and bonuses",
+            "Work-life balance",
+            "Career growth opportunities",
+            "Job security",
+            "Meaningful work/impact",
+            "Good company culture",
+            "Remote work flexibility",
+            "Learning and development"
+          ],
+          "max_selections": 3
+        }
+      ],
+      "personality": [
+        {
+          "id": "ug_per_1",
+          "type": "choice",
+          "question": "In a team project, you naturally tend to:",
+          "options": [
+            {"text": "Take leadership and coordinate tasks", "traits": {"E": 2, "J": 2}},
+            {"text": "Generate creative ideas and solutions", "traits": {"N": 2, "P": 1}},
+            {"text": "Ensure quality and accuracy of work", "traits": {"J": 2, "S": 1}},
+            {"text": "Maintain team harmony and motivation", "traits": {"F": 2, "E": 1}}
+          ]
+        },
+        {
+          "id": "ug_per_2",
+          "type": "choice",
+          "question": "When making career decisions, you prioritize:",
+          "options": [
+            {"text": "Logical analysis of pros and cons", "traits": {"T": 2}},
+            {"text": "How it aligns with your values", "traits": {"F": 2}},
+            {"text": "Future possibilities and growth", "traits": {"N": 2}},
+            {"text": "Practical and immediate benefits", "traits": {"S": 2}}
+          ]
+        }
+      ]
+    },
+    
+    "graduate": {
+      "aptitude": [
+        {
+          "id": "grad_apt_1",
+          "type": "mcq",
+          "question": "A company's profit increased from ₹2 lakhs to ₹2.5 lakhs. What is the percentage increase?",
+          "options": ["20%", "25%", "30%", "50%"],
+          "correct": 1,
+          "category": "numerical",
+          "difficulty": "medium"
+        },
+        {
+          "id": "grad_apt_2",
+          "type": "mcq",
+          "question": "If the probability of an event is 0.3, what is the probability of it NOT occurring?",
+          "options": ["0.3", "0.7", "0.03", "1.3"],
+          "correct": 1,
+          "category": "numerical",
+          "difficulty": "easy"
+        },
+        {
+          "id": "grad_apt_3",
+          "type": "mcq",
+          "question": "Critical reading: 'Innovation distinguishes between a leader and a follower.' - Steve Jobs. This quote suggests:",
+          "options": [
+            "Leaders always follow others",
+            "Innovation is key to leadership",
+            "Followers cannot innovate",
+            "Leadership requires no innovation"
+          ],
+          "correct": 1,
+          "category": "verbal",
+          "difficulty": "medium"
+        },
+        {
+          "id": "grad_apt_4",
+          "type": "mcq",
+          "question": "Data Interpretation: If a pie chart shows Marketing at 25%, Sales at 35%, and R&D at 20%, what percentage is allocated to other departments?",
+          "options": ["15%", "20%", "25%", "30%"],
+          "correct": 1,
+          "category": "data_interpretation",
+          "difficulty": "medium"
+        }
+      ],
+      "technical_assessment": {
+        "data_science": [
+          {
+            "id": "grad_ds_1",
+            "type": "mcq",
+            "question": "Which algorithm is best for classification problems?",
+            "options": ["Linear Regression", "K-Means Clustering", "Random Forest", "PCA"],
+            "correct": 2
+          },
+          {
+            "id": "grad_ds_2",
+            "type": "mcq",
+            "question": "What does overfitting mean in machine learning?",
+            "options": [
+              "Model performs well on training data but poorly on new data",
+              "Model performs poorly on all data",
+              "Model is too simple",
+              "Model has high bias"
+            ],
+            "correct": 0
+          }
+        ],
+        "software_engineering": [
+          {
+            "id": "grad_se_1",
+            "type": "mcq",
+            "question": "What is the primary benefit of microservices architecture?",
+            "options": ["Lower cost", "Independent deployment and scaling", "Simpler code", "Faster execution"],
+            "correct": 1
+          },
+          {
+            "id": "grad_se_2",
+            "type": "mcq",
+            "question": "Which HTTP method is idempotent?",
+            "options": ["POST", "GET", "PATCH", "None of the above"],
+            "correct": 1
+          }
+        ],
+        "management": [
+          {
+            "id": "grad_mgmt_1",
+            "type": "mcq",
+            "question": "What is the purpose of SWOT analysis?",
+            "options": [
+              "Financial planning",
+              "Strategic planning and assessment",
+              "Employee evaluation",
+              "Market research only"
+            ],
+            "correct": 1
+          }
+        ]
+      },
+      "interview_simulation": [
+        {
+          "id": "grad_sim_1",
+          "type": "video_response",
+          "question": "Walk us through your most significant project and your contribution.",
+          "time_limit": 180,
+          "evaluation_criteria": ["clarity", "structure", "impact_demonstration"]
+        },
+        {
+          "id": "grad_sim_2",
+          "type": "case_study",
+          "question": "A startup has ₹50 lakhs to invest. Should they spend on marketing (faster growth but risky) or product development (slower but sustainable)? Justify your recommendation.",
+          "time_limit": 600,
+          "max_length": 1500
+        },
+        {
+          "id": "grad_sim_3",
+          "type": "situational",
+          "question": "Your manager asks you to complete a task you believe is unethical. How do you handle this?",
+          "options": [
+            {"text": "Refuse outright and report to HR", "score": 3, "skills": ["integrity"]},
+            {"text": "Express concerns professionally and seek clarification on the task", "score": 5, "skills": ["integrity", "communication", "professionalism"]},
+            {"text": "Complete the task to avoid conflict", "score": 1, "skills": []},
+            {"text": "Discuss with colleagues first", "score": 2, "skills": ["collaboration"]}
+          ]
+        }
+      ],
+      "soft_skills": [
+        {
+          "id": "grad_soft_1",
+          "type": "scale",
+          "question": "Rate your public speaking ability:",
+          "scale": {"min": 1, "max": 10}
+        },
+        {
+          "id": "grad_soft_2",
+          "type": "scale",
+          "question": "Rate your ability to work under pressure:",
+          "scale": {"min": 1, "max": 10}
+        },
+        {
+          "id": "grad_soft_3",
+          "type": "scale",
+          "question": "Rate your conflict resolution skills:",
+          "scale": {"min": 1, "max": 10}
+        }
+      ],
+      "career_goals": [
+        {
+          "id": "grad_goal_1",
+          "type": "text",
+          "question": "What is your dream job and why?",
+          "max_length": 500
+        },
+        {
+          "id": "grad_goal_2",
+          "type": "mcq",
+          "question": "What type of company culture do you prefer?",
+          "options": [
+            "Fast-paced startup environment",
+            "Structured corporate environment",
+            "Creative/Agency setting",
+            "Remote-first distributed team",
+            "Research/Academic environment"
+          ]
+        }
+      ],
+      "personality": [
+        {
+          "id": "grad_per_1",
+          "type": "choice",
+          "question": "Your approach to solving complex problems:",
+          "options": [
+            {"text": "Break it into smaller parts systematically", "traits": {"T": 2, "J": 2}},
+            {"text": "Look for innovative unconventional solutions", "traits": {"N": 2, "P": 1}},
+            {"text": "Collaborate with others to brainstorm", "traits": {"E": 2, "F": 1}},
+            {"text": "Research existing solutions first", "traits": {"S": 2, "I": 1}}
+          ]
+        }
+      ],
+      "leadership": [
+        {
+          "id": "grad_lead_1",
+          "type": "scenario",
+          "question": "You're leading a team with two members who have conflicting ideas. How do you proceed?",
+          "options": [
+            {"text": "Let them debate and decide based on merit", "score": 4},
+            {"text": "Facilitate a structured discussion to find common ground", "score": 5},
+            {"text": "Make the decision yourself to avoid conflict", "score": 2},
+            {"text": "Assign them separate tasks to avoid interaction", "score": 1}
+          ]
+        }
+      ]
+    },
+    
+    "postgraduate": {
+      "advanced_aptitude": [
+        {
+          "id": "pg_apt_1",
+          "type": "mcq",
+          "question": "If f(x) = 2x + 3 and g(x) = x² - 1, find f(g(2)).",
+          "options": ["9", "11", "13", "15"],
+          "correct": 1,
+          "category": "numerical"
+        },
+        {
+          "id": "pg_apt_2",
+          "type": "mcq",
+          "question": "A rectangular garden has a perimeter of 60m. If the length is twice the width, find the area.",
+          "options": ["150 m²", "200 m²", "250 m²", "300 m²"],
+          "correct": 1,
+          "category": "numerical"
+        }
+      ],
+      "research_aptitude": [
+        {
+          "id": "pg_res_1",
+          "type": "mcq",
+          "question": "What is the primary purpose of a literature review?",
+          "options": [
+            "To fill pages in a thesis",
+            "To establish research context and identify gaps",
+            "To copy existing research",
+            "To impress the examiner"
+          ],
+          "correct": 1
+        },
+        {
+          "id": "pg_res_2",
+          "type": "mcq",
+          "question": "Which of these is a qualitative research method?",
+          "options": ["Statistical analysis", "Surveys with Likert scales", "In-depth interviews", "Hypothesis testing"],
+          "correct": 2
+        }
+      ],
+      "specialization": [
+        {
+          "id": "pg_spec_1",
+          "type": "text",
+          "question": "Describe your area of specialization and how you plan to contribute to it.",
+          "max_length": 1000
+        }
+      ],
+      "leadership": [
+        {
+          "id": "pg_lead_1",
+          "type": "scenario",
+          "question": "You're managing a cross-functional team across different time zones. How do you ensure effective collaboration?",
+          "options": [
+            {"text": "Schedule all meetings at your convenience", "score": 1},
+            {"text": "Use async communication and rotate meeting times fairly", "score": 5},
+            {"text": "Let team members figure it out themselves", "score": 1},
+            {"text": "Hire people only in your time zone", "score": 2}
+          ]
+        }
+      ],
+      "career_strategy": [
+        {
+          "id": "pg_strat_1",
+          "type": "text",
+          "question": "What is your 10-year career vision and strategy to achieve it?",
+          "max_length": 1500
+        }
+      ]
+    },
+    
+    "working_professional": {
+      "skill_assessment": [
+        {
+          "id": "wp_skill_1",
+          "type": "scale",
+          "question": "Rate your expertise in your current field:",
+          "scale": {"min": 1, "max": 10}
+        },
+        {
+          "id": "wp_skill_2",
+          "type": "multiple_select",
+          "question": "Which skills have you developed in your current role?",
+          "options": [
+            "Project Management",
+            "Team Leadership",
+            "Technical Skills",
+            "Client Management",
+            "Strategic Planning",
+            "Data Analysis",
+            "Communication",
+            "Problem Solving"
+          ]
+        }
+      ],
+      "career_transition": [
+        {
+          "id": "wp_trans_1",
+          "type": "mcq",
+          "question": "What is driving your career change consideration?",
+          "options": [
+            "Better salary prospects",
+            "Passion for a different field",
+            "Work-life balance",
+            "Career growth plateau",
+            "Industry decline",
+            "Relocation needs"
+          ]
+        },
+        {
+          "id": "wp_trans_2",
+          "type": "text",
+          "question": "Describe your transferable skills and how they apply to your target career.",
+          "max_length": 1000
+        }
+      ],
+      "leadership": [
+        {
+          "id": "wp_lead_1",
+          "type": "scale",
+          "question": "How many people have you directly managed?",
+          "scale": {"min": 0, "max": 100, "step": 5}
+        },
+        {
+          "id": "wp_lead_2",
+          "type": "scenario",
+          "question": "Your team is underperforming. How do you address this?",
+          "options": [
+            {"text": "Set stricter deadlines and monitor closely", "score": 2},
+            {"text": "Identify root causes through 1-on-1s and provide support", "score": 5},
+            {"text": "Replace underperformers", "score": 1},
+            {"text": "Increase incentives", "score": 3}
+          ]
+        }
+      ],
+      "industry_knowledge": [
+        {
+          "id": "wp_ind_1",
+          "type": "text",
+          "question": "What trends do you see shaping your industry in the next 5 years?",
+          "max_length": 800
+        }
+      ]
+    }
+  },
+  
+  "scoring_weights": {
+    "aptitude": 0.25,
+    "subject_knowledge": 0.15,
+    "technical_skills": 0.20,
+    "soft_skills": 0.15,
+    "personality": 0.15,
+    "interview_prep": 0.10
+  },
+  
+  "time_limits": {
+    "10th": 30,
+    "12th": 45,
+    "undergraduate": 60,
+    "graduate": 75,
+    "postgraduate": 60,
+    "working_professional": 45
+  }
+}

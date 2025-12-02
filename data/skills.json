@@ -1,0 +1,196 @@
+{
+    "skills": [
+        {
+            "id": 1,
+            "name": "Programming",
+            "category": "Technical",
+            "description": "Ability to write code in various programming languages",
+            "sub_skills": ["Python", "JavaScript", "Java", "C++", "SQL"],
+            "related_subjects": ["Computer Science", "Mathematics"],
+            "difficulty_to_learn": 7,
+            "demand_score": 0.95
+        },
+        {
+            "id": 2,
+            "name": "Data Analysis",
+            "category": "Technical",
+            "description": "Ability to analyze and interpret complex data",
+            "sub_skills": ["Excel", "SQL", "Statistics", "Visualization", "Python/R"],
+            "related_subjects": ["Mathematics", "Statistics", "Computer Science"],
+            "difficulty_to_learn": 6,
+            "demand_score": 0.90
+        },
+        {
+            "id": 3,
+            "name": "Machine Learning",
+            "category": "Technical",
+            "description": "Building and deploying ML models",
+            "sub_skills": ["Python", "TensorFlow", "PyTorch", "Scikit-learn", "Deep Learning"],
+            "related_subjects": ["Mathematics", "Computer Science", "Statistics"],
+            "difficulty_to_learn": 9,
+            "demand_score": 0.92
+        },
+        {
+            "id": 4,
+            "name": "Communication",
+            "category": "Soft",
+            "description": "Effectively conveying ideas and information",
+            "sub_skills": ["Verbal", "Written", "Presentation", "Active Listening"],
+            "related_subjects": ["English", "Psychology"],
+            "difficulty_to_learn": 5,
+            "demand_score": 0.88
+        },
+        {
+            "id": 5,
+            "name": "Problem Solving",
+            "category": "Cognitive",
+            "description": "Analyzing problems and finding effective solutions",
+            "sub_skills": ["Critical Thinking", "Analytical Skills", "Logic", "Creativity"],
+            "related_subjects": ["Mathematics", "Science", "Philosophy"],
+            "difficulty_to_learn": 6,
+            "demand_score": 0.92
+        },
+        {
+            "id": 6,
+            "name": "Leadership",
+            "category": "Soft",
+            "description": "Guiding and motivating teams towards goals",
+            "sub_skills": ["Team Management", "Decision Making", "Delegation", "Conflict Resolution"],
+            "related_subjects": ["Psychology", "Management"],
+            "difficulty_to_learn": 7,
+            "demand_score": 0.85
+        },
+        {
+            "id": 7,
+            "name": "Design",
+            "category": "Creative",
+            "description": "Creating visual and user-friendly designs",
+            "sub_skills": ["UI/UX", "Graphic Design", "Adobe Creative Suite", "Figma", "Typography"],
+            "related_subjects": ["Art", "Psychology", "Computer Applications"],
+            "difficulty_to_learn": 6,
+            "demand_score": 0.82
+        },
+        {
+            "id": 8,
+            "name": "Financial Analysis",
+            "category": "Technical",
+            "description": "Analyzing financial data and making recommendations",
+            "sub_skills": ["Accounting", "Excel", "Financial Modeling", "Valuation"],
+            "related_subjects": ["Commerce", "Mathematics", "Economics"],
+            "difficulty_to_learn": 7,
+            "demand_score": 0.80
+        },
+        {
+            "id": 9,
+            "name": "Research",
+            "category": "Cognitive",
+            "description": "Conducting systematic investigation and analysis",
+            "sub_skills": ["Literature Review", "Data Collection", "Analysis", "Documentation"],
+            "related_subjects": ["Any Science", "Psychology", "Sociology"],
+            "difficulty_to_learn": 6,
+            "demand_score": 0.75
+        },
+        {
+            "id": 10,
+            "name": "Project Management",
+            "category": "Management",
+            "description": "Planning, executing, and closing projects",
+            "sub_skills": ["Planning", "Scheduling", "Resource Management", "Risk Management", "Agile"],
+            "related_subjects": ["Management", "Computer Science"],
+            "difficulty_to_learn": 6,
+            "demand_score": 0.85
+        },
+        {
+            "id": 11,
+            "name": "Writing",
+            "category": "Creative",
+            "description": "Creating clear and engaging written content",
+            "sub_skills": ["Technical Writing", "Creative Writing", "Editing", "SEO"],
+            "related_subjects": ["English", "Journalism"],
+            "difficulty_to_learn": 5,
+            "demand_score": 0.75
+        },
+        {
+            "id": 12,
+            "name": "Cloud Computing",
+            "category": "Technical",
+            "description": "Working with cloud platforms and services",
+            "sub_skills": ["AWS", "Azure", "GCP", "DevOps", "Kubernetes"],
+            "related_subjects": ["Computer Science", "Networking"],
+            "difficulty_to_learn": 8,
+            "demand_score": 0.93
+        },
+        {
+            "id": 13,
+            "name": "Cybersecurity",
+            "category": "Technical",
+            "description": "Protecting systems and data from threats",
+            "sub_skills": ["Network Security", "Ethical Hacking", "Cryptography", "Risk Assessment"],
+            "related_subjects": ["Computer Science", "Mathematics"],
+            "difficulty_to_learn": 8,
+            "demand_score": 0.90
+        },
+        {
+            "id": 14,
+            "name": "Medical Knowledge",
+            "category": "Domain",
+            "description": "Understanding of human health and medicine",
+            "sub_skills": ["Anatomy", "Pharmacology", "Diagnosis", "Treatment"],
+            "related_subjects": ["Biology", "Chemistry", "Physics"],
+            "difficulty_to_learn": 10,
+            "demand_score": 0.88
+        },
+        {
+            "id": 15,
+            "name": "Legal Knowledge",
+            "category": "Domain",
+            "description": "Understanding of laws and legal procedures",
+            "sub_skills": ["Legal Research", "Contract Law", "Litigation", "Compliance"],
+            "related_subjects": ["Political Science", "History", "English"],
+            "difficulty_to_learn": 9,
+            "demand_score": 0.78
+        }
+    ],
+    "online_courses": [
+        {
+            "name": "Machine Learning by Stanford (Coursera)",
+            "url": "https://www.coursera.org/learn/machine-learning",
+            "skills": ["Machine Learning", "Programming", "Data Analysis"],
+            "price": "Free (audit) / $49 (certificate)",
+            "duration": "11 weeks",
+            "rating": 4.9
+        },
+        {
+            "name": "CS50 by Harvard (edX)",
+            "url": "https://www.edx.org/cs50",
+            "skills": ["Programming", "Problem Solving"],
+            "price": "Free (audit) / $90 (certificate)",
+            "duration": "12 weeks",
+            "rating": 4.8
+        },
+        {
+            "name": "Google Data Analytics Certificate",
+            "url": "https://www.coursera.org/professional-certificates/google-data-analytics",
+            "skills": ["Data Analysis", "SQL", "Visualization"],
+            "price": "$39/month",
+            "duration": "6 months",
+            "rating": 4.8
+        },
+        {
+            "name": "AWS Cloud Practitioner",
+            "url": "https://aws.amazon.com/certification/certified-cloud-practitioner/",
+            "skills": ["Cloud Computing"],
+            "price": "$100 (exam)",
+            "duration": "Self-paced",
+            "rating": 4.7
+        },
+        {
+            "name": "Google UX Design Certificate",
+            "url": "https://www.coursera.org/professional-certificates/google-ux-design",
+            "skills": ["Design", "Research"],
+            "price": "$39/month",
+            "duration": "6 months",
+            "rating": 4.8
+        }
+    ]
+}
