@@ -12,8 +12,14 @@ from pathlib import Path
 from typing import Optional, Dict, List
 import json
 
-# Database path
-DB_PATH = Path(__file__).parent.parent / 'data' / 'users.db'
+# Database path - use /tmp on Render (writable), otherwise use local data folder
+if os.environ.get('RENDER'):
+    DB_PATH = Path('/tmp') / 'users.db'
+else:
+    DB_PATH = Path(__file__).parent.parent / 'data' / 'users.db'
+
+# Ensure parent directory exists
+DB_PATH.parent.mkdir(parents=True, exist_ok=True)
 
 
 def get_db_connection():
@@ -412,5 +418,5 @@ class AssessmentResult:
         return result
 
 
-# Initialize database on module import
-init_database()
+# Don't auto-initialize on import - let the app do it
+# init_database()
