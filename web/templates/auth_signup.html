@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Sign Up - Cariax</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
+    <style>
+        body {
+            background: #fff7ed;
+            min-height: 100vh;
+        }
+        .auth-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 24px;
+            background: #fff7ed;
+        }
+        .auth-card {
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 32px 24px;
+            max-width: 420px;
+            margin: 0 auto;
+            width: 100%;
+            box-shadow: 0 25px 50px -12px rgba(249, 115, 22, 0.15);
+            border: 1px solid #fdba74;
+        }
+        .logo-container {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        .logo-icon {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, #f97316 0%, #ea580c 50%, #c2410c 100%);
+            border-radius: 18px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 12px;
+            box-shadow: 0 10px 30px rgba(249, 115, 22, 0.4);
+        }
+        .logo-icon i {
+            font-size: 28px;
+            color: white;
+        }
+        .logo-text {
+            font-size: 24px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #f97316, #ea580c);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .signup-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        .signup-subtitle {
+            color: #64748b;
+            font-size: 14px;
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        .alert {
+            padding: 12px 16px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+        }
+        .alert-error {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #dc2626;
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        @media (max-width: 400px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+        .password-strength {
+            margin-top: 8px;
+        }
+        .strength-bar {
+            height: 4px;
+            background: #e2e8f0;
+            border-radius: 9999px;
+            overflow: hidden;
+        }
+        .strength-fill {
+            height: 100%;
+            width: 0%;
+            transition: all 0.3s;
+        }
+        .strength-fill.weak { width: 33%; background: #ef4444; }
+        .strength-fill.medium { width: 66%; background: #f59e0b; }
+        .strength-fill.strong { width: 100%; background: #10b981; }
+        .strength-text {
+            font-size: 12px;
+            margin-top: 4px;
+            color: #64748b;
+        }
+        .education-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+        .education-option {
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 13px;
+        }
+        .education-option:hover {
+            border-color: #818cf8;
+        }
+        .education-option.selected {
+            border-color: #f97316;
+            background: rgba(99, 102, 241, 0.1);
+        }
+        .education-option i {
+            display: block;
+            font-size: 20px;
+            margin-bottom: 6px;
+            color: #f97316;
+        }
+        .terms-check {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            font-size: 13px;
+            color: #64748b;
+            margin-bottom: 20px;
+        }
+        .terms-check input {
+            margin-top: 2px;
+            width: 18px;
+            height: 18px;
+            accent-color: #f97316;
+        }
+        .terms-check a {
+            color: #f97316;
+            text-decoration: none;
+        }
+        .login-link {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #64748b;
+        }
+        .login-link a {
+            color: #f97316;
+            text-decoration: none;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-card slide-up">
+            <!-- Logo -->
+            <div class="logo-container">
+                <div class="logo-icon">
+                    <i class="fas fa-rocket"></i>
+                </div>
+                <div class="logo-text">Cariax</div>
+            </div>
+
+            <h1 class="signup-title">Create Your Account</h1>
+            <p class="signup-subtitle">Start your personalized career journey today</p>
+
+            <!-- Error Message -->
+            {% if error %}
+            <div class="alert alert-error">
+                <i class="fas fa-exclamation-circle"></i>
+                <span>{{ error }}</span>
+            </div>
+            {% endif %}
+
+
+
+            <!-- Signup Form -->
+            <form action="/signup" method="POST" id="signupForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">First Name</label>
+                        <input type="text" name="first_name" class="form-input" placeholder="John" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Last Name</label>
+                        <input type="text" name="last_name" class="form-input" placeholder="Doe" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Email Address</label>
+                    <input type="email" name="email" class="form-input" placeholder="your@email.com" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <input type="password" name="password" id="password" class="form-input" placeholder="Create a strong password" required oninput="checkPasswordStrength(this.value)">
+                    <div class="password-strength">
+                        <div class="strength-bar">
+                            <div class="strength-fill" id="strengthFill"></div>
+                        </div>
+                        <div class="strength-text" id="strengthText"></div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Current Education Level</label>
+                    <div class="education-options">
+                        <div class="education-option" data-value="10th" onclick="selectEducation(this)">
+                            <i class="fas fa-school"></i>
+                            10th Student
+                        </div>
+                        <div class="education-option" data-value="12th" onclick="selectEducation(this)">
+                            <i class="fas fa-graduation-cap"></i>
+                            12th Student
+                        </div>
+                        <div class="education-option" data-value="undergraduate" onclick="selectEducation(this)">
+                            <i class="fas fa-university"></i>
+                            Undergraduate
+                        </div>
+                        <div class="education-option" data-value="graduate" onclick="selectEducation(this)">
+                            <i class="fas fa-user-graduate"></i>
+                            Graduate
+                        </div>
+                        <div class="education-option" data-value="postgraduate" onclick="selectEducation(this)">
+                            <i class="fas fa-award"></i>
+                            Post Graduate
+                        </div>
+                        <div class="education-option" data-value="working" onclick="selectEducation(this)">
+                            <i class="fas fa-briefcase"></i>
+                            Working Professional
+                        </div>
+                    </div>
+                    <input type="hidden" name="education_level" id="educationLevel" required>
+                </div>
+
+                <label class="terms-check">
+                    <input type="checkbox" name="terms" required>
+                    <span>I agree to the <a href="/terms">Terms of Service</a> and <a href="/privacy">Privacy Policy</a></span>
+                </label>
+
+                <button type="submit" class="btn btn-primary btn-full btn-lg">
+                    <i class="fas fa-user-plus"></i>
+                    Create Account
+                </button>
+            </form>
+
+            <div class="login-link">
+                Already have an account? <a href="/login">Sign In</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function selectEducation(element) {
+            document.querySelectorAll('.education-option').forEach(opt => opt.classList.remove('selected'));
+            element.classList.add('selected');
+            document.getElementById('educationLevel').value = element.dataset.value;
+        }
+
+        function checkPasswordStrength(password) {
+            const strengthFill = document.getElementById('strengthFill');
+            const strengthText = document.getElementById('strengthText');
+            
+            let strength = 0;
+            if (password.length >= 8) strength++;
+            if (/[A-Z]/.test(password)) strength++;
+            if (/[0-9]/.test(password)) strength++;
+            if (/[^A-Za-z0-9]/.test(password)) strength++;
+            
+            strengthFill.className = 'strength-fill';
+            
+            if (password.length === 0) {
+                strengthText.textContent = '';
+            } else if (strength <= 1) {
+                strengthFill.classList.add('weak');
+                strengthText.textContent = 'Weak - Add numbers and special characters';
+            } else if (strength <= 2) {
+                strengthFill.classList.add('medium');
+                strengthText.textContent = 'Medium - Add more variety';
+            } else {
+                strengthFill.classList.add('strong');
+                strengthText.textContent = 'Strong password!';
+            }
+        }
+        
+
+    </script>
+</body>
+</html>
+
+
+
+

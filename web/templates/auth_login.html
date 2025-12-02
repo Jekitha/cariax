@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Login - Cariax</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
+    <script>
+        // Check if already logged in via localStorage
+        if (localStorage.getItem('cariax_logged_in') === 'true') {
+            window.location.href = '/dashboard';
+        }
+    </script>
+    <style>
+        body {
+            background: #fff7ed;
+            min-height: 100vh;
+        }
+        .auth-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 24px;
+            background: #fff7ed;
+        }
+        .auth-card {
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 32px 24px;
+            max-width: 400px;
+            margin: 0 auto;
+            width: 100%;
+            box-shadow: 0 25px 50px -12px rgba(249, 115, 22, 0.15);
+            border: 1px solid #fdba74;
+        }
+        .logo-container {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        .logo-icon {
+            width: 72px;
+            height: 72px;
+            background: linear-gradient(135deg, #f97316 0%, #ea580c 50%, #c2410c 100%);
+            border-radius: 20px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+            box-shadow: 0 10px 30px rgba(249, 115, 22, 0.4);
+        }
+        .logo-icon i {
+            font-size: 32px;
+            color: white;
+        }
+        .logo-text {
+            font-size: 28px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #f97316, #ea580c);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .logo-tagline {
+            color: #64748b;
+            font-size: 14px;
+            margin-top: 4px;
+        }
+        .alert {
+            padding: 12px 16px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+        }
+        .alert-error {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #dc2626;
+        }
+        .alert-success {
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            color: #16a34a;
+        }
+        .password-toggle {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+            cursor: pointer;
+        }
+        .remember-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            font-size: 14px;
+        }
+        .remember-check {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+        .remember-check input {
+            width: 18px;
+            height: 18px;
+            accent-color: #f97316;
+        }
+        .forgot-link {
+            color: #f97316;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .forgot-link:hover {
+            text-decoration: underline;
+        }
+        .signup-link {
+            text-align: center;
+            margin-top: 24px;
+            font-size: 14px;
+            color: #64748b;
+        }
+        .signup-link a {
+            color: #f97316;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .signup-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-card slide-up">
+            <!-- Logo -->
+            <div class="logo-container">
+                <div class="logo-icon">
+                    <i class="fas fa-rocket"></i>
+                </div>
+                <div class="logo-text">Cariax</div>
+                <div class="logo-tagline">Your AI-Powered Career Guide</div>
+            </div>
+
+            <!-- Error/Success Messages -->
+            {% if error %}
+            <div class="alert alert-error">
+                <i class="fas fa-exclamation-circle"></i>
+                <span>{{ error }}</span>
+            </div>
+            {% endif %}
+            
+            {% if success %}
+            <div class="alert alert-success">
+                <i class="fas fa-check-circle"></i>
+                <span>{{ success }}</span>
+            </div>
+            {% endif %}
+
+
+
+            <!-- Login Form -->
+            <form action="/login" method="POST">
+                <div class="form-group">
+                    <label class="form-label">Email Address</label>
+                    <input type="email" name="email" class="form-input" placeholder="your@email.com" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <div style="position: relative;">
+                        <input type="password" name="password" id="password" class="form-input" placeholder="••••••••" required>
+                        <span class="password-toggle" onclick="togglePassword()">
+                            <i class="fas fa-eye" id="toggleIcon"></i>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="remember-row">
+                    <label class="remember-check">
+                        <input type="checkbox" name="remember">
+                        <span>Remember me</span>
+                    </label>
+                    <a href="/forgot-password" class="forgot-link">Forgot Password?</a>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-full btn-lg">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Sign In
+                </button>
+            </form>
+
+            <div class="signup-link">
+                Don't have an account? <a href="/signup">Create one</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Pre-fill email if saved
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedEmail = localStorage.getItem('cariax_email');
+            const rememberMe = localStorage.getItem('cariax_remember');
+            
+            if (savedEmail && rememberMe === 'true') {
+                document.querySelector('input[name="email"]').value = savedEmail;
+                document.querySelector('input[name="remember"]').checked = true;
+            }
+        });
+        
+        // Save email on form submit if "Remember me" is checked
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const email = document.querySelector('input[name="email"]').value;
+            const remember = document.querySelector('input[name="remember"]').checked;
+            
+            if (remember && email) {
+                localStorage.setItem('cariax_email', email);
+                localStorage.setItem('cariax_remember', 'true');
+            } else {
+                localStorage.removeItem('cariax_email');
+                localStorage.removeItem('cariax_remember');
+            }
+        });
+        
+        function togglePassword() {
+            const passwordInput = document.getElementById('password');
+            const toggleIcon = document.getElementById('toggleIcon');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleIcon.classList.remove('fa-eye');
+                toggleIcon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                toggleIcon.classList.remove('fa-eye-slash');
+                toggleIcon.classList.add('fa-eye');
+            }
+        }
+        
+
+    </script>
+</body>
+</html>
+
+
+
+

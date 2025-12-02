@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Your Career Roadmap - Cariax</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
+    <style>
+        body { background: #f8fafc; }
+        .roadmap-header {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            padding: 20px;
+            padding-top: 60px;
+            color: white;
+            position: relative;
+        }
+        .back-btn {
+            position: absolute;
+            top: 16px;
+            left: 16px;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255,255,255,0.2);
+            border-radius: 12px;
+            color: white;
+            text-decoration: none;
+        }
+        .roadmap-career {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 4px;
+        }
+        .roadmap-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+        .overall-progress {
+            background: rgba(255,255,255,0.2);
+            border-radius: 12px;
+            padding: 16px;
+        }
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+        .progress-label {
+            font-size: 13px;
+        }
+        .progress-value {
+            font-size: 13px;
+            font-weight: 600;
+        }
+        .progress-bar {
+            height: 8px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 9999px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: white;
+            border-radius: 9999px;
+            transition: width 0.5s ease;
+        }
+
+        .roadmap-content {
+            padding: 20px;
+            max-width: 480px;
+            margin: 0 auto;
+            padding-bottom: 100px;
+        }
+
+        .roadmap-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            overflow-x: auto;
+            padding-bottom: 8px;
+        }
+        .roadmap-tab {
+            padding: 10px 20px;
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 9999px;
+            font-size: 13px;
+            font-weight: 500;
+            color: #64748b;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .roadmap-tab.active {
+            background: #f97316;
+            border-color: #f97316;
+            color: white;
+        }
+
+        .milestone-container {
+            position: relative;
+            padding-left: 40px;
+        }
+        .milestone-line {
+            position: absolute;
+            left: 14px;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(to bottom, #10b981, #f97316, #e2e8f0);
+            border-radius: 9999px;
+        }
+
+        .milestone {
+            position: relative;
+            margin-bottom: 24px;
+        }
+        .milestone-dot {
+            position: absolute;
+            left: -33px;
+            top: 6px;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #e2e8f0;
+            border: 4px solid white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1;
+        }
+        .milestone.completed .milestone-dot {
+            background: #10b981;
+            color: white;
+        }
+        .milestone.current .milestone-dot {
+            background: #f97316;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.4); }
+            50% { box-shadow: 0 0 0 10px rgba(99, 102, 241, 0); }
+        }
+
+        .milestone-card {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            border: 1px solid #f1f5f9;
+            transition: all 0.2s;
+        }
+        .milestone.current .milestone-card {
+            border-color: #f97316;
+            box-shadow: 0 4px 20px rgba(99, 102, 241, 0.15);
+        }
+        .milestone.completed .milestone-card {
+            opacity: 0.7;
+        }
+        .milestone-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+        .milestone-phase {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: #f97316;
+            margin-bottom: 4px;
+        }
+        .milestone-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1e293b;
+        }
+        .milestone-duration {
+            font-size: 12px;
+            color: #94a3b8;
+            background: #f8fafc;
+            padding: 4px 10px;
+            border-radius: 9999px;
+        }
+        .milestone-desc {
+            font-size: 13px;
+            color: #64748b;
+            margin-bottom: 16px;
+            line-height: 1.6;
+        }
+
+        .goal-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .goal-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: #f8fafc;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .goal-item:hover {
+            background: #f1f5f9;
+        }
+        .goal-check {
+            width: 24px;
+            height: 24px;
+            border: 2px solid #cbd5e1;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all 0.2s;
+        }
+        .goal-item.completed .goal-check {
+            background: #10b981;
+            border-color: #10b981;
+            color: white;
+        }
+        .goal-text {
+            flex: 1;
+            font-size: 13px;
+            color: #475569;
+        }
+        .goal-item.completed .goal-text {
+            text-decoration: line-through;
+            color: #94a3b8;
+        }
+
+        .milestone-resources {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid #f1f5f9;
+        }
+        .resources-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: #64748b;
+            margin-bottom: 10px;
+        }
+        .resource-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .resource-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            background: #dbeafe;
+            color: #3b82f6;
+            border-radius: 9999px;
+            font-size: 12px;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        .resource-tag:hover {
+            background: #bfdbfe;
+        }
+
+        /* Celebration Modal */
+        .celebration-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 200;
+        }
+        .celebration-overlay.active { display: flex; }
+        .celebration-card {
+            background: white;
+            border-radius: 24px;
+            padding: 40px;
+            text-align: center;
+            max-width: 320px;
+            margin: 20px;
+            animation: bounceIn 0.5s ease;
+        }
+        @keyframes bounceIn {
+            0% { transform: scale(0.5); opacity: 0; }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .celebration-emoji {
+            font-size: 72px;
+            margin-bottom: 20px;
+            animation: bounce 1s ease infinite;
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .celebration-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 8px;
+        }
+        .celebration-message {
+            font-size: 14px;
+            color: #64748b;
+            margin-bottom: 24px;
+        }
+        .celebration-stats {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+        .celebration-stat {
+            text-align: center;
+        }
+        .celebration-stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #f97316;
+        }
+        .celebration-stat-label {
+            font-size: 12px;
+            color: #94a3b8;
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-top: 1px solid #e2e8f0;
+            padding: 8px 0;
+            padding-bottom: env(safe-area-inset-bottom, 8px);
+            display: flex;
+            justify-content: space-around;
+            z-index: 50;
+        }
+        .bottom-nav a {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 8px 16px;
+            color: #64748b;
+            text-decoration: none;
+            font-size: 11px;
+            font-weight: 500;
+        }
+        .bottom-nav a i {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+        .bottom-nav a.active { color: #f97316; }
+    </style>
+</head>
+<body>
+    <div class="roadmap-header">
+        <a href="/results" class="back-btn">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+        <div class="roadmap-career">Roadmap for</div>
+        <h1 class="roadmap-title" id="careerTitle">Software Engineer</h1>
+        <div class="overall-progress">
+            <div class="progress-header">
+                <span class="progress-label">Overall Progress</span>
+                <span class="progress-value" id="progressValue">25%</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill" style="width: 25%;"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="roadmap-content">
+        <!-- Phase Tabs -->
+        <div class="roadmap-tabs">
+            <div class="roadmap-tab active" data-phase="all">All Phases</div>
+            <div class="roadmap-tab" data-phase="foundation">Foundation</div>
+            <div class="roadmap-tab" data-phase="intermediate">Intermediate</div>
+            <div class="roadmap-tab" data-phase="advanced">Advanced</div>
+            <div class="roadmap-tab" data-phase="expert">Expert</div>
+        </div>
+
+        <!-- Milestones -->
+        <div class="milestone-container" id="milestoneContainer">
+            <div class="milestone-line"></div>
+            
+            <!-- Milestones will be loaded dynamically -->
+        </div>
+    </div>
+
+    <!-- Celebration Modal -->
+    <div class="celebration-overlay" id="celebrationModal">
+        <div class="celebration-card">
+            <div class="celebration-emoji">🎉</div>
+            <h2 class="celebration-title">Amazing Job!</h2>
+            <p class="celebration-message" id="celebrationMessage">You completed a goal!</p>
+            <div class="celebration-stats">
+                <div class="celebration-stat">
+                    <div class="celebration-stat-value" id="goalsCompleted">5</div>
+                    <div class="celebration-stat-label">Goals Done</div>
+                </div>
+                <div class="celebration-stat">
+                    <div class="celebration-stat-value" id="streakDays">7</div>
+                    <div class="celebration-stat-label">Day Streak</div>
+                </div>
+            </div>
+            <button class="btn btn-primary btn-full" onclick="closeCelebration()">
+                Keep Going! 🚀
+            </button>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <a href="/dashboard">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </a>
+        <a href="/careers">
+            <i class="fas fa-compass"></i>
+            <span>Explore</span>
+        </a>
+        <a href="/onboarding">
+            <i class="fas fa-clipboard-check"></i>
+            <span>Assess</span>
+        </a>
+        <a href="/roadmap" class="active">
+            <i class="fas fa-route"></i>
+            <span>Roadmap</span>
+        </a>
+        <a href="/profile">
+            <i class="fas fa-user"></i>
+            <span>Profile</span>
+        </a>
+    </nav>
+
+    <script>
+        let roadmapData = null;
+        let userProgress = {};
+
+        // Sample roadmap data
+        const sampleRoadmaps = {
+            'Software Engineer': [
+                {
+                    phase: 'foundation',
+                    title: 'Programming Fundamentals',
+                    duration: '2-3 months',
+                    description: 'Build a strong foundation in programming concepts and learn your first programming language.',
+                    goals: [
+                        { id: 'g1', text: 'Learn Python basics (variables, loops, functions)' },
+                        { id: 'g2', text: 'Complete 50 coding challenges' },
+                        { id: 'g3', text: 'Build a simple calculator project' },
+                        { id: 'g4', text: 'Understand data structures (arrays, lists)' }
+                    ],
+                    resources: [
+                        { name: 'Python Course', icon: 'fa-play-circle', url: '#' },
+                        { name: 'LeetCode', icon: 'fa-code', url: '#' }
+                    ]
+                },
+                {
+                    phase: 'foundation',
+                    title: 'Web Development Basics',
+                    duration: '2-3 months',
+                    description: 'Learn HTML, CSS, and JavaScript to build interactive websites.',
+                    goals: [
+                        { id: 'g5', text: 'Master HTML5 & semantic markup' },
+                        { id: 'g6', text: 'Learn CSS3 & Flexbox/Grid' },
+                        { id: 'g7', text: 'JavaScript fundamentals' },
+                        { id: 'g8', text: 'Build a portfolio website' }
+                    ],
+                    resources: [
+                        { name: 'freeCodeCamp', icon: 'fa-laptop-code', url: '#' },
+                        { name: 'MDN Docs', icon: 'fa-book', url: '#' }
+                    ]
+                },
+                {
+                    phase: 'intermediate',
+                    title: 'Backend Development',
+                    duration: '3-4 months',
+                    description: 'Learn server-side programming, databases, and APIs.',
+                    goals: [
+                        { id: 'g9', text: 'Learn a backend framework (Django/Express)' },
+                        { id: 'g10', text: 'Understand REST APIs' },
+                        { id: 'g11', text: 'Database design (SQL/NoSQL)' },
+                        { id: 'g12', text: 'Build a full-stack project' }
+                    ],
+                    resources: [
+                        { name: 'Node.js Course', icon: 'fa-server', url: '#' }
+                    ]
+                },
+                {
+                    phase: 'advanced',
+                    title: 'System Design & Architecture',
+                    duration: '3-4 months',
+                    description: 'Learn to design scalable systems and understand software architecture.',
+                    goals: [
+                        { id: 'g13', text: 'Study system design patterns' },
+                        { id: 'g14', text: 'Learn microservices architecture' },
+                        { id: 'g15', text: 'Understand cloud services (AWS/GCP)' },
+                        { id: 'g16', text: 'Design a scalable system' }
+                    ],
+                    resources: [
+                        { name: 'System Design', icon: 'fa-sitemap', url: '#' }
+                    ]
+                },
+                {
+                    phase: 'expert',
+                    title: 'Interview Preparation',
+                    duration: '2-3 months',
+                    description: 'Prepare for technical interviews and land your dream job.',
+                    goals: [
+                        { id: 'g17', text: 'Solve 100+ LeetCode problems' },
+                        { id: 'g18', text: 'Practice mock interviews' },
+                        { id: 'g19', text: 'Build impressive portfolio' },
+                        { id: 'g20', text: 'Apply to 10+ companies' }
+                    ],
+                    resources: [
+                        { name: 'Interview Prep', icon: 'fa-user-tie', url: '#' }
+                    ],
+                    interviewQuestions: [
+                        { q: 'Explain the difference between REST and GraphQL APIs?', company: 'Google', difficulty: 'Medium' },
+                        { q: 'Design a URL shortening service like bit.ly', company: 'Amazon', difficulty: 'Hard' },
+                        { q: 'What is the difference between process and thread?', company: 'Microsoft', difficulty: 'Medium' },
+                        { q: 'How would you design Twitter\'s timeline feature?', company: 'Meta', difficulty: 'Hard' },
+                        { q: 'Explain Big O notation and time complexity', company: 'Apple', difficulty: 'Easy' },
+                        { q: 'What are SOLID principles? Give examples.', company: 'Netflix', difficulty: 'Medium' },
+                        { q: 'How does garbage collection work in Java/Python?', company: 'Uber', difficulty: 'Medium' },
+                        { q: 'Design a rate limiter for an API', company: 'Stripe', difficulty: 'Hard' }
+                    ]
+                }
+            ],
+            'Data Scientist': [
+                {
+                    phase: 'foundation',
+                    title: 'Math & Statistics Foundation',
+                    duration: '2-3 months',
+                    description: 'Build strong mathematical foundations for data science.',
+                    goals: [
+                        { id: 'ds1', text: 'Linear Algebra fundamentals' },
+                        { id: 'ds2', text: 'Statistics & Probability' },
+                        { id: 'ds3', text: 'Calculus basics' }
+                    ],
+                    resources: [
+                        { name: 'Khan Academy', icon: 'fa-calculator', url: '#' }
+                    ]
+                },
+                {
+                    phase: 'foundation',
+                    title: 'Python for Data Science',
+                    duration: '2 months',
+                    description: 'Master Python libraries for data manipulation and analysis.',
+                    goals: [
+                        { id: 'ds4', text: 'NumPy & Pandas mastery' },
+                        { id: 'ds5', text: 'Data visualization (Matplotlib/Seaborn)' },
+                        { id: 'ds6', text: 'Jupyter Notebooks proficiency' }
+                    ],
+                    resources: [
+                        { name: 'DataCamp', icon: 'fa-database', url: '#' }
+                    ]
+                },
+                {
+                    phase: 'intermediate',
+                    title: 'Machine Learning',
+                    duration: '3-4 months',
+                    description: 'Learn ML algorithms and build predictive models.',
+                    goals: [
+                        { id: 'ds7', text: 'Supervised learning algorithms' },
+                        { id: 'ds8', text: 'Unsupervised learning' },
+                        { id: 'ds9', text: 'Scikit-learn projects' }
+                    ],
+                    resources: [
+                        { name: 'Coursera ML', icon: 'fa-brain', url: '#' }
+                    ]
+                },
+                {
+                    phase: 'expert',
+                    title: 'Interview Preparation',
+                    duration: '2-3 months',
+                    description: 'Prepare for data science interviews at top companies.',
+                    goals: [
+                        { id: 'ds10', text: 'Complete 50 SQL challenges' },
+                        { id: 'ds11', text: 'Build 3 end-to-end ML projects' },
+                        { id: 'ds12', text: 'Practice case study interviews' }
+                    ],
+                    resources: [
+                        { name: 'Interview Prep', icon: 'fa-user-tie', url: '#' }
+                    ],
+                    interviewQuestions: [
+                        { q: 'Explain the bias-variance tradeoff', company: 'Google', difficulty: 'Medium' },
+                        { q: 'How would you handle imbalanced datasets?', company: 'Amazon', difficulty: 'Medium' },
+                        { q: 'Explain L1 vs L2 regularization', company: 'Meta', difficulty: 'Medium' },
+                        { q: 'Design a recommendation system for Netflix', company: 'Netflix', difficulty: 'Hard' },
+                        { q: 'What is the difference between bagging and boosting?', company: 'Microsoft', difficulty: 'Medium' },
+                        { q: 'How would you detect fraud in transactions?', company: 'PayPal', difficulty: 'Hard' }
+                    ]
+                }
+            ]
+        };
+
+        function getCareerFromUrl() {
+            const params = new URLSearchParams(window.location.search);
+            return params.get('career') || 'Software Engineer';
+        }
+
+        function loadRoadmap() {
+            const career = getCareerFromUrl();
+            document.getElementById('careerTitle').textContent = career;
+            
+            // Load saved progress
+            const saved = localStorage.getItem(`roadmap_${career}`);
+            if (saved) {
+                userProgress = JSON.parse(saved);
+            }
+            
+            roadmapData = sampleRoadmaps[career] || sampleRoadmaps['Software Engineer'];
+            renderMilestones(roadmapData);
+            updateProgress();
+        }
+
+        function renderMilestones(milestones, filter = 'all') {
+            const container = document.getElementById('milestoneContainer');
+            const filteredMilestones = filter === 'all' 
+                ? milestones 
+                : milestones.filter(m => m.phase === filter);
+            
+            let currentFound = false;
+            
+            const html = filteredMilestones.map((milestone, idx) => {
+                // Only use userProgress - ignore any hardcoded completed state
+                const completedGoals = milestone.goals.filter(g => 
+                    userProgress[g.id] === true
+                ).length;
+                const isCompleted = completedGoals === milestone.goals.length;
+                const isCurrent = !isCompleted && !currentFound;
+                
+                if (isCurrent) currentFound = true;
+                
+                return `
+                    <div class="milestone ${isCompleted ? 'completed' : ''} ${isCurrent ? 'current' : ''}" data-phase="${milestone.phase}">
+                        <div class="milestone-dot">
+                            ${isCompleted ? '<i class="fas fa-check" style="font-size: 10px;"></i>' : ''}
+                        </div>
+                        <div class="milestone-card">
+                            <div class="milestone-header">
+                                <div>
+                                    <div class="milestone-phase">${milestone.phase}</div>
+                                    <div class="milestone-title">${milestone.title}</div>
+                                </div>
+                                <div class="milestone-duration">${milestone.duration}</div>
+                            </div>
+                            <p class="milestone-desc">${milestone.description}</p>
+                            
+                            <div class="goal-list">
+                                ${milestone.goals.map(goal => {
+                                    const isGoalCompleted = userProgress[goal.id] === true;
+                                    return `
+                                    <div class="goal-item ${isGoalCompleted ? 'completed' : ''}" 
+                                         onclick="toggleGoal('${goal.id}')" style="cursor: pointer;">
+                                        <div class="goal-check">
+                                            ${isGoalCompleted ? '<i class="fas fa-check" style="font-size: 12px;"></i>' : ''}
+                                        </div>
+                                        <span class="goal-text">${goal.text}</span>
+                                    </div>
+                                `}).join('')}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            container.innerHTML = '<div class="milestone-line"></div>' + html;
+        }
+
+        function toggleGoal(goalId) {
+            const wasCompleted = userProgress[goalId];
+            userProgress[goalId] = !wasCompleted;
+            
+            // Save progress
+            const career = getCareerFromUrl();
+            localStorage.setItem(`roadmap_${career}`, JSON.stringify(userProgress));
+            
+            // Rerender
+            const currentFilter = document.querySelector('.roadmap-tab.active').dataset.phase;
+            renderMilestones(roadmapData, currentFilter);
+            updateProgress();
+            
+            // Show celebration if goal was just completed
+            if (!wasCompleted) {
+                showCelebration();
+            }
+        }
+
+        function updateProgress() {
+            let totalGoals = 0;
+            let completedGoals = 0;
+            
+            roadmapData.forEach(milestone => {
+                milestone.goals.forEach(goal => {
+                    totalGoals++;
+                    // Only count goals that user has manually completed
+                    if (userProgress[goal.id] === true) {
+                        completedGoals++;
+                    }
+                });
+            });
+            
+            const percentage = Math.round((completedGoals / totalGoals) * 100);
+            document.getElementById('progressValue').textContent = percentage + '%';
+            document.getElementById('progressFill').style.width = percentage + '%';
+        }
+
+        function showCelebration() {
+            const completedCount = Object.values(userProgress).filter(v => v).length;
+            const streakDays = parseInt(localStorage.getItem('streakDays') || '1');
+            
+            // Update last activity for streak
+            localStorage.setItem('lastActivity', new Date().toDateString());
+            
+            const messages = [
+                "You're crushing it! 💪",
+                "Keep up the amazing work! 🌟",
+                "One step closer to your dream! 🚀",
+                "You're on fire! 🔥",
+                "Fantastic progress! 🎯"
+            ];
+            
+            document.getElementById('celebrationMessage').textContent = 
+                messages[Math.floor(Math.random() * messages.length)];
+            document.getElementById('goalsCompleted').textContent = completedCount;
+            document.getElementById('streakDays').textContent = streakDays;
+            
+            document.getElementById('celebrationModal').classList.add('active');
+        }
+
+        function closeCelebration() {
+            document.getElementById('celebrationModal').classList.remove('active');
+        }
+
+        // Tab switching
+        document.querySelectorAll('.roadmap-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.roadmap-tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                renderMilestones(roadmapData, this.dataset.phase);
+            });
+        });
+
+        // Check and update streak
+        function checkStreak() {
+            const lastActivity = localStorage.getItem('lastActivity');
+            const today = new Date().toDateString();
+            const yesterday = new Date(Date.now() - 86400000).toDateString();
+            
+            if (lastActivity === yesterday) {
+                const streak = parseInt(localStorage.getItem('streakDays') || '0') + 1;
+                localStorage.setItem('streakDays', streak.toString());
+            } else if (lastActivity !== today) {
+                localStorage.setItem('streakDays', '1');
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            checkStreak();
+            loadRoadmap();
+        });
+    </script>
+</body>
+</html>
+
+
+
+

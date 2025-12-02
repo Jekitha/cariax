@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explore Careers - Cariax</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .gradient-bg { background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); }
+        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <a href="/" class="flex items-center space-x-2">
+                    <i class="fas fa-graduation-cap text-2xl text-orange-500"></i>
+                    <span class="text-xl font-bold text-gray-800">Cariax</span>
+                </a>
+                <div class="flex items-center space-x-4">
+                    <a href="/assessment" class="text-gray-600 hover:text-orange-500">Assessment</a>
+                    <a href="/chat" class="text-gray-600 hover:text-orange-500">AI Mentor</a>
+                    <a href="/" class="text-gray-600 hover:text-orange-500">Home</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <div class="gradient-bg py-12 px-4">
+        <div class="max-w-6xl mx-auto text-center">
+            <h1 class="text-3xl md:text-4xl font-bold text-white mb-4">Explore Career Paths</h1>
+            <p class="text-orange-100 mb-6">Discover 25+ career options with detailed insights</p>
+            
+            <!-- Search and Filter -->
+            <div class="flex flex-col md:flex-row gap-4 justify-center max-w-2xl mx-auto">
+                <input 
+                    type="text" 
+                    id="searchInput" 
+                    placeholder="Search careers..." 
+                    class="flex-1 px-4 py-3 rounded-lg focus:ring-2 focus:ring-orange-300"
+                    onkeyup="filterCareers()"
+                >
+                <select id="categoryFilter" class="px-4 py-3 rounded-lg" onchange="filterCareers()">
+                    <option value="">All Categories</option>
+                    <option value="Technology">Technology</option>
+                    <option value="Healthcare">Healthcare</option>
+                    <option value="Finance">Finance</option>
+                    <option value="Engineering">Engineering</option>
+                    <option value="Creative">Creative</option>
+                    <option value="Design">Design</option>
+                    <option value="Marketing">Marketing</option>
+                    <option value="Law">Law</option>
+                    <option value="Science">Science</option>
+                    <option value="Media">Media</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <!-- Careers Grid -->
+    <div class="max-w-7xl mx-auto px-4 py-12">
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6" id="careersGrid">
+            <!-- Loading State -->
+            <div class="col-span-full text-center py-12" id="loadingState">
+                <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500 mx-auto mb-4"></div>
+                <p class="text-gray-600">Loading careers...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Career Detail Modal -->
+    <div id="careerModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div class="sticky top-0 bg-white border-b p-4 flex justify-between items-center">
+                <h2 class="text-xl font-bold" id="modalTitle">Career Details</h2>
+                <button onclick="closeModal()" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            <div class="p-6" id="modalContent">
+                <!-- Content will be populated dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let allCareers = [];
+
+        // Fetch careers on page load
+        async function fetchCareers() {
+            try {
+                const response = await fetch('/api/careers');
+                const data = await response.json();
+                
+                if (data.success) {
+                    allCareers = data.careers;
+                    renderCareers(allCareers);
+                }
+            } catch (error) {
+                document.getElementById('loadingState').innerHTML = `
+                    <p class="text-red-500">Error loading careers. Please refresh the page.</p>
+                `;
+            }
+        }
+
+        function renderCareers(careers) {
+            const grid = document.getElementById('careersGrid');
+            
+            if (careers.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full text-center py-12">
+                        <i class="fas fa-search text-4xl text-gray-400 mb-4"></i>
+                        <p class="text-gray-600">No careers found matching your criteria.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = careers.map(career => `
+                <div class="bg-white rounded-xl shadow-lg p-6 card-hover transition duration-300 cursor-pointer" onclick="showCareerDetails('${career.name}')">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
+                            <i class="fas ${getCategoryIcon(career.category)} text-xl text-orange-500"></i>
+                        </div>
+                        <span class="text-xs bg-orange-100 text-orange-500 px-2 py-1 rounded-full">${career.category}</span>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-800 mb-2">${career.name}</h3>
+                    <p class="text-gray-600 text-sm mb-4 line-clamp-2">${career.description}</p>
+                    <div class="flex items-center justify-between text-sm">
+                        <span class="text-gray-500">
+                            <i class="fas fa-chart-line mr-1"></i>
+                            Growth: ${(career.job_growth_rate * 100).toFixed(0)}%
+                        </span>
+                        <span class="text-${career.automation_risk < 0.2 ? 'green' : career.automation_risk < 0.4 ? 'yellow' : 'red'}-600">
+                            <i class="fas fa-robot mr-1"></i>
+                            AI Risk: ${(career.automation_risk * 100).toFixed(0)}%
+                        </span>
+                    </div>
+                    <div class="mt-4 pt-4 border-t">
+                        <div class="flex justify-between text-sm">
+                            <span class="text-gray-500">Difficulty</span>
+                            <div class="flex">
+                                ${[...Array(10)].map((_, i) => `
+                                    <i class="fas fa-circle text-xs ${i < career.difficulty ? 'text-orange-500' : 'text-gray-200'} mx-0.5"></i>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function getCategoryIcon(category) {
+            const icons = {
+                'Technology': 'fa-laptop-code',
+                'Healthcare': 'fa-heartbeat',
+                'Finance': 'fa-chart-pie',
+                'Engineering': 'fa-cogs',
+                'Creative': 'fa-palette',
+                'Design': 'fa-pencil-ruler',
+                'Marketing': 'fa-bullhorn',
+                'Law': 'fa-balance-scale',
+                'Science': 'fa-flask',
+                'Media': 'fa-newspaper'
+            };
+            return icons[category] || 'fa-briefcase';
+        }
+
+        function filterCareers() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const category = document.getElementById('categoryFilter').value;
+            
+            const filtered = allCareers.filter(career => {
+                const matchesSearch = career.name.toLowerCase().includes(searchTerm) || 
+                                     career.description.toLowerCase().includes(searchTerm);
+                const matchesCategory = !category || career.category === category;
+                return matchesSearch && matchesCategory;
+            });
+            
+            renderCareers(filtered);
+        }
+
+        async function showCareerDetails(careerName) {
+            const modal = document.getElementById('careerModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalContent = document.getElementById('modalContent');
+            
+            modalTitle.textContent = careerName;
+            modalContent.innerHTML = '<div class="text-center py-8"><div class="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500 mx-auto"></div></div>';
+            modal.classList.remove('hidden');
+            
+            try {
+                const response = await fetch(`/api/careers/${encodeURIComponent(careerName)}`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    const career = data.data.career;
+                    const salary = data.data.salary_projection;
+                    const forecast = data.data.job_forecast;
+                    
+                    modalContent.innerHTML = `
+                        <div class="space-y-6">
+                            <!-- Description -->
+                            <div>
+                                <h3 class="font-semibold text-gray-800 mb-2">About this Career</h3>
+                                <p class="text-gray-600">${career.description}</p>
+                            </div>
+                            
+                            <!-- Key Stats -->
+                            <div class="grid grid-cols-3 gap-4">
+                                <div class="bg-orange-50 rounded-lg p-4 text-center">
+                                    <div class="text-2xl font-bold text-orange-500">${career.difficulty}/10</div>
+                                    <div class="text-sm text-gray-600">Difficulty</div>
+                                </div>
+                                <div class="bg-green-50 rounded-lg p-4 text-center">
+                                    <div class="text-2xl font-bold text-green-600">${(career.job_growth_rate * 100).toFixed(0)}%</div>
+                                    <div class="text-sm text-gray-600">Growth Rate</div>
+                                </div>
+                                <div class="bg-orange-50 rounded-lg p-4 text-center">
+                                    <div class="text-2xl font-bold text-orange-600">${career.course_duration_years}yr</div>
+                                    <div class="text-sm text-gray-600">Education</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Required Skills -->
+                            <div>
+                                <h3 class="font-semibold text-gray-800 mb-2">Required Skills</h3>
+                                <div class="flex flex-wrap gap-2">
+                                    ${career.required_skills.map(skill => `
+                                        <span class="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm">${skill}</span>
+                                    `).join('')}
+                                </div>
+                            </div>
+                            
+                            <!-- Education -->
+                            <div>
+                                <h3 class="font-semibold text-gray-800 mb-2">Education Required</h3>
+                                <p class="text-gray-600">${career.education}</p>
+                            </div>
+                            
+                            <!-- Salary Projection -->
+                            <div>
+                                <h3 class="font-semibold text-gray-800 mb-2">Salary Projection (USD)</h3>
+                                <div class="grid grid-cols-4 gap-2 text-center">
+                                    <div class="bg-gray-50 rounded p-3">
+                                        <div class="font-semibold text-gray-800">$${(salary.starting / 1000).toFixed(0)}K</div>
+                                        <div class="text-xs text-gray-500">Starting</div>
+                                    </div>
+                                    <div class="bg-gray-50 rounded p-3">
+                                        <div class="font-semibold text-gray-800">$${(salary['3_years'] / 1000).toFixed(0)}K</div>
+                                        <div class="text-xs text-gray-500">3 Years</div>
+                                    </div>
+                                    <div class="bg-gray-50 rounded p-3">
+                                        <div class="font-semibold text-gray-800">$${(salary['5_years'] / 1000).toFixed(0)}K</div>
+                                        <div class="text-xs text-gray-500">5 Years</div>
+                                    </div>
+                                    <div class="bg-green-50 rounded p-3">
+                                        <div class="font-semibold text-green-600">$${(salary['10_years'] / 1000).toFixed(0)}K</div>
+                                        <div class="text-xs text-gray-500">10 Years</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Job Market Outlook -->
+                            <div>
+                                <h3 class="font-semibold text-gray-800 mb-2">10-Year Job Market Outlook</h3>
+                                <div class="flex items-center justify-between bg-${forecast['10_year_outlook'] === 'Excellent' || forecast['10_year_outlook'] === 'Very Good' ? 'green' : forecast['10_year_outlook'] === 'Good' ? 'blue' : 'yellow'}-50 rounded-lg p-4">
+                                    <div>
+                                        <div class="text-lg font-semibold">${forecast['10_year_outlook']}</div>
+                                        <div class="text-sm text-gray-600">AI Impact: ${forecast.ai_impact}</div>
+                                    </div>
+                                    <div class="text-right">
+                                        <div class="text-sm text-gray-600">Automation Risk</div>
+                                        <div class="text-lg font-semibold">${forecast.automation_risk}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Personality Fit -->
+                            <div>
+                                <h3 class="font-semibold text-gray-800 mb-2">Best Suited For</h3>
+                                <div class="flex flex-wrap gap-2">
+                                    ${career.personality_fit.map(type => `
+                                        <span class="bg-orange-100 text-orange-600 px-3 py-1 rounded-full text-sm">${type}</span>
+                                    `).join('')}
+                                </div>
+                            </div>
+                            
+                            <!-- Action Buttons -->
+                            <div class="flex gap-4 pt-4">
+                                <a href="/assessment" class="flex-1 bg-orange-500 text-white text-center py-3 rounded-lg font-semibold hover:bg-orange-600 transition">
+                                    Check My Fit
+                                </a>
+                                <a href="/chat" class="flex-1 border border-orange-500 text-orange-500 text-center py-3 rounded-lg font-semibold hover:bg-orange-50 transition">
+                                    Ask AI Mentor
+                                </a>
+                            </div>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                modalContent.innerHTML = '<p class="text-red-500 text-center">Error loading career details.</p>';
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('careerModal').classList.add('hidden');
+        }
+
+        // Close modal on escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+        });
+
+        // Close modal on outside click
+        document.getElementById('careerModal').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('careerModal')) closeModal();
+        });
+
+        // Initialize
+        fetchCareers();
+    </script>
+</body>
+</html>
+
+
+
+

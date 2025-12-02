@@ -1,0 +1,2089 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Assessment - Cariax</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
+    <style>
+        body { background: #f8fafc; }
+        .validation-alert {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #ef4444;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            z-index: 9999;
+            font-weight: 500;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        .onboarding-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .onboarding-header {
+            background: white;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            border-bottom: 1px solid #f1f5f9;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+        .back-btn {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            color: #64748b;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        .back-btn:hover { background: #f1f5f9; }
+        .header-info { flex: 1; }
+        .header-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1e293b;
+        }
+        .header-step {
+            font-size: 12px;
+            color: #64748b;
+        }
+        .onboarding-progress {
+            padding: 0 20px;
+            background: white;
+            padding-bottom: 16px;
+        }
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            margin-bottom: 8px;
+        }
+        .progress-steps::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: #e2e8f0;
+            transform: translateY(-50%);
+        }
+        .progress-step {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+            color: #94a3b8;
+            position: relative;
+            z-index: 1;
+            transition: all 0.3s;
+        }
+        .progress-step.active {
+            background: #f97316;
+            color: white;
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2);
+        }
+        .progress-step.completed {
+            background: #10b981;
+            color: white;
+        }
+        .step-labels {
+            display: flex;
+            justify-content: space-between;
+        }
+        .step-label {
+            font-size: 10px;
+            color: #94a3b8;
+            text-align: center;
+            width: 50px;
+        }
+        .step-label.active { color: #f97316; font-weight: 600; }
+
+        .onboarding-content {
+            flex: 1;
+            padding: 24px 20px;
+            max-width: 480px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        .step-screen { display: none; }
+        .step-screen.active { display: block; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        .step-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 8px;
+        }
+        .step-subtitle {
+            font-size: 14px;
+            color: #64748b;
+            margin-bottom: 24px;
+        }
+        .step-emoji {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        /* Interest Selection */
+        .interest-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        .interest-item {
+            padding: 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 14px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .interest-item:hover { border-color: #c7d2fe; }
+        .interest-item.selected {
+            border-color: #f97316;
+            background: rgba(99, 102, 241, 0.05);
+        }
+        .interest-item i {
+            font-size: 28px;
+            color: #f97316;
+            margin-bottom: 8px;
+        }
+        .interest-item span {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            color: #475569;
+        }
+
+        /* Subject Entry */
+        .subjects-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .subject-row {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+        .subject-row input[type="text"] {
+            flex: 1;
+            padding: 14px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 14px;
+        }
+        .subject-row input[type="number"] {
+            width: 80px;
+            padding: 14px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 14px;
+            text-align: center;
+        }
+        .subject-row .remove-btn {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            background: #fee2e2;
+            color: #ef4444;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+        .add-subject-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 14px;
+            border: 2px dashed #cbd5e1;
+            border-radius: 12px;
+            background: transparent;
+            color: #64748b;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            width: 100%;
+        }
+        .add-subject-btn:hover {
+            border-color: #f97316;
+            color: #f97316;
+        }
+
+        /* Personality Questions */
+        .personality-scale {
+            margin-bottom: 24px;
+        }
+        .scale-question {
+            font-size: 15px;
+            font-weight: 500;
+            color: #1e293b;
+            margin-bottom: 16px;
+        }
+        .scale-options {
+            display: flex;
+            justify-content: space-between;
+            gap: 8px;
+        }
+        .scale-option {
+            flex: 1;
+            padding: 12px 8px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 12px;
+            color: #64748b;
+        }
+        .scale-option:hover { border-color: #c7d2fe; }
+        .scale-option.selected {
+            border-color: #f97316;
+            background: #f97316;
+            color: white;
+        }
+
+        /* Domain Selection */
+        .domain-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .domain-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .domain-item:hover { border-color: #c7d2fe; }
+        .domain-item.selected {
+            border-color: #f97316;
+            background: rgba(99, 102, 241, 0.05);
+        }
+        .domain-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+        .domain-info { flex: 1; }
+        .domain-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1e293b;
+        }
+        .domain-desc {
+            font-size: 12px;
+            color: #64748b;
+        }
+        .domain-check {
+            width: 24px;
+            height: 24px;
+            border: 2px solid #cbd5e1;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .domain-item.selected .domain-check {
+            background: #f97316;
+            border-color: #f97316;
+            color: white;
+        }
+
+        /* Navigation Buttons */
+        .nav-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 32px;
+        }
+        .nav-buttons .btn { flex: 1; }
+
+        /* Question Types */
+        .mcq-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .mcq-option {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .mcq-option:hover { border-color: #c7d2fe; }
+        .mcq-option.selected {
+            border-color: #f97316;
+            background: rgba(99, 102, 241, 0.05);
+        }
+        .mcq-letter {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #f1f5f9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 13px;
+            color: #64748b;
+            flex-shrink: 0;
+        }
+        .mcq-option.selected .mcq-letter {
+            background: #f97316;
+            color: white;
+        }
+        .mcq-text {
+            font-size: 14px;
+            color: #475569;
+        }
+
+        /* Loading State */
+        .loading-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(255,255,255,0.95);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            z-index: 1000;
+        }
+        .loading-overlay.active { display: flex; }
+        .loading-spinner-lg {
+            width: 60px;
+            height: 60px;
+            border: 4px solid #e2e8f0;
+            border-top-color: #f97316;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 24px;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .loading-text {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 8px;
+        }
+        .loading-subtext {
+            font-size: 14px;
+            color: #64748b;
+        }
+    </style>
+</head>
+<body>
+    <div class="onboarding-container">
+        <!-- Header -->
+        <header class="onboarding-header">
+            <a href="/dashboard" class="back-btn" id="backBtn">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+            <div class="header-info">
+                <div class="header-title" id="headerTitle">Basic Information</div>
+                <div class="header-step">Step <span id="currentStepNum">1</span> of 6</div>
+            </div>
+        </header>
+
+        <!-- Progress -->
+        <div class="onboarding-progress">
+            <div class="progress-steps">
+                <div class="progress-step active" data-step="1">1</div>
+                <div class="progress-step" data-step="2">2</div>
+                <div class="progress-step" data-step="3">3</div>
+                <div class="progress-step" data-step="4">4</div>
+                <div class="progress-step" data-step="5">5</div>
+                <div class="progress-step" data-step="6">6</div>
+            </div>
+            <div class="step-labels">
+                <span class="step-label active">Basics</span>
+                <span class="step-label">Interests</span>
+                <span class="step-label">Academics</span>
+                <span class="step-label">Skills</span>
+                <span class="step-label">Personality</span>
+                <span class="step-label">Domain</span>
+            </div>
+        </div>
+
+        <!-- Content -->
+        <div class="onboarding-content">
+            <!-- Step 1: Basic Information -->
+            <div class="step-screen active" data-step="1">
+                <div class="step-emoji">👋</div>
+                <h2 class="step-title">Let's get to know you!</h2>
+                <p class="step-subtitle">Tell us a bit about yourself so we can personalize your experience</p>
+                
+                <div class="form-group">
+                    <label class="form-label">Full Name</label>
+                    <input type="text" id="fullName" class="form-input" placeholder="Enter your full name" value="{{ user.name if user else '' }}">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Age</label>
+                    <input type="number" id="age" class="form-input" placeholder="Your age" min="10" max="60">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Current Status</label>
+                    <select id="educationLevel" class="form-select">
+                        <option value="">Select your current status</option>
+                        <option value="10th">10th Student</option>
+                        <option value="12th">12th Student</option>
+                        <option value="undergraduate">Undergraduate Student</option>
+                        <option value="graduate">Graduate</option>
+                        <option value="postgraduate">Post Graduate</option>
+                        <option value="working">Working Professional</option>
+                    </select>
+                </div>
+
+                <!-- Conditional: If working professional -->
+                <div class="form-group" id="workingFields" style="display: none;">
+                    <label class="form-label">Current Job Title</label>
+                    <input type="text" id="jobTitle" class="form-input" placeholder="e.g., Software Engineer">
+                    <div style="margin-top: 12px;">
+                        <label class="form-label">Years of Experience</label>
+                        <input type="number" id="experience" class="form-input" placeholder="Years" min="0" max="40">
+                    </div>
+                </div>
+
+                <!-- Conditional: If student, show stream -->
+                <div class="form-group" id="streamField" style="display: none;">
+                    <label class="form-label">Your Stream / Field</label>
+                    <select id="stream" class="form-select">
+                        <option value="">Select your stream</option>
+                        <option value="science">Science (PCM/PCB)</option>
+                        <option value="commerce">Commerce</option>
+                        <option value="arts">Arts / Humanities</option>
+                        <option value="engineering">Engineering</option>
+                        <option value="medical">Medical / Life Sciences</option>
+                        <option value="business">Business / Management</option>
+                        <option value="design">Design / Creative</option>
+                        <option value="law">Law</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+
+                <!-- Specialization field - shows after stream selection -->
+                <div class="form-group" id="specializationField" style="display: none;">
+                    <label class="form-label">Your Specialization</label>
+                    <select id="specialization" class="form-select">
+                        <option value="">Select your specialization</option>
+                    </select>
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="btn btn-primary btn-full" onclick="nextStep()">
+                        Continue <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Step 2: Interests & Hobbies -->
+            <div class="step-screen" data-step="2">
+                <div class="step-emoji">🎯</div>
+                <h2 class="step-title">What interests you?</h2>
+                <p class="step-subtitle">Select all that apply - this helps us find your perfect career match</p>
+                
+                <div class="interest-grid" id="interestGrid">
+                    <div class="interest-item" data-value="technology" onclick="toggleInterest(this)">
+                        <i class="fas fa-laptop-code"></i>
+                        <span>Technology</span>
+                    </div>
+                    <div class="interest-item" data-value="science" onclick="toggleInterest(this)">
+                        <i class="fas fa-flask"></i>
+                        <span>Science</span>
+                    </div>
+                    <div class="interest-item" data-value="arts" onclick="toggleInterest(this)">
+                        <i class="fas fa-palette"></i>
+                        <span>Arts & Design</span>
+                    </div>
+                    <div class="interest-item" data-value="business" onclick="toggleInterest(this)">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Business</span>
+                    </div>
+                    <div class="interest-item" data-value="healthcare" onclick="toggleInterest(this)">
+                        <i class="fas fa-heartbeat"></i>
+                        <span>Healthcare</span>
+                    </div>
+                    <div class="interest-item" data-value="education" onclick="toggleInterest(this)">
+                        <i class="fas fa-chalkboard-teacher"></i>
+                        <span>Education</span>
+                    </div>
+                    <div class="interest-item" data-value="writing" onclick="toggleInterest(this)">
+                        <i class="fas fa-pen-fancy"></i>
+                        <span>Writing</span>
+                    </div>
+                    <div class="interest-item" data-value="sports" onclick="toggleInterest(this)">
+                        <i class="fas fa-futbol"></i>
+                        <span>Sports</span>
+                    </div>
+                    <div class="interest-item" data-value="music" onclick="toggleInterest(this)">
+                        <i class="fas fa-music"></i>
+                        <span>Music</span>
+                    </div>
+                    <div class="interest-item" data-value="social" onclick="toggleInterest(this)">
+                        <i class="fas fa-users"></i>
+                        <span>Social Work</span>
+                    </div>
+                    <div class="interest-item" data-value="entrepreneurship" onclick="toggleInterest(this)">
+                        <i class="fas fa-rocket"></i>
+                        <span>Entrepreneurship</span>
+                    </div>
+                    <div class="interest-item" data-value="research" onclick="toggleInterest(this)">
+                        <i class="fas fa-microscope"></i>
+                        <span>Research</span>
+                    </div>
+                </div>
+
+                <div class="form-group" style="margin-top: 24px;">
+                    <label class="form-label">Your Hobbies (Optional)</label>
+                    <input type="text" id="hobbies" class="form-input" placeholder="e.g., Reading, Gaming, Cooking">
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="btn btn-secondary" onclick="prevStep()">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </button>
+                    <button class="btn btn-primary" onclick="nextStep()">
+                        Continue <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Step 3: Academic Details -->
+            <div class="step-screen" data-step="3">
+                <div class="step-emoji">📚</div>
+                <h2 class="step-title">Academic Performance</h2>
+                <p class="step-subtitle">Enter your subjects and marks - click + to add more subjects</p>
+                
+                <div class="subjects-container" id="subjectsContainer">
+                    <!-- Subjects will be added dynamically based on education level -->
+                </div>
+                
+                <button class="add-subject-btn" onclick="addSubject()">
+                    <i class="fas fa-plus"></i> Add Subject
+                </button>
+
+                <div class="nav-buttons">
+                    <button class="btn btn-secondary" onclick="prevStep()">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </button>
+                    <button class="btn btn-primary" onclick="nextStep()">
+                        Continue <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Step 4: Skills Assessment -->
+            <div class="step-screen" data-step="4">
+                <div class="step-emoji">💪</div>
+                <h2 class="step-title">Rate Your Skills</h2>
+                <p class="step-subtitle">Be honest - this helps us give accurate recommendations</p>
+                
+                <div id="skillsContainer">
+                    <!-- Skills will be loaded based on domain -->
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="btn btn-secondary" onclick="prevStep()">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </button>
+                    <button class="btn btn-primary" onclick="nextStep()">
+                        Continue <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Step 5: Personality -->
+            <div class="step-screen" data-step="5">
+                <div class="step-emoji">🧠</div>
+                <h2 class="step-title">Personality Check</h2>
+                <p class="step-subtitle">Answer honestly - there are no right or wrong answers</p>
+                
+                <div id="personalityContainer">
+                    <!-- Personality questions will be loaded -->
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="btn btn-secondary" onclick="prevStep()">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </button>
+                    <button class="btn btn-primary" onclick="nextStep()">
+                        Continue <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Step 6: Domain-Specific Questions -->
+            <div class="step-screen" data-step="6">
+                <div class="step-emoji">🎓</div>
+                <h2 class="step-title">Domain Assessment</h2>
+                <p class="step-subtitle" id="domainSubtitle">Answer these questions related to your field</p>
+                
+                <div id="domainQuestionsContainer">
+                    <!-- Domain-specific questions will be loaded -->
+                </div>
+
+                <!-- Nav buttons are inside domainQuestionsContainer -->
+            </div>
+        </div>
+
+        <!-- Loading Overlay -->
+        <div class="loading-overlay" id="loadingOverlay">
+            <div class="loading-spinner-lg"></div>
+            <div class="loading-text">Analyzing Your Profile...</div>
+            <div class="loading-subtext">Finding your perfect career matches</div>
+        </div>
+    </div>
+
+    <script>
+        let currentStep = 1;
+        const totalSteps = 6;
+        let assessmentData = {
+            basicInfo: {},
+            interests: [],
+            hobbies: '',
+            academics: [],
+            skills: {},
+            personality: {},
+            domainAnswers: {},
+            specialization: ''
+        };
+
+        // Step Titles
+        const stepTitles = {
+            1: 'Basic Information',
+            2: 'Interests & Hobbies',
+            3: 'Academic Details',
+            4: 'Skills Assessment',
+            5: 'Personality Profile',
+            6: 'Domain Assessment'
+        };
+
+        // Specializations by stream
+        const specializationsByStream = {
+            'engineering': [
+                { value: 'cse', label: 'Computer Science & Engineering' },
+                { value: 'biomedical', label: 'Biomedical Engineering' },
+                { value: 'mechanical', label: 'Mechanical Engineering' },
+                { value: 'electrical', label: 'Electrical Engineering' },
+                { value: 'civil', label: 'Civil Engineering' },
+                { value: 'electronics', label: 'Electronics & Communication' },
+                { value: 'chemical', label: 'Chemical Engineering' },
+                { value: 'aerospace', label: 'Aerospace Engineering' },
+                { value: 'robotics', label: 'Robotics & Automation' },
+                { value: 'ai_ml', label: 'AI & Machine Learning' }
+            ],
+            'medical': [
+                { value: 'mbbs', label: 'MBBS - General Medicine' },
+                { value: 'pharm_d', label: 'Pharm.D - Clinical Pharmacy' },
+                { value: 'bds', label: 'BDS - Dental Surgery' },
+                { value: 'nursing', label: 'Nursing Sciences' },
+                { value: 'physiotherapy', label: 'Physiotherapy' },
+                { value: 'ayurveda', label: 'BAMS - Ayurvedic Medicine' },
+                { value: 'homeopathy', label: 'BHMS - Homeopathy' },
+                { value: 'veterinary', label: 'Veterinary Sciences' },
+                { value: 'medical_lab', label: 'Medical Laboratory Technology' },
+                { value: 'radiology', label: 'Radiology & Imaging' }
+            ],
+            'science': [
+                { value: 'physics', label: 'Physics' },
+                { value: 'chemistry', label: 'Chemistry' },
+                { value: 'biology', label: 'Biology / Life Sciences' },
+                { value: 'mathematics', label: 'Mathematics & Statistics' },
+                { value: 'biotechnology', label: 'Biotechnology' },
+                { value: 'environmental', label: 'Environmental Science' },
+                { value: 'microbiology', label: 'Microbiology' },
+                { value: 'forensic', label: 'Forensic Science' },
+                { value: 'food_tech', label: 'Food Technology' },
+                { value: 'data_science', label: 'Data Science' }
+            ],
+            'commerce': [
+                { value: 'accounting', label: 'Accounting & Finance' },
+                { value: 'banking', label: 'Banking & Insurance' },
+                { value: 'taxation', label: 'Taxation' },
+                { value: 'auditing', label: 'Auditing' },
+                { value: 'economics', label: 'Economics' },
+                { value: 'stock_market', label: 'Stock Market & Investment' },
+                { value: 'e_commerce', label: 'E-Commerce' }
+            ],
+            'business': [
+                { value: 'marketing', label: 'Marketing Management' },
+                { value: 'finance', label: 'Financial Management' },
+                { value: 'hr', label: 'Human Resources' },
+                { value: 'operations', label: 'Operations Management' },
+                { value: 'entrepreneurship', label: 'Entrepreneurship' },
+                { value: 'international_business', label: 'International Business' },
+                { value: 'digital_marketing', label: 'Digital Marketing' },
+                { value: 'supply_chain', label: 'Supply Chain Management' }
+            ],
+            'arts': [
+                { value: 'literature', label: 'Literature & Languages' },
+                { value: 'psychology', label: 'Psychology' },
+                { value: 'sociology', label: 'Sociology' },
+                { value: 'history', label: 'History & Archaeology' },
+                { value: 'political_science', label: 'Political Science' },
+                { value: 'journalism', label: 'Journalism & Mass Communication' },
+                { value: 'fine_arts', label: 'Fine Arts & Visual Arts' },
+                { value: 'music', label: 'Music & Performing Arts' },
+                { value: 'philosophy', label: 'Philosophy' }
+            ],
+            'design': [
+                { value: 'fashion', label: 'Fashion Design' },
+                { value: 'interior', label: 'Interior Design' },
+                { value: 'graphic', label: 'Graphic & UI/UX Design' },
+                { value: 'product', label: 'Product Design' },
+                { value: 'animation', label: 'Animation & VFX' },
+                { value: 'architecture', label: 'Architecture' },
+                { value: 'game_design', label: 'Game Design' }
+            ],
+            'law': [
+                { value: 'corporate', label: 'Corporate Law' },
+                { value: 'criminal', label: 'Criminal Law' },
+                { value: 'civil', label: 'Civil Law' },
+                { value: 'intellectual_property', label: 'Intellectual Property Law' },
+                { value: 'cyber_law', label: 'Cyber Law' },
+                { value: 'human_rights', label: 'Human Rights Law' },
+                { value: 'environmental_law', label: 'Environmental Law' }
+            ]
+        };
+
+        // 25 Domain-Specific Interview Questions for each specialization
+        const domainInterviewQuestions = {
+            // Computer Science & Engineering
+            'cse': [
+                { id: 'cse1', question: 'What is the time complexity of binary search?', options: ['O(1)', 'O(n)', 'O(log n)', 'O(n²)'] },
+                { id: 'cse2', question: 'Which data structure uses LIFO principle?', options: ['Queue', 'Stack', 'Array', 'Linked List'] },
+                { id: 'cse3', question: 'What does SQL stand for?', options: ['Structured Query Language', 'Simple Query Language', 'Standard Query Logic', 'System Query Language'] },
+                { id: 'cse4', question: 'Which is NOT an OOP concept?', options: ['Inheritance', 'Encapsulation', 'Compilation', 'Polymorphism'] },
+                { id: 'cse5', question: 'What is the purpose of version control?', options: ['Track code changes', 'Compile code faster', 'Debug code', 'Format code'] },
+                { id: 'cse6', question: 'Which sorting algorithm has O(n log n) average time?', options: ['Bubble Sort', 'Merge Sort', 'Selection Sort', 'Insertion Sort'] },
+                { id: 'cse7', question: 'What is a REST API?', options: ['Database protocol', 'Web service architecture', 'Programming language', 'Operating system'] },
+                { id: 'cse8', question: 'What does HTML stand for?', options: ['Hyper Text Markup Language', 'High Tech Modern Language', 'Hyper Transfer Markup Logic', 'Home Tool Markup Language'] },
+                { id: 'cse9', question: 'Which is a NoSQL database?', options: ['MySQL', 'PostgreSQL', 'MongoDB', 'Oracle'] },
+                { id: 'cse10', question: 'What is recursion in programming?', options: ['Function calling itself', 'Loop structure', 'Variable declaration', 'Class inheritance'] },
+                { id: 'cse11', question: 'What is the purpose of an API?', options: ['Enable software communication', 'Store data', 'Design UI', 'Compile code'] },
+                { id: 'cse12', question: 'Which protocol is used for secure web browsing?', options: ['HTTP', 'FTP', 'HTTPS', 'SMTP'] },
+                { id: 'cse13', question: 'What is a primary key in databases?', options: ['Unique identifier', 'Foreign reference', 'Data type', 'Index name'] },
+                { id: 'cse14', question: 'What is Git used for?', options: ['Version control', 'Database management', 'Web hosting', 'Code compilation'] },
+                { id: 'cse15', question: 'Which language is used for Android development?', options: ['Swift', 'Kotlin/Java', 'C#', 'Ruby'] },
+                { id: 'cse16', question: 'What is a Docker container?', options: ['Lightweight virtualization', 'Database', 'Web browser', 'Code editor'] },
+                { id: 'cse17', question: 'What does CSS do in web development?', options: ['Adds styling', 'Handles logic', 'Stores data', 'Creates server'] },
+                { id: 'cse18', question: 'What is an algorithm?', options: ['Step-by-step procedure', 'Programming language', 'Hardware component', 'Software type'] },
+                { id: 'cse19', question: 'What is cloud computing?', options: ['On-demand computing services', 'Weather prediction', 'Local storage', 'Wired networking'] },
+                { id: 'cse20', question: 'What is machine learning?', options: ['AI that learns from data', 'Hardware maintenance', 'Database queries', 'Network security'] },
+                { id: 'cse21', question: 'What is agile development?', options: ['Iterative methodology', 'Programming language', 'Database type', 'Hardware specification'] },
+                { id: 'cse22', question: 'What is debugging?', options: ['Finding and fixing errors', 'Writing new code', 'Testing security', 'Designing UI'] },
+                { id: 'cse23', question: 'What is a compiler?', options: ['Translates code to machine language', 'Runs code directly', 'Stores variables', 'Creates graphics'] },
+                { id: 'cse24', question: 'What is responsive design?', options: ['Adapts to screen sizes', 'Fast loading', 'Secure login', 'Data encryption'] },
+                { id: 'cse25', question: 'What is cybersecurity?', options: ['Protecting systems from threats', 'Building websites', 'Creating databases', 'Designing hardware'] }
+            ],
+            // AI & Machine Learning
+            'ai_ml': [
+                { id: 'ai1', question: 'What is supervised learning?', options: ['Learning with labeled data', 'Learning without labels', 'Rule-based learning', 'Random learning'] },
+                { id: 'ai2', question: 'What is a neural network inspired by?', options: ['Human brain', 'Computer circuits', 'Mathematical formulas', 'Database tables'] },
+                { id: 'ai3', question: 'What is overfitting in ML?', options: ['Model too specific to training data', 'Model too simple', 'Fast training', 'High accuracy'] },
+                { id: 'ai4', question: 'Which is a deep learning framework?', options: ['TensorFlow', 'Excel', 'Photoshop', 'WordPress'] },
+                { id: 'ai5', question: 'What is NLP?', options: ['Natural Language Processing', 'Network Logic Protocol', 'Numeric Linear Programming', 'New Learning Paradigm'] },
+                { id: 'ai6', question: 'What is a CNN used for?', options: ['Image recognition', 'Text translation', 'Voice calls', 'Database queries'] },
+                { id: 'ai7', question: 'What is reinforcement learning?', options: ['Learning through rewards', 'Learning with labels', 'Learning by examples', 'Learning by rules'] },
+                { id: 'ai8', question: 'What is a training dataset?', options: ['Data used to train model', 'Final predictions', 'User interface', 'System logs'] },
+                { id: 'ai9', question: 'What is gradient descent?', options: ['Optimization algorithm', 'Data structure', 'Network protocol', 'File format'] },
+                { id: 'ai10', question: 'What is a confusion matrix?', options: ['Performance evaluation table', 'Training data', 'Neural network layer', 'Code structure'] },
+                { id: 'ai11', question: 'What is transfer learning?', options: ['Using pretrained models', 'Moving data', 'Network transfer', 'Code migration'] },
+                { id: 'ai12', question: 'What is computer vision?', options: ['AI for image understanding', 'Monitor display', 'Video player', 'Graphics software'] },
+                { id: 'ai13', question: 'What is a GAN?', options: ['Generative Adversarial Network', 'Graphics Animation Network', 'General Access Node', 'Global Area Network'] },
+                { id: 'ai14', question: 'What is feature engineering?', options: ['Creating input features', 'Building software', 'Hardware design', 'Network setup'] },
+                { id: 'ai15', question: 'What is an epoch in training?', options: ['One pass through data', 'Time period', 'Error rate', 'Model version'] },
+                { id: 'ai16', question: 'What is a recurrent neural network for?', options: ['Sequential data', 'Static images', 'Database queries', 'Web design'] },
+                { id: 'ai17', question: 'What is data augmentation?', options: ['Artificially increasing data', 'Data backup', 'Data compression', 'Data deletion'] },
+                { id: 'ai18', question: 'What is PyTorch?', options: ['Deep learning framework', 'Game engine', 'Text editor', 'Database'] },
+                { id: 'ai19', question: 'What is k-means clustering?', options: ['Unsupervised grouping', 'Supervised classification', 'Data sorting', 'File organization'] },
+                { id: 'ai20', question: 'What is cross-validation?', options: ['Model evaluation technique', 'Data backup', 'Code review', 'Security check'] },
+                { id: 'ai21', question: 'What is bias in ML?', options: ['Systematic error', 'Random noise', 'High accuracy', 'Fast training'] },
+                { id: 'ai22', question: 'What is an activation function?', options: ['Adds non-linearity', 'Starts program', 'Opens file', 'Connects network'] },
+                { id: 'ai23', question: 'What is batch normalization?', options: ['Normalizing layer inputs', 'Data grouping', 'File sorting', 'Network routing'] },
+                { id: 'ai24', question: 'What is a hyperparameter?', options: ['Model configuration setting', 'Training data', 'Output result', 'Error message'] },
+                { id: 'ai25', question: 'What is GPT?', options: ['Generative Pre-trained Transformer', 'General Processing Tool', 'Graphics Processing Technology', 'Global Protocol Transfer'] }
+            ],
+            // Biomedical Engineering
+            'biomedical': [
+                { id: 'bio1', question: 'What is biomedical engineering?', options: ['Engineering for healthcare', 'Marine biology', 'Agricultural science', 'Environmental study'] },
+                { id: 'bio2', question: 'What is an MRI?', options: ['Magnetic Resonance Imaging', 'Medical Research Institute', 'Molecular Reading Index', 'Medical Response Indicator'] },
+                { id: 'bio3', question: 'What are prosthetics?', options: ['Artificial body parts', 'Medical drugs', 'Surgical tools', 'Hospital equipment'] },
+                { id: 'bio4', question: 'What is biomechanics?', options: ['Study of body mechanics', 'Chemical reactions', 'Plant biology', 'Water treatment'] },
+                { id: 'bio5', question: 'What is a pacemaker?', options: ['Heart rhythm device', 'Running watch', 'Blood pressure monitor', 'Glucose meter'] },
+                { id: 'bio6', question: 'What is biocompatibility?', options: ['Material safely in body', 'Drug effectiveness', 'Surgical skill', 'Hospital policy'] },
+                { id: 'bio7', question: 'What is tissue engineering?', options: ['Growing biological tissues', 'Fabric manufacturing', 'Building construction', 'Paper production'] },
+                { id: 'bio8', question: 'What is ultrasound imaging?', options: ['Sound wave imaging', 'X-ray imaging', 'Light imaging', 'Heat imaging'] },
+                { id: 'bio9', question: 'What is FDA approval?', options: ['Medical device authorization', 'Food delivery', 'Drug addiction', 'Hospital admission'] },
+                { id: 'bio10', question: 'What is a CT scan?', options: ['X-ray cross-section imaging', 'Computer testing', 'Cell therapy', 'Clinical trial'] },
+                { id: 'bio11', question: 'What is biomaterial?', options: ['Material for medical devices', 'Organic waste', 'Construction material', 'Electronic component'] },
+                { id: 'bio12', question: 'What is ECG/EKG?', options: ['Heart electrical activity', 'Brain scanning', 'Muscle testing', 'Blood analysis'] },
+                { id: 'bio13', question: 'What is rehabilitation engineering?', options: ['Assistive technology development', 'Building restoration', 'Car repair', 'Factory maintenance'] },
+                { id: 'bio14', question: 'What is dialysis?', options: ['Kidney function replacement', 'Heart treatment', 'Brain surgery', 'Eye examination'] },
+                { id: 'bio15', question: 'What is medical imaging?', options: ['Visualizing body interior', 'Hospital photography', 'Patient identification', 'Drug packaging'] },
+                { id: 'bio16', question: 'What is a defibrillator?', options: ['Heart shock device', 'Pain reliever', 'Blood filter', 'Oxygen supplier'] },
+                { id: 'bio17', question: 'What is genetic engineering?', options: ['DNA modification', 'Machine building', 'Car design', 'Bridge construction'] },
+                { id: 'bio18', question: 'What is nanotechnology in medicine?', options: ['Microscopic medical tools', 'Large equipment', 'Hospital management', 'Drug marketing'] },
+                { id: 'bio19', question: 'What is drug delivery system?', options: ['Controlled medication release', 'Pharmacy logistics', 'Hospital transport', 'Medicine storage'] },
+                { id: 'bio20', question: 'What is bioinformatics?', options: ['Biological data analysis', 'Hospital IT', 'Medical billing', 'Patient scheduling'] },
+                { id: 'bio21', question: 'What is 3D bioprinting?', options: ['Printing living tissues', 'Medical documents', 'X-ray images', 'Patient records'] },
+                { id: 'bio22', question: 'What is neural engineering?', options: ['Brain-machine interfaces', 'Nerve surgery', 'Mental health', 'Psychology'] },
+                { id: 'bio23', question: 'What is wearable health technology?', options: ['Body-worn health monitors', 'Hospital uniforms', 'Surgical gowns', 'Lab coats'] },
+                { id: 'bio24', question: 'What is clinical engineering?', options: ['Managing medical equipment', 'Surgical procedure', 'Patient diagnosis', 'Drug prescription'] },
+                { id: 'bio25', question: 'What is quality control in medical devices?', options: ['Ensuring device safety', 'Selling devices', 'Buying equipment', 'Training staff'] }
+            ],
+            // Mechanical Engineering
+            'mechanical': [
+                { id: 'mech1', question: 'What is thermodynamics?', options: ['Study of heat and energy', 'Study of motion', 'Study of materials', 'Study of electricity'] },
+                { id: 'mech2', question: 'What is a CAD software used for?', options: ['Computer-aided design', 'Computer-aided destruction', 'Communication device', 'Calculation device'] },
+                { id: 'mech3', question: 'What is stress in materials?', options: ['Force per unit area', 'Material weight', 'Material color', 'Material cost'] },
+                { id: 'mech4', question: 'What is strain in mechanics?', options: ['Deformation due to stress', 'Weight measurement', 'Color change', 'Temperature rise'] },
+                { id: 'mech5', question: 'What is a gear used for?', options: ['Transmitting power', 'Storing energy', 'Measuring speed', 'Creating heat'] },
+                { id: 'mech6', question: 'What is fluid mechanics?', options: ['Study of fluids in motion', 'Study of solid materials', 'Study of gases only', 'Study of electricity'] },
+                { id: 'mech7', question: 'What is manufacturing engineering?', options: ['Production process design', 'Product sales', 'Marketing', 'Customer service'] },
+                { id: 'mech8', question: 'What is heat transfer?', options: ['Energy movement due to temperature', 'Material movement', 'Light movement', 'Sound movement'] },
+                { id: 'mech9', question: 'What is a lathe machine?', options: ['Cutting tool for rotation', 'Welding machine', 'Printing machine', 'Grinding machine'] },
+                { id: 'mech10', question: 'What is IC engine?', options: ['Internal Combustion engine', 'Integrated Circuit engine', 'Industrial Control engine', 'International Commercial engine'] },
+                { id: 'mech11', question: 'What is robotics?', options: ['Automated machine design', 'Human study', 'Chemical study', 'Plant study'] },
+                { id: 'mech12', question: 'What is CNC machining?', options: ['Computer Numerical Control', 'Central Network Connection', 'Common Number Calculation', 'Control Node Circuit'] },
+                { id: 'mech13', question: 'What is welding?', options: ['Joining metals by heat', 'Cutting metals', 'Painting metals', 'Cleaning metals'] },
+                { id: 'mech14', question: 'What is kinematics?', options: ['Study of motion without forces', 'Study of heat', 'Study of electricity', 'Study of sound'] },
+                { id: 'mech15', question: 'What is HVAC?', options: ['Heating, Ventilation, Air Conditioning', 'High Voltage Alternating Current', 'Heavy Vehicle Auto Control', 'Hydraulic Valve Automatic Control'] },
+                { id: 'mech16', question: 'What is a turbine?', options: ['Rotary engine for power', 'Static engine', 'Fuel storage', 'Brake system'] },
+                { id: 'mech17', question: 'What is 3D printing in manufacturing?', options: ['Additive manufacturing', 'Paper printing', 'Photo printing', 'Screen printing'] },
+                { id: 'mech18', question: 'What is quality control?', options: ['Ensuring product standards', 'Product sales', 'Product marketing', 'Product delivery'] },
+                { id: 'mech19', question: 'What is fatigue in materials?', options: ['Weakening from repeated stress', 'Material color change', 'Material weight gain', 'Material expansion'] },
+                { id: 'mech20', question: 'What is automotive engineering?', options: ['Vehicle design and production', 'Road construction', 'Traffic management', 'Fuel production'] },
+                { id: 'mech21', question: 'What is lean manufacturing?', options: ['Waste reduction in production', 'Heavy manufacturing', 'Fast manufacturing', 'Cheap manufacturing'] },
+                { id: 'mech22', question: 'What is SolidWorks?', options: ['3D CAD software', 'Programming language', 'Database', 'Operating system'] },
+                { id: 'mech23', question: 'What is power plant engineering?', options: ['Electricity generation systems', 'Plant biology', 'Agriculture', 'Gardening'] },
+                { id: 'mech24', question: 'What is material science?', options: ['Study of material properties', 'Study of chemicals', 'Study of biology', 'Study of physics only'] },
+                { id: 'mech25', question: 'What is Six Sigma?', options: ['Quality improvement methodology', 'Mathematical concept only', 'Programming language', 'Manufacturing tool'] }
+            ],
+            // Civil Engineering
+            'civil': [
+                { id: 'civil1', question: 'What is structural engineering?', options: ['Designing load-bearing structures', 'Road painting', 'Interior design', 'Landscaping'] },
+                { id: 'civil2', question: 'What is concrete?', options: ['Cement, sand, aggregate mixture', 'Pure cement', 'Only sand', 'Only stone'] },
+                { id: 'civil3', question: 'What is RCC?', options: ['Reinforced Cement Concrete', 'Regular Cement Compound', 'Raw Construction Component', 'Rapid Curing Cement'] },
+                { id: 'civil4', question: 'What is surveying in civil engineering?', options: ['Measuring land and distances', 'Building design', 'Material testing', 'Project budgeting'] },
+                { id: 'civil5', question: 'What is soil mechanics?', options: ['Study of soil behavior', 'Gardening', 'Agriculture only', 'Mining'] },
+                { id: 'civil6', question: 'What is foundation engineering?', options: ['Designing building bases', 'Roof design', 'Wall painting', 'Interior work'] },
+                { id: 'civil7', question: 'What is hydraulics?', options: ['Study of water flow', 'Study of electricity', 'Study of air flow', 'Study of sound'] },
+                { id: 'civil8', question: 'What is a beam in construction?', options: ['Horizontal load-bearing member', 'Vertical support only', 'Roof covering', 'Floor tile'] },
+                { id: 'civil9', question: 'What is AutoCAD used for?', options: ['Computer-aided drafting', 'Photo editing', 'Video making', 'Music production'] },
+                { id: 'civil10', question: 'What is transportation engineering?', options: ['Designing roads and transport systems', 'Vehicle manufacturing', 'Fuel production', 'Traffic police training'] },
+                { id: 'civil11', question: 'What is environmental engineering?', options: ['Water, air, waste management', 'Only gardening', 'Only painting', 'Only decoration'] },
+                { id: 'civil12', question: 'What is a column in construction?', options: ['Vertical load-bearing member', 'Horizontal beam', 'Roof slab', 'Window frame'] },
+                { id: 'civil13', question: 'What is geotechnical engineering?', options: ['Soil and rock mechanics', 'Only surveying', 'Only design', 'Only construction'] },
+                { id: 'civil14', question: 'What is a retaining wall?', options: ['Wall holding back soil', 'Interior partition', 'Boundary fence', 'Decorative wall'] },
+                { id: 'civil15', question: 'What is water resources engineering?', options: ['Managing water supply and drainage', 'Only well digging', 'Only swimming pools', 'Only fountains'] },
+                { id: 'civil16', question: 'What is construction management?', options: ['Planning and supervising projects', 'Only labor work', 'Only material supply', 'Only accounting'] },
+                { id: 'civil17', question: 'What is a truss?', options: ['Triangular structural framework', 'Circular structure', 'Solid beam', 'Curved arch'] },
+                { id: 'civil18', question: 'What is quantity surveying?', options: ['Estimating construction costs', 'Land measurement only', 'Quality testing only', 'Design work only'] },
+                { id: 'civil19', question: 'What is prestressed concrete?', options: ['Concrete with pre-applied tension', 'Normal concrete', 'Weak concrete', 'Colored concrete'] },
+                { id: 'civil20', question: 'What is earthquake engineering?', options: ['Designing earthquake-resistant structures', 'Predicting earthquakes', 'Measuring earthquakes only', 'Earthquake rescue'] },
+                { id: 'civil21', question: 'What is bridge engineering?', options: ['Designing and building bridges', 'Only road design', 'Only building design', 'Only tunnel design'] },
+                { id: 'civil22', question: 'What is STAAD Pro?', options: ['Structural analysis software', 'Photo editing software', 'Video editing software', 'Music software'] },
+                { id: 'civil23', question: 'What is green building?', options: ['Environmentally sustainable construction', 'Green colored building', 'Garden building', 'Greenhouse only'] },
+                { id: 'civil24', question: 'What is urban planning?', options: ['City development planning', 'Only road design', 'Only building design', 'Only park design'] },
+                { id: 'civil25', question: 'What is BIM in construction?', options: ['Building Information Modeling', 'Basic Interior Management', 'Building Interior Model', 'Basic Infrastructure Method'] }
+            ],
+            // Electrical Engineering
+            'electrical': [
+                { id: 'elec_e1', question: 'What is electrical power?', options: ['Rate of electrical energy transfer', 'Only voltage', 'Only current', 'Only resistance'] },
+                { id: 'elec_e2', question: 'What is a transformer?', options: ['Voltage changing device', 'Current generator', 'Power storage', 'Light source'] },
+                { id: 'elec_e3', question: 'What is AC current?', options: ['Alternating Current', 'Always Constant', 'Automatic Current', 'Average Current'] },
+                { id: 'elec_e4', question: 'What is DC current?', options: ['Direct Current', 'Dual Current', 'Dynamic Current', 'Distributed Current'] },
+                { id: 'elec_e5', question: 'What is Ohm\'s Law?', options: ['V = IR relationship', 'P = VI only', 'E = mc² only', 'F = ma only'] },
+                { id: 'elec_e6', question: 'What is a circuit breaker?', options: ['Automatic switch for protection', 'Power generator', 'Light source', 'Voltage booster'] },
+                { id: 'elec_e7', question: 'What is power generation?', options: ['Converting energy to electricity', 'Only solar power', 'Only wind power', 'Only water power'] },
+                { id: 'elec_e8', question: 'What is an electric motor?', options: ['Converts electricity to motion', 'Converts motion to electricity', 'Stores electricity', 'Generates light'] },
+                { id: 'elec_e9', question: 'What is power transmission?', options: ['Sending electricity over distance', 'Only local distribution', 'Only power generation', 'Only consumption'] },
+                { id: 'elec_e10', question: 'What is a relay?', options: ['Electrically operated switch', 'Power source', 'Light bulb', 'Motor'] },
+                { id: 'elec_e11', question: 'What is grounding/earthing?', options: ['Safety connection to earth', 'Power generation', 'Voltage increase', 'Current increase'] },
+                { id: 'elec_e12', question: 'What is three-phase power?', options: ['Power with three AC waves', 'Single wave power', 'DC power only', 'Solar power only'] },
+                { id: 'elec_e13', question: 'What is power factor?', options: ['Ratio of real to apparent power', 'Only voltage ratio', 'Only current ratio', 'Only resistance ratio'] },
+                { id: 'elec_e14', question: 'What is a generator?', options: ['Converts motion to electricity', 'Converts electricity to motion', 'Stores power', 'Uses power'] },
+                { id: 'elec_e15', question: 'What is an inverter?', options: ['Converts DC to AC', 'Converts AC to DC', 'Stores power', 'Generates power'] },
+                { id: 'elec_e16', question: 'What is electrical resistance?', options: ['Opposition to current flow', 'Current enhancement', 'Voltage generation', 'Power storage'] },
+                { id: 'elec_e17', question: 'What is capacitance?', options: ['Ability to store electrical charge', 'Ability to resist current', 'Ability to generate power', 'Ability to conduct electricity'] },
+                { id: 'elec_e18', question: 'What is inductance?', options: ['Property opposing current change', 'Voltage storage', 'Current generation', 'Power consumption'] },
+                { id: 'elec_e19', question: 'What is a smart grid?', options: ['Modernized electrical grid with digital', 'Only solar grid', 'Only wind grid', 'Old power grid'] },
+                { id: 'elec_e20', question: 'What is renewable energy?', options: ['Energy from natural replenishing sources', 'Only fossil fuels', 'Only nuclear energy', 'Only coal energy'] },
+                { id: 'elec_e21', question: 'What is PLC?', options: ['Programmable Logic Controller', 'Power Line Connector', 'Primary Load Controller', 'Power Level Checker'] },
+                { id: 'elec_e22', question: 'What is SCADA?', options: ['Supervisory Control and Data Acquisition', 'Simple Control and Data Analysis', 'System Control and Device Automation', 'Standard Control and Data Allocation'] },
+                { id: 'elec_e23', question: 'What is load flow analysis?', options: ['Studying power flow in network', 'Physical load movement', 'Weight calculation', 'Material flow'] },
+                { id: 'elec_e24', question: 'What is short circuit?', options: ['Low resistance path for current', 'Normal circuit operation', 'Open circuit', 'High resistance path'] },
+                { id: 'elec_e25', question: 'What is kWh?', options: ['Unit of electrical energy', 'Unit of power only', 'Unit of voltage only', 'Unit of current only'] }
+            ],
+            // Chemical Engineering
+            'chemical': [
+                { id: 'chem1', question: 'What is chemical engineering?', options: ['Converting raw materials to products', 'Only chemistry study', 'Only physics study', 'Only biology study'] },
+                { id: 'chem2', question: 'What is a chemical reactor?', options: ['Vessel for chemical reactions', 'Storage tank only', 'Mixing tank only', 'Heating element only'] },
+                { id: 'chem3', question: 'What is distillation?', options: ['Separating liquids by boiling points', 'Mixing liquids', 'Solidifying liquids', 'Freezing liquids'] },
+                { id: 'chem4', question: 'What is process engineering?', options: ['Designing industrial processes', 'Only laboratory work', 'Only research', 'Only testing'] },
+                { id: 'chem5', question: 'What is mass transfer?', options: ['Movement of mass between phases', 'Weight measurement', 'Mass production', 'Mass marketing'] },
+                { id: 'chem6', question: 'What is heat exchanger?', options: ['Device transferring heat between fluids', 'Only heating device', 'Only cooling device', 'Only storage tank'] },
+                { id: 'chem7', question: 'What is fluid dynamics?', options: ['Study of fluid motion', 'Study of solid motion', 'Study of gas only', 'Study of light'] },
+                { id: 'chem8', question: 'What is petrochemical?', options: ['Chemicals derived from petroleum', 'Only natural chemicals', 'Only organic chemicals', 'Only inorganic chemicals'] },
+                { id: 'chem9', question: 'What is catalysis?', options: ['Speeding reactions with catalyst', 'Slowing reactions', 'Stopping reactions', 'Reversing reactions'] },
+                { id: 'chem10', question: 'What is polymer engineering?', options: ['Working with plastics and polymers', 'Only metal work', 'Only wood work', 'Only stone work'] },
+                { id: 'chem11', question: 'What is process control?', options: ['Monitoring and controlling processes', 'Only manual operation', 'Only observation', 'Only recording'] },
+                { id: 'chem12', question: 'What is separation process?', options: ['Isolating components from mixture', 'Combining components', 'Destroying components', 'Creating components'] },
+                { id: 'chem13', question: 'What is reaction kinetics?', options: ['Rate of chemical reactions', 'Only reaction products', 'Only reactants', 'Only catalysts'] },
+                { id: 'chem14', question: 'What is pharmaceutical manufacturing?', options: ['Producing medicines', 'Only selling medicines', 'Only prescribing medicines', 'Only testing medicines'] },
+                { id: 'chem15', question: 'What is biotechnology process?', options: ['Using living systems for products', 'Only computer systems', 'Only mechanical systems', 'Only electrical systems'] },
+                { id: 'chem16', question: 'What is fermentation?', options: ['Microbial chemical conversion', 'Only heating', 'Only cooling', 'Only mixing'] },
+                { id: 'chem17', question: 'What is HAZOP?', options: ['Hazard and Operability study', 'Heavy Assembly Zone Operation', 'High Altitude Zone Operation', 'Horizontal Axis Zero Operation'] },
+                { id: 'chem18', question: 'What is unit operations?', options: ['Basic steps in chemical process', 'Only chemical reactions', 'Only physical changes', 'Only heating operations'] },
+                { id: 'chem19', question: 'What is stoichiometry?', options: ['Quantitative chemical relationships', 'Only qualitative analysis', 'Only observation', 'Only description'] },
+                { id: 'chem20', question: 'What is crystallization?', options: ['Forming solid crystals from solution', 'Only dissolving', 'Only melting', 'Only evaporating'] },
+                { id: 'chem21', question: 'What is absorption?', options: ['Taking in substance', 'Releasing substance', 'Destroying substance', 'Creating substance'] },
+                { id: 'chem22', question: 'What is adsorption?', options: ['Adhesion to surface', 'Absorption into bulk', 'Dissolution', 'Evaporation'] },
+                { id: 'chem23', question: 'What is process simulation?', options: ['Computer modeling of processes', 'Physical experimentation only', 'Manual calculation only', 'Observation only'] },
+                { id: 'chem24', question: 'What is safety in chemical industry?', options: ['Preventing accidents and hazards', 'Only production', 'Only profit', 'Only speed'] },
+                { id: 'chem25', question: 'What is environmental compliance?', options: ['Meeting environmental regulations', 'Only profit maximization', 'Only production increase', 'Only cost reduction'] }
+            ],
+            // Aerospace Engineering
+            'aerospace': [
+                { id: 'aero1', question: 'What is aerodynamics?', options: ['Study of air flow around objects', 'Study of water flow', 'Study of ground movement', 'Study of sound'] },
+                { id: 'aero2', question: 'What is propulsion?', options: ['Force that moves aircraft forward', 'Stopping force', 'Turning force', 'Lifting force only'] },
+                { id: 'aero3', question: 'What are the four forces of flight?', options: ['Lift, Weight, Thrust, Drag', 'Push, Pull, Turn, Stop', 'Up, Down, Left, Right', 'Start, Stop, Turn, Land'] },
+                { id: 'aero4', question: 'What is an airfoil?', options: ['Cross-section shape of wing', 'Engine type', 'Fuel tank', 'Landing gear'] },
+                { id: 'aero5', question: 'What is Mach number?', options: ['Ratio of speed to sound speed', 'Engine power rating', 'Fuel efficiency', 'Wing span measurement'] },
+                { id: 'aero6', question: 'What is avionics?', options: ['Electronic systems in aircraft', 'Only mechanical parts', 'Only structural parts', 'Only fuel systems'] },
+                { id: 'aero7', question: 'What is a jet engine?', options: ['Engine using jet propulsion', 'Propeller engine only', 'Rocket engine only', 'Electric engine only'] },
+                { id: 'aero8', question: 'What is composite material in aerospace?', options: ['Combined materials for strength', 'Single metal only', 'Wood only', 'Plastic only'] },
+                { id: 'aero9', question: 'What is CFD?', options: ['Computational Fluid Dynamics', 'Central Flight Direction', 'Controlled Flight Device', 'Common Flight Data'] },
+                { id: 'aero10', question: 'What is structural analysis?', options: ['Studying forces on structures', 'Only weight calculation', 'Only size measurement', 'Only color analysis'] },
+                { id: 'aero11', question: 'What is flight control system?', options: ['System to control aircraft movement', 'Only engine control', 'Only fuel control', 'Only passenger control'] },
+                { id: 'aero12', question: 'What is spacecraft?', options: ['Vehicle for space travel', 'Only airplane', 'Only helicopter', 'Only drone'] },
+                { id: 'aero13', question: 'What is orbital mechanics?', options: ['Motion of objects in space', 'Only Earth motion', 'Only Moon motion', 'Only Sun motion'] },
+                { id: 'aero14', question: 'What is wind tunnel testing?', options: ['Testing models in controlled airflow', 'Only outdoor testing', 'Only computer testing', 'Only paper testing'] },
+                { id: 'aero15', question: 'What is aircraft maintenance?', options: ['Keeping aircraft in safe condition', 'Only cleaning aircraft', 'Only painting aircraft', 'Only refueling'] },
+                { id: 'aero16', question: 'What is supersonic flight?', options: ['Flying faster than sound', 'Flying slower than sound', 'Flying at constant speed', 'Flying backwards'] },
+                { id: 'aero17', question: 'What is UAV?', options: ['Unmanned Aerial Vehicle', 'Universal Air Vehicle', 'United Aviation Vehicle', 'Ultimate Air Vehicle'] },
+                { id: 'aero18', question: 'What is satellite engineering?', options: ['Designing and building satellites', 'Only launching satellites', 'Only tracking satellites', 'Only using satellites'] },
+                { id: 'aero19', question: 'What is rocket propulsion?', options: ['Using exhaust gases for thrust', 'Using propellers', 'Using jet engines', 'Using wings'] },
+                { id: 'aero20', question: 'What is aircraft design?', options: ['Creating aircraft specifications', 'Only painting aircraft', 'Only naming aircraft', 'Only selling aircraft'] },
+                { id: 'aero21', question: 'What is fatigue testing in aerospace?', options: ['Testing material endurance', 'Pilot fatigue testing', 'Passenger testing', 'Fuel testing'] },
+                { id: 'aero22', question: 'What is space propulsion?', options: ['Moving spacecraft through space', 'Only Earth propulsion', 'Only water propulsion', 'Only air propulsion'] },
+                { id: 'aero23', question: 'What is navigation system?', options: ['System for determining position', 'Only speed measurement', 'Only altitude measurement', 'Only fuel measurement'] },
+                { id: 'aero24', question: 'What is aerospace materials?', options: ['Materials used in aircraft/spacecraft', 'Only building materials', 'Only clothing materials', 'Only food materials'] },
+                { id: 'aero25', question: 'What is flight simulation?', options: ['Computer-based flight training', 'Only real flight', 'Only reading manuals', 'Only watching videos'] }
+            ],
+            // Robotics & Automation
+            'robotics': [
+                { id: 'rob1', question: 'What is robotics?', options: ['Design and use of robots', 'Only computer programming', 'Only mechanical work', 'Only electrical work'] },
+                { id: 'rob2', question: 'What is automation?', options: ['Self-operating systems', 'Only manual control', 'Only human operation', 'Only remote control'] },
+                { id: 'rob3', question: 'What is a robot arm?', options: ['Mechanical manipulator', 'Human arm', 'Animal arm', 'Plant branch'] },
+                { id: 'rob4', question: 'What is PLC in automation?', options: ['Programmable Logic Controller', 'Personal Light Controller', 'Power Line Connector', 'Primary Load Calculator'] },
+                { id: 'rob5', question: 'What is sensor in robotics?', options: ['Device detecting environment', 'Power source', 'Motor', 'Controller'] },
+                { id: 'rob6', question: 'What is actuator?', options: ['Device producing motion', 'Sensor', 'Controller', 'Power source'] },
+                { id: 'rob7', question: 'What is industrial robot?', options: ['Robot for manufacturing', 'Household robot', 'Toy robot', 'Medical robot'] },
+                { id: 'rob8', question: 'What is servo motor?', options: ['Precision controlled motor', 'Simple DC motor', 'AC motor only', 'Generator'] },
+                { id: 'rob9', question: 'What is machine vision?', options: ['Computer-based image analysis', 'Human vision', 'Animal vision', 'Night vision only'] },
+                { id: 'rob10', question: 'What is end effector?', options: ['Tool at robot arm end', 'Robot base', 'Robot body', 'Robot power source'] },
+                { id: 'rob11', question: 'What is kinematics in robotics?', options: ['Study of robot motion', 'Study of robot power', 'Study of robot size', 'Study of robot color'] },
+                { id: 'rob12', question: 'What is autonomous robot?', options: ['Self-operating robot', 'Remote controlled robot', 'Manual robot', 'Stationary robot'] },
+                { id: 'rob13', question: 'What is ROS?', options: ['Robot Operating System', 'Random Operation System', 'Remote Operating System', 'Rapid Operating System'] },
+                { id: 'rob14', question: 'What is SCARA robot?', options: ['Selective Compliance robot', 'Simple Control robot', 'Standard Commercial robot', 'Special Category robot'] },
+                { id: 'rob15', question: 'What is collaborative robot?', options: ['Robot working with humans', 'Robot working alone', 'Robot fighting humans', 'Robot replacing humans'] },
+                { id: 'rob16', question: 'What is path planning?', options: ['Robot movement trajectory', 'Factory layout', 'Product design', 'Budget planning'] },
+                { id: 'rob17', question: 'What is pick and place robot?', options: ['Robot moving objects', 'Robot welding', 'Robot painting', 'Robot cutting'] },
+                { id: 'rob18', question: 'What is drone?', options: ['Unmanned flying robot', 'Ground robot', 'Water robot', 'Underground robot'] },
+                { id: 'rob19', question: 'What is human-robot interaction?', options: ['People working with robots', 'Robots fighting people', 'Robots avoiding people', 'People avoiding robots'] },
+                { id: 'rob20', question: 'What is swarm robotics?', options: ['Multiple robots working together', 'Single large robot', 'Robot insects', 'Robot bees only'] },
+                { id: 'rob21', question: 'What is control system?', options: ['Managing robot behavior', 'Only power supply', 'Only structure', 'Only appearance'] },
+                { id: 'rob22', question: 'What is mobile robot?', options: ['Robot that can move around', 'Stationary robot', 'Fixed robot', 'Mounted robot'] },
+                { id: 'rob23', question: 'What is feedback control?', options: ['Using output to adjust input', 'Only forward control', 'Only manual control', 'Only visual control'] },
+                { id: 'rob24', question: 'What is AGV?', options: ['Automated Guided Vehicle', 'Automatic Ground Vehicle', 'Advanced General Vehicle', 'Automated Goods Vehicle'] },
+                { id: 'rob25', question: 'What is Industry 4.0?', options: ['Fourth industrial revolution with automation', 'First industrial revolution', 'Second industrial revolution', 'Third industrial revolution'] }
+            ],
+            // Electronics & Communication
+            'electronics': [
+                { id: 'elec1', question: 'What is an semiconductor?', options: ['Material with controllable conductivity', 'Pure conductor', 'Pure insulator', 'Liquid conductor'] },
+                { id: 'elec2', question: 'What is a transistor?', options: ['Electronic switch/amplifier', 'Power source', 'Storage device', 'Display unit'] },
+                { id: 'elec3', question: 'What is digital electronics?', options: ['Binary signal processing', 'Analog signal processing', 'Mechanical processing', 'Chemical processing'] },
+                { id: 'elec4', question: 'What is a microcontroller?', options: ['Small computer on chip', 'Large computer', 'Display screen', 'Power supply'] },
+                { id: 'elec5', question: 'What is signal processing?', options: ['Analyzing and modifying signals', 'Creating signals only', 'Destroying signals', 'Storing signals only'] },
+                { id: 'elec6', question: 'What is an oscilloscope?', options: ['Signal visualization tool', 'Sound amplifier', 'Power generator', 'Heat sensor'] },
+                { id: 'elec7', question: 'What is VLSI?', options: ['Very Large Scale Integration', 'Very Low Speed Internet', 'Virtual Local System Interface', 'Variable Light Source Indicator'] },
+                { id: 'elec8', question: 'What is PCB?', options: ['Printed Circuit Board', 'Personal Computer Base', 'Power Control Box', 'Programmable Circuit Block'] },
+                { id: 'elec9', question: 'What is embedded systems?', options: ['Computer systems in devices', 'Underground cables', 'Hidden software', 'Encrypted data'] },
+                { id: 'elec10', question: 'What is wireless communication?', options: ['Data transfer without cables', 'Wired data transfer', 'Postal communication', 'Paper communication'] },
+                { id: 'elec11', question: 'What is IoT?', options: ['Internet of Things', 'Input of Technology', 'Integration of Tools', 'Interface of Terminals'] },
+                { id: 'elec12', question: 'What is an antenna?', options: ['Device for transmitting/receiving signals', 'Power source', 'Data storage', 'Display screen'] },
+                { id: 'elec13', question: 'What is modulation?', options: ['Varying signal properties', 'Signal destruction', 'Signal storage', 'Signal deletion'] },
+                { id: 'elec14', question: 'What is a capacitor?', options: ['Energy storage component', 'Energy generator', 'Energy destroyer', 'Energy display'] },
+                { id: 'elec15', question: 'What is an op-amp?', options: ['Operational Amplifier', 'Open Platform', 'Optical Printer', 'Output Power'] },
+                { id: 'elec16', question: 'What is 5G technology?', options: ['Fifth generation wireless', 'Five gigabyte storage', 'Five gate processor', 'Fifth grade electronics'] },
+                { id: 'elec17', question: 'What is FPGA?', options: ['Field Programmable Gate Array', 'Fast Processing General Application', 'Fixed Program Gate Array', 'Flexible Power Grid Adapter'] },
+                { id: 'elec18', question: 'What is ADC?', options: ['Analog to Digital Converter', 'Advanced Digital Computer', 'Automatic Data Control', 'Audio Device Controller'] },
+                { id: 'elec19', question: 'What is a sensor?', options: ['Device detecting physical properties', 'Data storage', 'Power source', 'Display unit'] },
+                { id: 'elec20', question: 'What is RF engineering?', options: ['Radio Frequency engineering', 'Random Function engineering', 'Rapid Fire engineering', 'Real Format engineering'] },
+                { id: 'elec21', question: 'What is power electronics?', options: ['Controlling electrical power', 'Creating electricity', 'Storing electricity', 'Destroying electricity'] },
+                { id: 'elec22', question: 'What is a microprocessor?', options: ['CPU on single chip', 'Memory chip', 'Power chip', 'Display chip'] },
+                { id: 'elec23', question: 'What is Bluetooth?', options: ['Short-range wireless technology', 'Long-range wired technology', 'Satellite technology', 'Fiber optic technology'] },
+                { id: 'elec24', question: 'What is a diode?', options: ['One-way current device', 'Two-way current device', 'Power generator', 'Storage device'] },
+                { id: 'elec25', question: 'What is communication protocol?', options: ['Rules for data exchange', 'Physical cables', 'Power supply', 'Storage format'] }
+            ],
+            // BDS - Dental Surgery
+            'bds': [
+                { id: 'bds1', question: 'What is oral anatomy?', options: ['Study of mouth structure', 'Study of body structure', 'Study of brain', 'Study of heart'] },
+                { id: 'bds2', question: 'What is dental caries?', options: ['Tooth decay', 'Gum disease', 'Mouth ulcer', 'Tooth fracture'] },
+                { id: 'bds3', question: 'What is periodontics?', options: ['Gum disease treatment', 'Tooth extraction', 'Teeth whitening', 'Braces treatment'] },
+                { id: 'bds4', question: 'What is orthodontics?', options: ['Teeth alignment treatment', 'Gum treatment', 'Root canal', 'Tooth extraction'] },
+                { id: 'bds5', question: 'What is endodontics?', options: ['Root canal treatment', 'Gum surgery', 'Teeth cleaning', 'Tooth whitening'] },
+                { id: 'bds6', question: 'What is prosthodontics?', options: ['Dental prosthesis/replacement', 'Tooth extraction', 'Gum treatment', 'Teeth whitening'] },
+                { id: 'bds7', question: 'What is dental radiography?', options: ['X-ray imaging of teeth', 'Teeth cleaning', 'Gum massage', 'Tooth polishing'] },
+                { id: 'bds8', question: 'What is oral pathology?', options: ['Study of mouth diseases', 'Teeth whitening', 'Gum massage', 'Tooth extraction'] },
+                { id: 'bds9', question: 'What is a dental implant?', options: ['Artificial tooth root', 'Natural tooth', 'Gum tissue', 'Jaw bone'] },
+                { id: 'bds10', question: 'What is oral surgery?', options: ['Surgical procedures in mouth', 'Teeth cleaning', 'Gum massage', 'Teeth whitening'] },
+                { id: 'bds11', question: 'What is fluoride treatment?', options: ['Preventing tooth decay', 'Teeth whitening', 'Gum treatment', 'Root canal'] },
+                { id: 'bds12', question: 'What is dental crown?', options: ['Cap covering damaged tooth', 'Tooth extraction', 'Gum surgery', 'Root canal'] },
+                { id: 'bds13', question: 'What is gingivitis?', options: ['Gum inflammation', 'Tooth decay', 'Mouth ulcer', 'Tooth fracture'] },
+                { id: 'bds14', question: 'What is dental scaling?', options: ['Removing plaque/tartar', 'Tooth extraction', 'Gum surgery', 'Root canal'] },
+                { id: 'bds15', question: 'What is oral hygiene?', options: ['Keeping mouth clean', 'Teeth whitening only', 'Gum surgery', 'Root canal'] },
+                { id: 'bds16', question: 'What is a dental bridge?', options: ['Replacing missing teeth', 'Teeth whitening', 'Gum treatment', 'Tooth extraction'] },
+                { id: 'bds17', question: 'What is pulpitis?', options: ['Tooth pulp inflammation', 'Gum disease', 'Tooth decay', 'Mouth ulcer'] },
+                { id: 'bds18', question: 'What is dental anesthesia?', options: ['Numbing for procedures', 'Pain medication', 'Antibiotic', 'Vitamin supplement'] },
+                { id: 'bds19', question: 'What is malocclusion?', options: ['Misaligned teeth/bite', 'Tooth decay', 'Gum disease', 'Mouth ulcer'] },
+                { id: 'bds20', question: 'What is pediatric dentistry?', options: ['Children\'s dental care', 'Adult dental care', 'Senior dental care', 'Animal dental care'] },
+                { id: 'bds21', question: 'What is TMJ disorder?', options: ['Jaw joint problems', 'Tooth decay', 'Gum disease', 'Mouth cancer'] },
+                { id: 'bds22', question: 'What is dental veneer?', options: ['Thin shell over tooth', 'Tooth extraction', 'Gum surgery', 'Root canal'] },
+                { id: 'bds23', question: 'What is tooth extraction?', options: ['Removing a tooth', 'Cleaning a tooth', 'Whitening a tooth', 'Filling a tooth'] },
+                { id: 'bds24', question: 'What is oral medicine?', options: ['Diagnosing mouth diseases', 'Teeth cleaning', 'Gum massage', 'Tooth polishing'] },
+                { id: 'bds25', question: 'What is maxillofacial surgery?', options: ['Face and jaw surgery', 'Heart surgery', 'Brain surgery', 'Eye surgery'] }
+            ],
+            // Nursing Sciences
+            'nursing': [
+                { id: 'nur1', question: 'What is patient care?', options: ['Attending to patient needs', 'Hospital cleaning', 'Medicine making', 'Surgery assistance'] },
+                { id: 'nur2', question: 'What is vital signs monitoring?', options: ['Checking temperature, pulse, BP', 'Blood testing only', 'X-ray reading', 'Surgery preparation'] },
+                { id: 'nur3', question: 'What is wound dressing?', options: ['Covering and treating wounds', 'Clothing the patient', 'Hair styling', 'Makeup application'] },
+                { id: 'nur4', question: 'What is medication administration?', options: ['Giving medicines to patients', 'Making medicines', 'Buying medicines', 'Selling medicines'] },
+                { id: 'nur5', question: 'What is patient assessment?', options: ['Evaluating patient condition', 'Patient billing', 'Patient transport', 'Patient discharge'] },
+                { id: 'nur6', question: 'What is infection control?', options: ['Preventing disease spread', 'Treating infections only', 'Creating vaccines', 'Surgery procedures'] },
+                { id: 'nur7', question: 'What is IV therapy?', options: ['Intravenous fluid/medicine delivery', 'Oral medication', 'Topical treatment', 'Surgical treatment'] },
+                { id: 'nur8', question: 'What is CPR?', options: ['Cardiopulmonary Resuscitation', 'Computer Patient Records', 'Central Patient Registry', 'Clinical Practice Review'] },
+                { id: 'nur9', question: 'What is nursing documentation?', options: ['Recording patient information', 'Hospital decoration', 'Staff scheduling', 'Equipment purchasing'] },
+                { id: 'nur10', question: 'What is patient education?', options: ['Teaching patients about health', 'School teaching', 'Staff training', 'Medical research'] },
+                { id: 'nur11', question: 'What is palliative care?', options: ['Comfort care for serious illness', 'Emergency care', 'Surgical care', 'Preventive care'] },
+                { id: 'nur12', question: 'What is nursing ethics?', options: ['Professional moral principles', 'Hospital rules', 'Government laws', 'Medical techniques'] },
+                { id: 'nur13', question: 'What is critical care nursing?', options: ['ICU patient care', 'Outpatient care', 'Home care', 'School nursing'] },
+                { id: 'nur14', question: 'What is patient advocacy?', options: ['Supporting patient rights', 'Hospital marketing', 'Staff recruitment', 'Equipment sales'] },
+                { id: 'nur15', question: 'What is sterile technique?', options: ['Maintaining germ-free environment', 'General cleaning', 'Patient bathing', 'Room decoration'] },
+                { id: 'nur16', question: 'What is triage?', options: ['Prioritizing patient treatment', 'Patient discharge', 'Hospital admission', 'Staff scheduling'] },
+                { id: 'nur17', question: 'What is catheterization?', options: ['Inserting tube into body', 'Blood drawing', 'Temperature taking', 'Wound cleaning'] },
+                { id: 'nur18', question: 'What is mental health nursing?', options: ['Psychiatric patient care', 'Physical therapy', 'Surgery assistance', 'Laboratory work'] },
+                { id: 'nur19', question: 'What is community health nursing?', options: ['Public health focus', 'Hospital only care', 'Private clinic work', 'Research only'] },
+                { id: 'nur20', question: 'What is obstetric nursing?', options: ['Pregnancy and childbirth care', 'Child care only', 'Elderly care only', 'Surgery care only'] },
+                { id: 'nur21', question: 'What is pediatric nursing?', options: ['Children\'s healthcare', 'Adult care', 'Elderly care', 'Animal care'] },
+                { id: 'nur22', question: 'What is geriatric nursing?', options: ['Elderly patient care', 'Child care', 'Youth care', 'Adult care only'] },
+                { id: 'nur23', question: 'What is emergency nursing?', options: ['Urgent care treatment', 'Routine checkups', 'Preventive care', 'Long-term care'] },
+                { id: 'nur24', question: 'What is rehabilitation nursing?', options: ['Recovery and function restoration', 'Emergency care', 'Surgery', 'Diagnosis'] },
+                { id: 'nur25', question: 'What is surgical nursing?', options: ['Operating room assistance', 'Outpatient care only', 'Home visits only', 'School nursing'] }
+            ],
+            // MBBS - General Medicine
+            'mbbs': [
+                { id: 'mbbs1', question: 'What is anatomy?', options: ['Study of body structure', 'Drug study', 'Mental health', 'Surgery technique'] },
+                { id: 'mbbs2', question: 'What is physiology?', options: ['Study of body functions', 'Disease study', 'Drug making', 'Surgical procedure'] },
+                { id: 'mbbs3', question: 'What is pathology?', options: ['Study of diseases', 'Surgery', 'Drug treatment', 'Patient care'] },
+                { id: 'mbbs4', question: 'What is pharmacology?', options: ['Study of drugs', 'Surgery techniques', 'Body structure', 'Mental health'] },
+                { id: 'mbbs5', question: 'What does MBBS stand for?', options: ['Bachelor of Medicine & Surgery', 'Medical Board Basic Studies', 'Master of Biological Sciences', 'Medical Bureau of Surgery'] },
+                { id: 'mbbs6', question: 'What is a stethoscope used for?', options: ['Listening to body sounds', 'Measuring temperature', 'Checking blood pressure', 'Eye examination'] },
+                { id: 'mbbs7', question: 'What is biochemistry in medicine?', options: ['Chemical processes in body', 'Drug manufacturing', 'Hospital management', 'Surgery techniques'] },
+                { id: 'mbbs8', question: 'What is microbiology?', options: ['Study of microorganisms', 'Study of large organisms', 'Surgery', 'Mental health'] },
+                { id: 'mbbs9', question: 'What is forensic medicine?', options: ['Medicine for legal purposes', 'Emergency medicine', 'Pediatrics', 'Geriatrics'] },
+                { id: 'mbbs10', question: 'What is community medicine?', options: ['Public health focus', 'Private practice', 'Hospital surgery', 'Pharmacy'] },
+                { id: 'mbbs11', question: 'What is pediatrics?', options: ['Child healthcare', 'Elderly care', 'Surgery', 'Mental health'] },
+                { id: 'mbbs12', question: 'What is obstetrics?', options: ['Pregnancy & childbirth care', 'Heart treatment', 'Brain surgery', 'Eye care'] },
+                { id: 'mbbs13', question: 'What is orthopedics?', options: ['Bone & muscle treatment', 'Heart surgery', 'Brain treatment', 'Eye surgery'] },
+                { id: 'mbbs14', question: 'What is dermatology?', options: ['Skin treatment', 'Heart care', 'Brain surgery', 'Bone treatment'] },
+                { id: 'mbbs15', question: 'What is cardiology?', options: ['Heart medicine', 'Skin treatment', 'Bone care', 'Mental health'] },
+                { id: 'mbbs16', question: 'What is neurology?', options: ['Nervous system medicine', 'Heart treatment', 'Bone surgery', 'Skin care'] },
+                { id: 'mbbs17', question: 'What is ophthalmology?', options: ['Eye medicine', 'Ear treatment', 'Heart care', 'Brain surgery'] },
+                { id: 'mbbs18', question: 'What is ENT?', options: ['Ear, Nose, Throat', 'Emergency & Trauma', 'Endocrine Treatment', 'Eye & Nerve Treatment'] },
+                { id: 'mbbs19', question: 'What is radiology?', options: ['Medical imaging', 'Radiation therapy', 'Drug administration', 'Surgery'] },
+                { id: 'mbbs20', question: 'What is anesthesiology?', options: ['Pain management during surgery', 'Disease diagnosis', 'Drug making', 'Patient counseling'] },
+                { id: 'mbbs21', question: 'What is psychiatry?', options: ['Mental health treatment', 'Physical therapy', 'Surgery', 'Radiology'] },
+                { id: 'mbbs22', question: 'What is emergency medicine?', options: ['Acute care treatment', 'Long-term care', 'Mental health', 'Preventive care'] },
+                { id: 'mbbs23', question: 'What is general surgery?', options: ['Surgical treatment of diseases', 'Drug prescription', 'Mental therapy', 'Physical rehabilitation'] },
+                { id: 'mbbs24', question: 'What is internal medicine?', options: ['Adult diseases treatment', 'Surgery', 'Child care', 'Mental health'] },
+                { id: 'mbbs25', question: 'What is clinical rotation?', options: ['Practical hospital training', 'Classroom lecture', 'Research work', 'Exam preparation'] }
+            ],
+            // Pharm.D - Clinical Pharmacy
+            'pharm_d': [
+                { id: 'phar1', question: 'What is pharmacokinetics?', options: ['Drug movement in body', 'Drug manufacturing', 'Drug pricing', 'Drug advertising'] },
+                { id: 'phar2', question: 'What is drug interaction?', options: ['Effect of multiple drugs together', 'Drug manufacturing', 'Drug storage', 'Drug disposal'] },
+                { id: 'phar3', question: 'What is therapeutic drug monitoring?', options: ['Measuring drug levels in blood', 'Drug marketing', 'Drug sales', 'Drug packaging'] },
+                { id: 'phar4', question: 'What is clinical pharmacy?', options: ['Patient-focused pharmacy', 'Drug manufacturing', 'Retail pharmacy', 'Drug research'] },
+                { id: 'phar5', question: 'What is pharmacodynamics?', options: ['Drug effect on body', 'Drug pricing', 'Drug packaging', 'Drug transport'] },
+                { id: 'phar6', question: 'What is adverse drug reaction?', options: ['Unwanted drug effect', 'Positive drug effect', 'Drug manufacturing', 'Drug storage'] },
+                { id: 'phar7', question: 'What is drug dosage form?', options: ['Physical form of drug', 'Drug price', 'Drug name', 'Drug company'] },
+                { id: 'phar8', question: 'What is pharmaceutical care?', options: ['Patient-centered drug therapy', 'Drug sales', 'Drug manufacturing', 'Drug packaging'] },
+                { id: 'phar9', question: 'What is drug formulation?', options: ['Drug preparation method', 'Drug pricing', 'Drug marketing', 'Drug sales'] },
+                { id: 'phar10', question: 'What is medication therapy management?', options: ['Optimizing drug therapy', 'Drug pricing', 'Drug advertising', 'Drug manufacturing'] },
+                { id: 'phar11', question: 'What is drug stability?', options: ['Drug shelf life', 'Drug effect', 'Drug interaction', 'Drug dosage'] },
+                { id: 'phar12', question: 'What is compounding pharmacy?', options: ['Custom drug preparation', 'Drug selling', 'Drug research', 'Drug testing'] },
+                { id: 'phar13', question: 'What is pharmacovigilance?', options: ['Drug safety monitoring', 'Drug sales', 'Drug manufacturing', 'Drug advertising'] },
+                { id: 'phar14', question: 'What is drug bioavailability?', options: ['Drug absorption rate', 'Drug price', 'Drug name', 'Drug color'] },
+                { id: 'phar15', question: 'What is generic drug?', options: ['Non-brand drug version', 'New drug', 'Expensive drug', 'Rare drug'] },
+                { id: 'phar16', question: 'What is drug half-life?', options: ['Time for drug to reduce by half', 'Drug price', 'Drug weight', 'Drug color'] },
+                { id: 'phar17', question: 'What is pharmacy informatics?', options: ['Technology in pharmacy', 'Drug manufacturing', 'Drug sales', 'Drug research'] },
+                { id: 'phar18', question: 'What is controlled substance?', options: ['Regulated drug', 'Over-the-counter drug', 'Generic drug', 'Herbal drug'] },
+                { id: 'phar19', question: 'What is drug compliance?', options: ['Following drug instructions', 'Drug manufacturing', 'Drug pricing', 'Drug packaging'] },
+                { id: 'phar20', question: 'What is pharmaceutical chemistry?', options: ['Drug chemical composition', 'Drug pricing', 'Drug marketing', 'Drug sales'] },
+                { id: 'phar21', question: 'What is drug metabolism?', options: ['Drug breakdown in body', 'Drug production', 'Drug storage', 'Drug packaging'] },
+                { id: 'phar22', question: 'What is pharmacy practice?', options: ['Professional pharmacy activities', 'Drug manufacturing', 'Drug research', 'Drug testing'] },
+                { id: 'phar23', question: 'What is clinical trial?', options: ['Drug testing on humans', 'Drug sales', 'Drug pricing', 'Drug advertising'] },
+                { id: 'phar24', question: 'What is pharmacy ethics?', options: ['Professional conduct standards', 'Drug pricing', 'Drug sales', 'Drug manufacturing'] },
+                { id: 'phar25', question: 'What is pharmacoeconomics?', options: ['Cost-effectiveness of drugs', 'Drug manufacturing', 'Drug testing', 'Drug advertising'] }
+            ],
+            // Data Science
+            'data_science': [
+                { id: 'ds1', question: 'What is data visualization?', options: ['Graphical data representation', 'Data storage', 'Data deletion', 'Data encryption'] },
+                { id: 'ds2', question: 'What is Python used for in data science?', options: ['Data analysis & modeling', 'Web design only', 'Gaming only', 'Hardware control'] },
+                { id: 'ds3', question: 'What is a data pipeline?', options: ['Data flow automation', 'Physical pipe', 'Network cable', 'Power cord'] },
+                { id: 'ds4', question: 'What is exploratory data analysis?', options: ['Initial data investigation', 'Final report', 'Data backup', 'Data deletion'] },
+                { id: 'ds5', question: 'What is SQL?', options: ['Database query language', 'Programming language only', 'Markup language', 'Scripting language'] },
+                { id: 'ds6', question: 'What is a data warehouse?', options: ['Central data repository', 'Physical warehouse', 'Small database', 'Spreadsheet'] },
+                { id: 'ds7', question: 'What is big data?', options: ['Large complex datasets', 'Small data', 'Old data', 'Deleted data'] },
+                { id: 'ds8', question: 'What is statistical analysis?', options: ['Mathematical data interpretation', 'Data storage', 'Data copying', 'Data sharing'] },
+                { id: 'ds9', question: 'What is Pandas in Python?', options: ['Data manipulation library', 'Animal type', 'Game library', 'Graphics library'] },
+                { id: 'ds10', question: 'What is regression analysis?', options: ['Predicting continuous values', 'Data grouping', 'Data sorting', 'Data cleaning'] },
+                { id: 'ds11', question: 'What is classification in ML?', options: ['Categorizing data', 'Sorting files', 'Naming variables', 'Creating folders'] },
+                { id: 'ds12', question: 'What is a dashboard?', options: ['Visual data display', 'Car part', 'Keyboard type', 'Mouse type'] },
+                { id: 'ds13', question: 'What is ETL?', options: ['Extract, Transform, Load', 'Enter, Test, Leave', 'Edit, Transfer, Link', 'Evaluate, Track, Log'] },
+                { id: 'ds14', question: 'What is data cleaning?', options: ['Fixing data errors', 'Deleting all data', 'Copying data', 'Sharing data'] },
+                { id: 'ds15', question: 'What is hypothesis testing?', options: ['Statistical significance testing', 'Theory creation', 'Data storage', 'File organization'] },
+                { id: 'ds16', question: 'What is NumPy?', options: ['Numerical computing library', 'Database type', 'Web framework', 'Design tool'] },
+                { id: 'ds17', question: 'What is A/B testing?', options: ['Comparing two versions', 'Alphabet learning', 'Data sorting', 'File naming'] },
+                { id: 'ds18', question: 'What is correlation?', options: ['Relationship between variables', 'Data error', 'File type', 'Network issue'] },
+                { id: 'ds19', question: 'What is Jupyter Notebook?', options: ['Interactive coding environment', 'Physical notebook', 'Drawing app', 'Video player'] },
+                { id: 'ds20', question: 'What is feature selection?', options: ['Choosing relevant variables', 'Product features', 'UI design', 'Code formatting'] },
+                { id: 'ds21', question: 'What is dimensionality reduction?', options: ['Reducing data variables', 'Physical shrinking', 'File compression', 'Screen resolution'] },
+                { id: 'ds22', question: 'What is time series analysis?', options: ['Analyzing data over time', 'Clock repair', 'Calendar making', 'History study'] },
+                { id: 'ds23', question: 'What is data mining?', options: ['Discovering patterns in data', 'Underground mining', 'Web scraping only', 'File searching'] },
+                { id: 'ds24', question: 'What is Tableau?', options: ['Data visualization tool', 'Database type', 'Programming language', 'Operating system'] },
+                { id: 'ds25', question: 'What is business intelligence?', options: ['Data-driven decision making', 'Corporate spying', 'Product selling', 'Marketing campaign'] }
+            ],
+            // Marketing Management
+            'marketing': [
+                { id: 'mkt1', question: 'What is market segmentation?', options: ['Dividing market into groups', 'Cutting products', 'Breaking contracts', 'Splitting profits'] },
+                { id: 'mkt2', question: 'What is brand positioning?', options: ['How brand is perceived', 'Physical store location', 'Product placement', 'Price setting'] },
+                { id: 'mkt3', question: 'What is the marketing mix (4Ps)?', options: ['Product, Price, Place, Promotion', 'People, Process, Profit, Plan', 'Plan, Predict, Perform, Produce', 'Profit, Price, Place, People'] },
+                { id: 'mkt4', question: 'What is target audience?', options: ['Intended customer group', 'Competitor analysis', 'Market research', 'Product design'] },
+                { id: 'mkt5', question: 'What is a SWOT analysis?', options: ['Strengths, Weaknesses, Opportunities, Threats', 'Sales, Warehouse, Operations, Technology', 'Strategy, Work, Objectives, Timeline', 'Supply, Wholesale, Outsource, Trade'] },
+                { id: 'mkt6', question: 'What is content marketing?', options: ['Creating valuable content', 'Product pricing', 'Store design', 'Employee training'] },
+                { id: 'mkt7', question: 'What is SEO?', options: ['Search Engine Optimization', 'Sales Enhancement Operation', 'Store Efficiency Optimization', 'Service Excellence Operation'] },
+                { id: 'mkt8', question: 'What is customer persona?', options: ['Fictional customer profile', 'Real customer name', 'Employee type', 'Product category'] },
+                { id: 'mkt9', question: 'What is ROI in marketing?', options: ['Return on Investment', 'Rate of Inflation', 'Record of Income', 'Range of Interest'] },
+                { id: 'mkt10', question: 'What is a call-to-action?', options: ['Prompt to take action', 'Phone call script', 'Meeting invitation', 'Job description'] },
+                { id: 'mkt11', question: 'What is influencer marketing?', options: ['Using popular people for promotion', 'Manager training', 'Employee rewards', 'Product testing'] },
+                { id: 'mkt12', question: 'What is market research?', options: ['Gathering customer data', 'Selling products', 'Pricing strategy', 'Store design'] },
+                { id: 'mkt13', question: 'What is brand awareness?', options: ['How well brand is known', 'Product quality', 'Price point', 'Store location'] },
+                { id: 'mkt14', question: 'What is conversion rate?', options: ['Visitors becoming customers', 'Currency exchange', 'Employee turnover', 'Product return rate'] },
+                { id: 'mkt15', question: 'What is email marketing?', options: ['Promotional emails', 'Personal emails', 'Work emails', 'Spam emails'] },
+                { id: 'mkt16', question: 'What is competitive analysis?', options: ['Studying competitors', 'Price comparison only', 'Product copying', 'Employee hiring'] },
+                { id: 'mkt17', question: 'What is customer journey?', options: ['Customer experience path', 'Physical travel', 'Product delivery', 'Store tour'] },
+                { id: 'mkt18', question: 'What is PPC advertising?', options: ['Pay-Per-Click ads', 'Product Placement Campaign', 'Professional Promotion Content', 'Public Price Comparison'] },
+                { id: 'mkt19', question: 'What is a marketing funnel?', options: ['Customer acquisition stages', 'Physical funnel', 'Budget allocation', 'Team structure'] },
+                { id: 'mkt20', question: 'What is guerrilla marketing?', options: ['Unconventional low-cost marketing', 'Aggressive marketing', 'Military marketing', 'Large budget marketing'] },
+                { id: 'mkt21', question: 'What is social media marketing?', options: ['Promotion via social platforms', 'Traditional advertising', 'Print marketing', 'TV commercials'] },
+                { id: 'mkt22', question: 'What is lead generation?', options: ['Finding potential customers', 'Employee recruitment', 'Product development', 'Store opening'] },
+                { id: 'mkt23', question: 'What is brand loyalty?', options: ['Customer preference for brand', 'Employee commitment', 'Investor interest', 'Supplier relationship'] },
+                { id: 'mkt24', question: 'What is viral marketing?', options: ['Rapidly spreading content', 'Medical marketing', 'Slow marketing', 'Expensive marketing'] },
+                { id: 'mkt25', question: 'What is product differentiation?', options: ['Making product unique', 'Price reduction', 'Quality decrease', 'Feature removal'] }
+            ],
+            // Psychology
+            'psychology': [
+                { id: 'psy1', question: 'What is cognitive psychology?', options: ['Study of mental processes', 'Brain surgery', 'Drug therapy', 'Physical therapy'] },
+                { id: 'psy2', question: 'What is behavioral psychology?', options: ['Study of observable behavior', 'Dream analysis', 'Brain anatomy', 'Genetic study'] },
+                { id: 'psy3', question: 'Who is considered the father of psychology?', options: ['Wilhelm Wundt', 'Sigmund Freud', 'Carl Rogers', 'B.F. Skinner'] },
+                { id: 'psy4', question: 'What is the unconscious mind?', options: ['Mental processes outside awareness', 'Sleep state', 'Memory loss', 'Physical numbness'] },
+                { id: 'psy5', question: 'What is conditioning in psychology?', options: ['Learning through association', 'Physical exercise', 'Air conditioning', 'Job training'] },
+                { id: 'psy6', question: 'What is developmental psychology?', options: ['Human growth and change', 'Software development', 'Product design', 'Economic growth'] },
+                { id: 'psy7', question: 'What is clinical psychology?', options: ['Treating mental disorders', 'Hospital management', 'Medical research', 'Drug manufacturing'] },
+                { id: 'psy8', question: 'What is social psychology?', options: ['How people influence each other', 'Party planning', 'Government policy', 'Marketing strategy'] },
+                { id: 'psy9', question: 'What is personality psychology?', options: ['Individual differences study', 'Celebrity research', 'Fashion psychology', 'Beauty standards'] },
+                { id: 'psy10', question: 'What is a psychological disorder?', options: ['Mental health condition', 'Physical disease', 'Learning difficulty', 'Social problem'] },
+                { id: 'psy11', question: 'What is psychotherapy?', options: ['Talk-based treatment', 'Drug therapy only', 'Surgery', 'Physical therapy'] },
+                { id: 'psy12', question: 'What is the id, ego, and superego?', options: ['Freud\'s personality model', 'Brain parts', 'Hormone types', 'Cell structures'] },
+                { id: 'psy13', question: 'What is cognitive behavioral therapy?', options: ['Changing thought patterns', 'Brain surgery', 'Drug treatment', 'Physical exercise'] },
+                { id: 'psy14', question: 'What is research methodology?', options: ['Scientific study methods', 'Library research', 'Internet search', 'Note taking'] },
+                { id: 'psy15', question: 'What is abnormal psychology?', options: ['Study of atypical behavior', 'Normal psychology', 'Average psychology', 'Common psychology'] },
+                { id: 'psy16', question: 'What is positive psychology?', options: ['Study of well-being', 'Negative thinking', 'Mental illness focus', 'Problem focus'] },
+                { id: 'psy17', question: 'What is neuropsychology?', options: ['Brain-behavior relationship', 'Nerve surgery', 'Drug study', 'Physical therapy'] },
+                { id: 'psy18', question: 'What is industrial-organizational psychology?', options: ['Workplace psychology', 'Factory construction', 'Business finance', 'Product development'] },
+                { id: 'psy19', question: 'What is a case study?', options: ['In-depth individual analysis', 'Legal case', 'Briefcase type', 'Computer case'] },
+                { id: 'psy20', question: 'What is motivation in psychology?', options: ['Drive to achieve goals', 'Movement', 'Movie creation', 'Motivation speech'] },
+                { id: 'psy21', question: 'What is perception?', options: ['Interpreting sensory information', 'Vision only', 'Hearing only', 'Smell only'] },
+                { id: 'psy22', question: 'What is memory in psychology?', options: ['Information encoding and retrieval', 'Computer memory', 'Memorial service', 'Historical event'] },
+                { id: 'psy23', question: 'What is stress response?', options: ['Body\'s reaction to demands', 'Exercise routine', 'Work schedule', 'Study plan'] },
+                { id: 'psy24', question: 'What is emotional intelligence?', options: ['Understanding and managing emotions', 'High IQ', 'Academic success', 'Physical strength'] },
+                { id: 'psy25', question: 'What is the placebo effect?', options: ['Improvement from belief', 'Drug effectiveness', 'Surgery outcome', 'Exercise result'] }
+            ],
+            // Default questions for other specializations
+            'default': [
+                { id: 'def1', question: 'What motivates you in your career choice?', options: ['Passion for the field', 'Salary potential', 'Job security', 'Family expectations'] },
+                { id: 'def2', question: 'How do you approach problem-solving?', options: ['Analytical thinking', 'Creative solutions', 'Collaborative approach', 'Research-based'] },
+                { id: 'def3', question: 'What is your preferred work environment?', options: ['Office setting', 'Remote work', 'Field work', 'Hybrid model'] },
+                { id: 'def4', question: 'How do you handle deadlines?', options: ['Plan ahead', 'Work under pressure', 'Delegate tasks', 'Prioritize carefully'] },
+                { id: 'def5', question: 'What leadership style do you prefer?', options: ['Democratic', 'Autocratic', 'Laissez-faire', 'Transformational'] },
+                { id: 'def6', question: 'How do you stay updated in your field?', options: ['Online courses', 'Industry publications', 'Networking', 'Conferences'] },
+                { id: 'def7', question: 'What is your approach to teamwork?', options: ['Collaborative', 'Independent contributor', 'Team leader', 'Support role'] },
+                { id: 'def8', question: 'How do you handle feedback?', options: ['Welcome it openly', 'Consider carefully', 'Prefer positive only', 'Seek it actively'] },
+                { id: 'def9', question: 'What drives your professional growth?', options: ['Learning new skills', 'Promotions', 'Recognition', 'Impact on others'] },
+                { id: 'def10', question: 'How do you balance work and life?', options: ['Strict boundaries', 'Flexible approach', 'Work-focused', 'Life-focused'] },
+                { id: 'def11', question: 'What is your communication style?', options: ['Direct and clear', 'Diplomatic', 'Detailed', 'Concise'] },
+                { id: 'def12', question: 'How do you approach learning?', options: ['Hands-on practice', 'Reading and research', 'Visual learning', 'Group discussions'] },
+                { id: 'def13', question: 'What is your risk tolerance?', options: ['Moderate risks', 'Risk-averse', 'Risk-taking', 'Calculated risks'] },
+                { id: 'def14', question: 'How do you set goals?', options: ['SMART goals', 'Long-term vision', 'Short-term targets', 'Flexible objectives'] },
+                { id: 'def15', question: 'What is your approach to innovation?', options: ['Embrace change', 'Cautious adoption', 'Early adopter', 'Traditional approach'] },
+                { id: 'def16', question: 'How do you handle stress?', options: ['Exercise and relaxation', 'Talk to others', 'Focus on solutions', 'Take breaks'] },
+                { id: 'def17', question: 'What is your networking style?', options: ['Build genuine connections', 'Professional focus', 'Selective networking', 'Active networker'] },
+                { id: 'def18', question: 'How do you approach decision-making?', options: ['Data-driven', 'Intuition-based', 'Consensus-seeking', 'Quick decisions'] },
+                { id: 'def19', question: 'What is your time management approach?', options: ['Structured schedule', 'Flexible timing', 'Priority-based', 'Deadline-driven'] },
+                { id: 'def20', question: 'How do you handle conflicts?', options: ['Address directly', 'Seek mediation', 'Avoid confrontation', 'Find compromise'] },
+                { id: 'def21', question: 'What is your technology proficiency?', options: ['Advanced', 'Intermediate', 'Basic', 'Expert'] },
+                { id: 'def22', question: 'How do you approach mentorship?', options: ['Seek mentors actively', 'Prefer self-learning', 'Mentor others', 'Both mentee and mentor'] },
+                { id: 'def23', question: 'What is your career timeline expectation?', options: ['5-year plan', '10-year vision', 'Flexible path', 'Short-term focus'] },
+                { id: 'def24', question: 'How do you approach continuous improvement?', options: ['Regular self-assessment', 'Feedback-based', 'Training programs', 'Peer learning'] },
+                { id: 'def25', question: 'What legacy do you want to leave?', options: ['Industry impact', 'Team development', 'Innovation', 'Social contribution'] }
+            ]
+        };
+
+        // Default subjects based on education level
+        const defaultSubjects = {
+            '10th': ['Tamil', 'English', 'Mathematics', 'Science', 'Social Science'],
+            '12th': ['Tamil', 'English', 'Physics', 'Chemistry', 'Mathematics/Biology'],
+            'undergraduate': ['Core Subject 1', 'Core Subject 2', 'Core Subject 3'],
+            'graduate': ['Specialization 1', 'Specialization 2'],
+            'postgraduate': ['Research Area 1', 'Thesis'],
+            'working': []
+        };
+
+        // Skills by domain
+        const skillsByDomain = {
+            'technology': ['Problem Solving', 'Coding', 'Logical Thinking', 'Debugging', 'System Design'],
+            'science': ['Research', 'Analysis', 'Lab Work', 'Data Interpretation', 'Critical Thinking'],
+            'arts': ['Creativity', 'Visual Design', 'Communication', 'Presentation', 'Conceptual Thinking'],
+            'business': ['Leadership', 'Communication', 'Negotiation', 'Strategic Thinking', 'Finance'],
+            'healthcare': ['Patient Care', 'Attention to Detail', 'Empathy', 'Medical Knowledge', 'Teamwork'],
+            'default': ['Communication', 'Problem Solving', 'Teamwork', 'Time Management', 'Adaptability']
+        };
+
+        // Personality questions
+        const personalityQuestions = [
+            { id: 'p1', question: 'In social situations, I tend to:', options: ['Lead conversations', 'Listen more than talk', 'Depends on the situation'] },
+            { id: 'p2', question: 'When solving problems, I prefer:', options: ['Logical analysis', 'Creative intuition', 'A mix of both'] },
+            { id: 'p3', question: 'Under pressure, I usually:', options: ['Stay calm & focused', 'Feel stressed but manage', 'Need time to decompress'] },
+            { id: 'p4', question: 'I prefer working:', options: ['Independently', 'In teams', 'Both equally'] },
+            { id: 'p5', question: 'My decision-making style is:', options: ['Quick & decisive', 'Careful & thorough', 'Balanced approach'] }
+        ];
+
+        // Stream change handler - populate specializations
+        document.getElementById('stream').addEventListener('change', function() {
+            const stream = this.value;
+            const specializationField = document.getElementById('specializationField');
+            const specializationSelect = document.getElementById('specialization');
+            
+            if (stream && specializationsByStream[stream]) {
+                specializationField.style.display = 'block';
+                specializationSelect.innerHTML = '<option value="">Select your specialization</option>';
+                
+                specializationsByStream[stream].forEach(spec => {
+                    const option = document.createElement('option');
+                    option.value = spec.value;
+                    option.textContent = spec.label;
+                    specializationSelect.appendChild(option);
+                });
+            } else {
+                specializationField.style.display = 'none';
+            }
+        });
+
+        // Education level change handler - show/hide stream and working fields
+        document.getElementById('educationLevel').addEventListener('change', function() {
+            const level = this.value;
+            const workingFields = document.getElementById('workingFields');
+            const streamField = document.getElementById('streamField');
+            
+            workingFields.style.display = level === 'working' ? 'block' : 'none';
+            streamField.style.display = ['undergraduate', 'graduate', 'postgraduate', '12th'].includes(level) ? 'block' : 'none';
+            
+            // Hide specialization when stream changes
+            document.getElementById('specializationField').style.display = 'none';
+        });
+
+        function toggleInterest(element) {
+            element.classList.toggle('selected');
+        }
+
+        function addSubject(name = '', marks = '') {
+            const container = document.getElementById('subjectsContainer');
+            const row = document.createElement('div');
+            row.className = 'subject-row';
+            row.innerHTML = `
+                <input type="text" placeholder="Subject name" value="${name}" class="subject-name">
+                <input type="number" placeholder="Marks %" min="0" max="100" value="${marks}" class="subject-marks">
+                <button class="remove-btn" onclick="this.parentElement.remove()">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            container.appendChild(row);
+        }
+
+        function loadSubjects() {
+            const level = document.getElementById('educationLevel').value || 'undergraduate';
+            const container = document.getElementById('subjectsContainer');
+            container.innerHTML = '';
+            
+            const subjects = defaultSubjects[level] || defaultSubjects['undergraduate'];
+            subjects.forEach(subject => addSubject(subject, ''));
+        }
+
+        function loadSkills() {
+            const container = document.getElementById('skillsContainer');
+            const interests = assessmentData.interests;
+            let skillSet = [];
+            
+            if (interests.includes('technology')) {
+                skillSet = skillsByDomain['technology'];
+            } else if (interests.includes('science')) {
+                skillSet = skillsByDomain['science'];
+            } else if (interests.includes('arts')) {
+                skillSet = skillsByDomain['arts'];
+            } else if (interests.includes('business')) {
+                skillSet = skillsByDomain['business'];
+            } else if (interests.includes('healthcare')) {
+                skillSet = skillsByDomain['healthcare'];
+            } else {
+                skillSet = skillsByDomain['default'];
+            }
+            
+            container.innerHTML = skillSet.map((skill, idx) => `
+                <div class="personality-scale">
+                    <div class="scale-question">${skill}</div>
+                    <div class="scale-options" data-skill="${skill}">
+                        <div class="scale-option" data-value="1" onclick="selectScale(this)">Beginner</div>
+                        <div class="scale-option" data-value="2" onclick="selectScale(this)">Basic</div>
+                        <div class="scale-option" data-value="3" onclick="selectScale(this)">Good</div>
+                        <div class="scale-option" data-value="4" onclick="selectScale(this)">Expert</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function loadPersonalityQuestions() {
+            const container = document.getElementById('personalityContainer');
+            container.innerHTML = personalityQuestions.map((q, idx) => `
+                <div class="personality-scale">
+                    <div class="scale-question">${idx + 1}. ${q.question}</div>
+                    <div class="mcq-options" data-question="${q.id}">
+                        ${q.options.map((opt, i) => `
+                            <div class="mcq-option" data-value="${opt}" onclick="selectMCQ(this)">
+                                <div class="mcq-letter">${String.fromCharCode(65 + i)}</div>
+                                <div class="mcq-text">${opt}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function loadDomainQuestions() {
+            const container = document.getElementById('domainQuestionsContainer');
+            const subtitle = document.getElementById('domainSubtitle');
+            const specialization = assessmentData.specialization || document.getElementById('specialization')?.value || '';
+            const stream = assessmentData.basicInfo?.stream || document.getElementById('stream')?.value || '';
+            
+            let questions = [];
+            let questionTitle = 'Answer these interview-style questions for your field';
+            
+            // Get 25 questions based on specialization
+            if (specialization && domainInterviewQuestions[specialization]) {
+                questions = domainInterviewQuestions[specialization];
+                const specLabel = specializationsByStream[stream]?.find(s => s.value === specialization)?.label || specialization;
+                questionTitle = `25 Interview Questions for ${specLabel}`;
+            } else if (stream) {
+                // Fall back to stream-based questions
+                const streamToSpec = {
+                    'engineering': 'cse',
+                    'medical': 'mbbs',
+                    'science': 'data_science',
+                    'business': 'marketing',
+                    'arts': 'psychology'
+                };
+                const fallbackSpec = streamToSpec[stream] || 'default';
+                questions = domainInterviewQuestions[fallbackSpec] || domainInterviewQuestions['default'];
+                questionTitle = `25 Assessment Questions for ${stream.charAt(0).toUpperCase() + stream.slice(1)} Stream`;
+            } else {
+                questions = domainInterviewQuestions['default'];
+            }
+            
+            subtitle.textContent = questionTitle;
+            
+            // Show all 25 questions with pagination-style display
+            container.innerHTML = `
+                <div class="questions-progress" style="text-align: center; margin-bottom: 20px; padding: 16px; background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%); border-radius: 16px; border: 1px solid #e2e8f0;">
+                    <span id="questionProgress" style="font-weight: 700; color: #f97316; font-size: 18px;">Question 1 of ${questions.length}</span>
+                    <div style="width: 100%; height: 8px; background: #e2e8f0; border-radius: 9999px; margin-top: 12px; overflow: hidden;">
+                        <div id="questionProgressBar" style="width: ${100/questions.length}%; height: 100%; background: linear-gradient(90deg, #f97316, #ea580c, #c2410c); border-radius: 9999px; transition: width 0.3s;"></div>
+                    </div>
+                    <div style="margin-top: 8px; font-size: 12px; color: #64748b;">
+                        <span id="answeredCount">0</span> of ${questions.length} answered
+                    </div>
+                </div>
+                <div id="questionsWrapper">
+                    ${questions.map((q, idx) => `
+                        <div class="question-item" data-question-idx="${idx}" style="${idx > 0 ? 'display: none;' : ''}">
+                            <div class="personality-scale">
+                                <div class="scale-question" style="font-size: 16px; margin-bottom: 16px;">
+                                    <span style="color: #f97316; font-weight: 700;">Q${idx + 1}.</span> ${q.question}
+                                </div>
+                                <div class="mcq-options" data-question="${q.id}">
+                                    ${q.options.map((opt, i) => `
+                                        <div class="mcq-option" data-value="${opt}" data-correct="${i === 0 ? 'true' : 'false'}" onclick="selectDomainAnswer(this, ${idx}, ${questions.length})">
+                                            <div class="mcq-letter">${String.fromCharCode(65 + i)}</div>
+                                            <div class="mcq-text">${opt}</div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+                
+                <!-- Navigation buttons for questions -->
+                <div id="questionNavButtons" style="display: flex; gap: 12px; margin-top: 20px;">
+                    <button type="button" class="btn btn-secondary" id="backToStep5Btn" onclick="prevStep()" style="flex: 1;">
+                        <i class="fas fa-arrow-left"></i> Back to Personality
+                    </button>
+                    <button type="button" class="btn btn-primary" id="nextQuestionBtn" onclick="nextDomainQuestion()" style="flex: 1;">
+                        Next Question <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+                
+                <!-- Complete Assessment button - shown only after all questions answered -->
+                <div id="completeAssessmentDiv" style="display: none; margin-top: 20px;">
+                    <div style="text-align: center; padding: 20px; background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%); border-radius: 16px; margin-bottom: 16px;">
+                        <i class="fas fa-check-circle" style="font-size: 48px; color: #10b981; margin-bottom: 12px;"></i>
+                        <h3 style="color: #166534; margin-bottom: 8px;">All Questions Answered! 🎉</h3>
+                        <p style="color: #15803d; font-size: 14px;">You've completed all 25 interview questions. Click below to see your quiz results.</p>
+                    </div>
+                    <button type="button" class="btn btn-primary btn-full" onclick="showQuizResults()" style="padding: 18px 24px; font-size: 18px; background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);">
+                        <i class="fas fa-chart-bar"></i> View My Quiz Results
+                    </button>
+                </div>
+                
+                <!-- Quiz Results Section - Hidden initially -->
+                <div id="quizResultsSection" style="display: none; margin-top: 20px;"></div>
+            `;
+            
+            window.currentDomainQuestion = 0;
+            window.totalDomainQuestions = questions.length;
+            window.answeredQuestions = new Set();
+        }
+        
+        function selectDomainAnswer(element, questionIdx, totalQuestions) {
+            const parent = element.parentElement;
+            parent.querySelectorAll('.mcq-option').forEach(opt => opt.classList.remove('selected'));
+            element.classList.add('selected');
+            
+            // Track answered questions
+            window.answeredQuestions.add(questionIdx);
+            const answeredCount = window.answeredQuestions.size;
+            document.getElementById('answeredCount').textContent = answeredCount;
+            
+            // Check if all questions answered OR if we're on the last question
+            const isLastQuestion = (questionIdx === totalQuestions - 1);
+            
+            if (answeredCount === totalQuestions) {
+                // All questions answered - show complete button
+                document.getElementById('questionNavButtons').style.display = 'none';
+                document.getElementById('completeAssessmentDiv').style.display = 'block';
+            } else if (isLastQuestion) {
+                // Last question answered but not all answered - show both nav and complete option
+                document.getElementById('nextQuestionBtn').innerHTML = '<i class="fas fa-rocket"></i> Start Match Engine';
+                document.getElementById('nextQuestionBtn').onclick = function() { showQuizResults(); };
+                document.getElementById('nextQuestionBtn').style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
+            }
+            
+            // Auto-advance to next question after short delay (only if not last question)
+            setTimeout(() => {
+                if (questionIdx < totalQuestions - 1) {
+                    nextDomainQuestion();
+                }
+            }, 400);
+        }
+        
+        function nextDomainQuestion() {
+            const current = window.currentDomainQuestion;
+            const total = window.totalDomainQuestions;
+            
+            if (current < total - 1) {
+                document.querySelector(`[data-question-idx="${current}"]`).style.display = 'none';
+                document.querySelector(`[data-question-idx="${current + 1}"]`).style.display = 'block';
+                window.currentDomainQuestion = current + 1;
+                
+                // Update progress
+                document.getElementById('questionProgress').textContent = `Question ${current + 2} of ${total}`;
+                document.getElementById('questionProgressBar').style.width = `${((current + 2) / total) * 100}%`;
+                
+                // Update button text for last question
+                if (current + 1 === total - 1) {
+                    // Check if last question is already answered
+                    if (window.answeredQuestions.has(current + 1)) {
+                        document.getElementById('nextQuestionBtn').innerHTML = '<i class="fas fa-rocket"></i> Start Match Engine';
+                        document.getElementById('nextQuestionBtn').onclick = function() { showQuizResults(); };
+                        document.getElementById('nextQuestionBtn').style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
+                    } else {
+                        document.getElementById('nextQuestionBtn').innerHTML = 'Last Question <i class="fas fa-flag-checkered"></i>';
+                    }
+                }
+                
+                // Update back button
+                document.getElementById('backToStep5Btn').innerHTML = '<i class="fas fa-arrow-left"></i> Previous Question';
+                document.getElementById('backToStep5Btn').onclick = function() { prevDomainQuestion(); };
+            }
+        }
+        
+        function prevDomainQuestion() {
+            const current = window.currentDomainQuestion;
+            const total = window.totalDomainQuestions;
+            
+            if (current > 0) {
+                document.querySelector(`[data-question-idx="${current}"]`).style.display = 'none';
+                document.querySelector(`[data-question-idx="${current - 1}"]`).style.display = 'block';
+                window.currentDomainQuestion = current - 1;
+                
+                // Update progress
+                document.getElementById('questionProgress').textContent = `Question ${current} of ${total}`;
+                document.getElementById('questionProgressBar').style.width = `${(current / total) * 100}%`;
+                
+                // Update back button for first question
+                if (current - 1 === 0) {
+                    document.getElementById('backToStep5Btn').innerHTML = '<i class="fas fa-arrow-left"></i> Back to Personality';
+                    document.getElementById('backToStep5Btn').onclick = function() { prevStep(); };
+                }
+                
+                // Reset next button style and function
+                document.getElementById('nextQuestionBtn').innerHTML = 'Next Question <i class="fas fa-arrow-right"></i>';
+                document.getElementById('nextQuestionBtn').onclick = function() { nextDomainQuestion(); };
+                document.getElementById('nextQuestionBtn').style.background = '';
+                
+                // Hide complete button if going back
+                document.getElementById('questionNavButtons').style.display = 'flex';
+                document.getElementById('completeAssessmentDiv').style.display = 'none';
+            }
+        }
+
+        function selectScale(element) {
+            const parent = element.parentElement;
+            parent.querySelectorAll('.scale-option').forEach(opt => opt.classList.remove('selected'));
+            element.classList.add('selected');
+        }
+
+        function selectMCQ(element) {
+            const parent = element.parentElement;
+            parent.querySelectorAll('.mcq-option').forEach(opt => opt.classList.remove('selected'));
+            element.classList.add('selected');
+        }
+
+        function collectCurrentStepData() {
+            switch(currentStep) {
+                case 1:
+                    assessmentData.basicInfo = {
+                        name: document.getElementById('fullName').value,
+                        age: document.getElementById('age').value,
+                        educationLevel: document.getElementById('educationLevel').value,
+                        stream: document.getElementById('stream')?.value || '',
+                        specialization: document.getElementById('specialization')?.value || '',
+                        jobTitle: document.getElementById('jobTitle')?.value || '',
+                        experience: document.getElementById('experience')?.value || ''
+                    };
+                    assessmentData.specialization = document.getElementById('specialization')?.value || '';
+                    break;
+                case 2:
+                    assessmentData.interests = Array.from(document.querySelectorAll('.interest-item.selected'))
+                        .map(el => el.dataset.value);
+                    assessmentData.hobbies = document.getElementById('hobbies').value;
+                    break;
+                case 3:
+                    const subjects = [];
+                    document.querySelectorAll('.subject-row').forEach(row => {
+                        const name = row.querySelector('.subject-name').value;
+                        const marks = row.querySelector('.subject-marks').value;
+                        if (name && marks) {
+                            subjects.push({ name, marks: parseInt(marks) });
+                        }
+                    });
+                    assessmentData.academics = subjects;
+                    break;
+                case 4:
+                    document.querySelectorAll('.scale-options').forEach(group => {
+                        const skill = group.dataset.skill;
+                        const selected = group.querySelector('.scale-option.selected');
+                        if (selected) {
+                            assessmentData.skills[skill] = parseInt(selected.dataset.value);
+                        }
+                    });
+                    break;
+                case 5:
+                    document.querySelectorAll('#personalityContainer .mcq-options').forEach(group => {
+                        const qId = group.dataset.question;
+                        const selected = group.querySelector('.mcq-option.selected');
+                        if (selected) {
+                            assessmentData.personality[qId] = selected.dataset.value;
+                        }
+                    });
+                    break;
+                case 6:
+                    document.querySelectorAll('#domainQuestionsContainer .mcq-options').forEach(group => {
+                        const qId = group.dataset.question;
+                        const selected = group.querySelector('.mcq-option.selected');
+                        if (selected) {
+                            assessmentData.domainAnswers[qId] = selected.dataset.value;
+                        }
+                    });
+                    break;
+            }
+        }
+
+        function updateUI() {
+            // Update step indicators
+            document.querySelectorAll('.progress-step').forEach(step => {
+                const stepNum = parseInt(step.dataset.step);
+                step.classList.remove('active', 'completed');
+                if (stepNum === currentStep) step.classList.add('active');
+                else if (stepNum < currentStep) step.classList.add('completed');
+            });
+            
+            // Update step labels
+            document.querySelectorAll('.step-label').forEach((label, idx) => {
+                label.classList.toggle('active', idx + 1 === currentStep);
+            });
+            
+            // Update header
+            document.getElementById('headerTitle').textContent = stepTitles[currentStep];
+            document.getElementById('currentStepNum').textContent = currentStep;
+            
+            // Show current step screen
+            document.querySelectorAll('.step-screen').forEach(screen => {
+                screen.classList.toggle('active', parseInt(screen.dataset.step) === currentStep);
+            });
+        }
+
+        function showError(message) {
+            // Remove existing error
+            const existing = document.querySelector('.validation-alert');
+            if (existing) existing.remove();
+            
+            // Create error element
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'validation-alert';
+            errorDiv.innerHTML = '<i class="fas fa-exclamation-circle"></i> ' + message;
+            document.body.appendChild(errorDiv);
+            
+            // Also show alert for Simple Browser
+            alert(message);
+            
+            // Remove after 5 seconds
+            setTimeout(() => {
+                if (errorDiv.parentElement) errorDiv.remove();
+            }, 5000);
+        }
+
+        function nextStep() {
+            console.log('nextStep called, current step:', currentStep);
+            collectCurrentStepData();
+            console.log('Data collected:', assessmentData);
+            
+            // Validate current step
+            if (currentStep === 1) {
+                const name = document.getElementById('fullName').value.trim();
+                const age = document.getElementById('age').value.trim();
+                const edu = document.getElementById('educationLevel').value;
+                
+                if (!name || !age || !edu) {
+                    showError('Please fill in: Name, Age, and Current Status');
+                    return false;
+                }
+            }
+            
+            if (currentStep === 2) {
+                if (assessmentData.interests.length === 0) {
+                    showError('Please select at least one interest');
+                    return false;
+                }
+            }
+            
+            if (currentStep === 3) {
+                // Validate subjects - at least one subject with marks
+                const subjectRows = document.querySelectorAll('.subject-row');
+                let hasValidSubject = false;
+                
+                subjectRows.forEach(row => {
+                    const name = row.querySelector('.subject-name').value.trim();
+                    const marks = row.querySelector('.subject-marks').value.trim();
+                    if (name && marks) {
+                        hasValidSubject = true;
+                    }
+                });
+                
+                if (!hasValidSubject) {
+                    showError('Please enter marks for at least one subject');
+                    return false;
+                }
+            }
+            
+            if (currentStep === 4) {
+                // Validate skills - at least one skill rated
+                const selectedSkills = document.querySelectorAll('.scale-option.selected');
+                if (selectedSkills.length === 0) {
+                    showError('Please rate at least one skill');
+                    return false;
+                }
+            }
+            
+            if (currentStep === 5) {
+                // Validate personality questions - all must be answered
+                const personalityGroups = document.querySelectorAll('#personalityContainer .mcq-options');
+                let allAnswered = true;
+                
+                personalityGroups.forEach(group => {
+                    if (!group.querySelector('.mcq-option.selected')) {
+                        allAnswered = false;
+                    }
+                });
+                
+                if (!allAnswered) {
+                    showError('Please answer all personality questions');
+                    return false;
+                }
+            }
+            
+            if (currentStep === 6) {
+                // Validate domain questions - all must be answered
+                const domainGroups = document.querySelectorAll('#domainQuestionsContainer .mcq-options');
+                let allAnswered = true;
+                
+                domainGroups.forEach(group => {
+                    if (!group.querySelector('.mcq-option.selected')) {
+                        allAnswered = false;
+                    }
+                });
+                
+                if (!allAnswered) {
+                    showError('Please answer all domain questions before submitting');
+                    return false;
+                }
+            }
+            
+            // Prepare next step data
+            if (currentStep === 2) {
+                loadSubjects();
+            } else if (currentStep === 3) {
+                loadSkills();
+            } else if (currentStep === 4) {
+                loadPersonalityQuestions();
+            } else if (currentStep === 5) {
+                loadDomainQuestions();
+            }
+            
+            if (currentStep < totalSteps) {
+                currentStep++;
+                updateUI();
+                window.scrollTo(0, 0);
+            }
+        }
+
+        function prevStep() {
+            collectCurrentStepData();
+            if (currentStep > 1) {
+                currentStep--;
+                updateUI();
+                window.scrollTo(0, 0);
+            }
+        }
+
+        function showQuizResults() {
+            collectCurrentStepData();
+            
+            // Get the specialization and questions
+            const specialization = assessmentData.specialization || assessmentData.basicInfo?.specialization || '';
+            const stream = assessmentData.basicInfo?.stream || '';
+            
+            let questions = [];
+            if (specialization && domainInterviewQuestions[specialization]) {
+                questions = domainInterviewQuestions[specialization];
+            } else if (stream) {
+                const streamToSpec = {
+                    'engineering': 'cse',
+                    'medical': 'mbbs',
+                    'science': 'data_science',
+                    'business': 'marketing',
+                    'arts': 'psychology'
+                };
+                const fallbackSpec = streamToSpec[stream] || 'default';
+                questions = domainInterviewQuestions[fallbackSpec] || domainInterviewQuestions['default'];
+            } else {
+                questions = domainInterviewQuestions['default'];
+            }
+            
+            // Calculate score and collect wrong answers
+            let correctCount = 0;
+            let wrongAnswers = [];
+            const domainAnswers = assessmentData.domainAnswers || {};
+            
+            questions.forEach((q, idx) => {
+                const userAnswer = domainAnswers[q.id];
+                const correctAnswer = q.options[0]; // First option is always correct
+                
+                if (userAnswer === correctAnswer) {
+                    correctCount++;
+                } else if (userAnswer) {
+                    wrongAnswers.push({
+                        questionNum: idx + 1,
+                        question: q.question,
+                        userAnswer: userAnswer,
+                        correctAnswer: correctAnswer
+                    });
+                }
+            });
+            
+            const totalQuestions = questions.length;
+            const percentage = Math.round((correctCount / totalQuestions) * 100);
+            
+            // Determine grade and message
+            let grade, gradeColor, message;
+            if (percentage >= 90) {
+                grade = 'A+'; gradeColor = '#10b981'; message = 'Excellent! You have outstanding knowledge in this field! 🌟';
+            } else if (percentage >= 80) {
+                grade = 'A'; gradeColor = '#22c55e'; message = 'Great job! You have strong domain knowledge! 👏';
+            } else if (percentage >= 70) {
+                grade = 'B+'; gradeColor = '#84cc16'; message = 'Good work! You have solid fundamentals! 👍';
+            } else if (percentage >= 60) {
+                grade = 'B'; gradeColor = '#eab308'; message = 'Not bad! Keep learning to improve! 📚';
+            } else if (percentage >= 50) {
+                grade = 'C'; gradeColor = '#f97316'; message = 'You passed! Focus on the areas you got wrong. 💪';
+            } else {
+                grade = 'D'; gradeColor = '#ef4444'; message = 'Keep studying! Review the correct answers below. 📖';
+            }
+            
+            // Generate wrong answers HTML
+            let wrongAnswersHtml = '';
+            if (wrongAnswers.length > 0) {
+                wrongAnswersHtml = `
+                    <div style="margin-top: 24px;">
+                        <h4 style="color: #dc2626; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+                            <i class="fas fa-times-circle"></i> Questions You Got Wrong (${wrongAnswers.length})
+                        </h4>
+                        <div style="display: flex; flex-direction: column; gap: 12px;">
+                            ${wrongAnswers.map(w => `
+                                <div style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 12px; padding: 16px;">
+                                    <div style="font-weight: 600; color: #1e293b; margin-bottom: 8px;">
+                                        Q${w.questionNum}. ${w.question}
+                                    </div>
+                                    <div style="display: flex; flex-direction: column; gap: 6px; font-size: 14px;">
+                                        <div style="display: flex; align-items: center; gap: 8px;">
+                                            <span style="background: #fee2e2; color: #dc2626; padding: 2px 8px; border-radius: 4px; font-weight: 600;">Your Answer:</span>
+                                            <span style="color: #dc2626;">${w.userAnswer}</span>
+                                        </div>
+                                        <div style="display: flex; align-items: center; gap: 8px;">
+                                            <span style="background: #dcfce7; color: #16a34a; padding: 2px 8px; border-radius: 4px; font-weight: 600;">Correct Answer:</span>
+                                            <span style="color: #16a34a; font-weight: 500;">${w.correctAnswer}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            } else {
+                wrongAnswersHtml = `
+                    <div style="margin-top: 24px; text-align: center; padding: 24px; background: #dcfce7; border-radius: 16px;">
+                        <i class="fas fa-trophy" style="font-size: 48px; color: #10b981; margin-bottom: 12px;"></i>
+                        <h4 style="color: #166534;">Perfect Score! 🎉</h4>
+                        <p style="color: #15803d;">You answered all questions correctly!</p>
+                    </div>
+                `;
+            }
+            
+            // Show results section
+            const resultsSection = document.getElementById('quizResultsSection');
+            resultsSection.style.display = 'block';
+            resultsSection.innerHTML = `
+                <div style="background: white; border-radius: 20px; padding: 24px; box-shadow: 0 10px 40px rgba(0,0,0,0.1);">
+                    <!-- Score Card -->
+                    <div style="text-align: center; margin-bottom: 24px;">
+                        <h3 style="color: #1e293b; margin-bottom: 16px; font-size: 20px;">📊 Your Quiz Results</h3>
+                        <div style="display: inline-flex; align-items: center; justify-content: center; width: 140px; height: 140px; border-radius: 50%; background: linear-gradient(135deg, ${gradeColor}20, ${gradeColor}40); border: 4px solid ${gradeColor};">
+                            <div style="text-align: center;">
+                                <div style="font-size: 48px; font-weight: 800; color: ${gradeColor};">${grade}</div>
+                                <div style="font-size: 14px; color: #64748b; font-weight: 600;">${correctCount}/${totalQuestions}</div>
+                            </div>
+                        </div>
+                        <div style="margin-top: 16px;">
+                            <div style="font-size: 32px; font-weight: 700; color: ${gradeColor};">${percentage}%</div>
+                            <div style="color: #64748b; font-size: 14px; margin-top: 4px;">${message}</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Score Breakdown -->
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px;">
+                        <div style="background: #dcfce7; padding: 16px; border-radius: 12px; text-align: center;">
+                            <div style="font-size: 24px; font-weight: 700; color: #16a34a;">${correctCount}</div>
+                            <div style="font-size: 12px; color: #15803d;">Correct ✓</div>
+                        </div>
+                        <div style="background: #fee2e2; padding: 16px; border-radius: 12px; text-align: center;">
+                            <div style="font-size: 24px; font-weight: 700; color: #dc2626;">${wrongAnswers.length}</div>
+                            <div style="font-size: 12px; color: #dc2626;">Wrong ✗</div>
+                        </div>
+                        <div style="background: #e0e7ff; padding: 16px; border-radius: 12px; text-align: center;">
+                            <div style="font-size: 24px; font-weight: 700; color: #f97316;">${totalQuestions}</div>
+                            <div style="font-size: 12px; color: #f97316;">Total</div>
+                        </div>
+                    </div>
+                    
+                    ${wrongAnswersHtml}
+                    
+                    <!-- Find Jobs Button -->
+                    <div style="margin-top: 32px;">
+                        <button type="button" class="btn btn-primary btn-full" onclick="submitAssessment()" style="padding: 20px 24px; font-size: 18px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); display: flex; align-items: center; justify-content: center; gap: 12px;">
+                            <i class="fas fa-search"></i> 
+                            <span>Find Suitable Jobs For Me</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                        <p style="text-align: center; margin-top: 12px; color: #64748b; font-size: 13px;">
+                            Based on your quiz score, personality, and skills, we'll find the best career matches for you!
+                        </p>
+                    </div>
+                </div>
+            `;
+            
+            // Hide the questions and show results
+            document.getElementById('questionsWrapper').style.display = 'none';
+            document.getElementById('completeAssessmentDiv').style.display = 'none';
+            document.querySelector('.questions-progress').style.display = 'none';
+            document.getElementById('questionNavButtons').style.display = 'none';
+            
+            // Scroll to top
+            window.scrollTo(0, 0);
+        }
+
+        async function submitAssessment() {
+            console.log('📤 Submitting assessment...');
+            collectCurrentStepData();
+            console.log('Assessment data:', assessmentData);
+            
+            // Show loading
+            document.getElementById('loadingOverlay').classList.add('active');
+            
+            const payload = {
+                education_level: assessmentData.basicInfo.educationLevel,
+                basic_info: assessmentData.basicInfo,
+                answers: {
+                    interests: assessmentData.interests,
+                    hobbies: assessmentData.hobbies,
+                    academics: assessmentData.academics,
+                    skills: assessmentData.skills,
+                    personality: assessmentData.personality,
+                    domain: assessmentData.domainAnswers
+                }
+            };
+            console.log('Sending payload:', payload);
+            
+            try {
+                const response = await fetch('/api/assessment/submit', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                
+                console.log('Response status:', response.status);
+                const data = await response.json();
+                console.log('Response data:', data);
+                
+                if (data.success) {
+                    console.log('✅ Assessment successful!');
+                    console.log('Recommendations:', data.recommendations);
+                    // Store results
+                    sessionStorage.setItem('careerResults', JSON.stringify(data));
+                    console.log('Stored in sessionStorage, redirecting...');
+                    // Redirect to results
+                    window.location.href = '/results';
+                } else {
+                    throw new Error(data.error || 'Assessment failed');
+                }
+            } catch (error) {
+                console.error('❌ Error:', error);
+                alert('Something went wrong: ' + error.message);
+                document.getElementById('loadingOverlay').classList.remove('active');
+            }
+        }
+
+        // Handle back button
+        document.getElementById('backBtn').addEventListener('click', function(e) {
+            if (currentStep > 1) {
+                e.preventDefault();
+                prevStep();
+            }
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            updateUI();
+        });
+    </script>
+</body>
+</html>
+
+
+
+

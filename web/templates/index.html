@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Career Guidance System</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(249, 115, 22, 0.15);
+        }
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+        }
+        .feature-card {
+            border: 1px solid #fdba74;
+        }
+    </style>
+</head>
+<body class="min-h-screen" style="background: #fff7ed;">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg fixed w-full z-50">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center space-x-2">
+                    <i class="fas fa-rocket text-2xl text-orange-500"></i>
+                    <span class="text-xl font-bold text-gray-800">AI Career Guide</span>
+                </div>
+                <div class="hidden md:flex items-center space-x-6">
+                    <a href="#features" class="text-gray-600 hover:text-orange-500 transition">Features</a>
+                    <a href="#how-it-works" class="text-gray-600 hover:text-orange-500 transition">How It Works</a>
+                    <a href="/careers" class="text-gray-600 hover:text-orange-500 transition">Careers</a>
+                    <a href="/chat" class="text-gray-600 hover:text-orange-500 transition">AI Mentor</a>
+                    {% if session.user_id %}
+                        <a href="/profile" class="text-gray-600 hover:text-orange-500 transition">
+                            <i class="fas fa-user mr-1"></i>{{ session.user_name.split()[0] if session.user_name else 'Profile' }}
+                        </a>
+                        <a href="/logout" class="text-gray-600 hover:text-orange-500 transition">Logout</a>
+                    {% else %}
+                        <a href="/login" class="text-gray-600 hover:text-orange-500 transition">Login</a>
+                        <a href="/signup" class="bg-orange-100 text-orange-500 px-4 py-2 rounded-full hover:bg-orange-200 transition">
+                            Sign Up
+                        </a>
+                    {% endif %}
+                    <a href="/assessment" class="bg-orange-500 text-white px-6 py-2 rounded-full hover:bg-orange-600 transition">
+                        Start Assessment
+                    </a>
+                </div>
+                <!-- Mobile menu button -->
+                <button onclick="toggleMobileMenu()" class="md:hidden text-gray-600">
+                    <i class="fas fa-bars text-2xl"></i>
+                </button>
+            </div>
+            <!-- Mobile Menu -->
+            <div id="mobileMenu" class="hidden md:hidden pb-4">
+                <a href="#features" class="block py-2 text-gray-600 hover:text-orange-500">Features</a>
+                <a href="/careers" class="block py-2 text-gray-600 hover:text-orange-500">Careers</a>
+                <a href="/chat" class="block py-2 text-gray-600 hover:text-orange-500">AI Mentor</a>
+                {% if session.user_id %}
+                    <a href="/profile" class="block py-2 text-gray-600 hover:text-orange-500">My Profile</a>
+                    <a href="/logout" class="block py-2 text-gray-600 hover:text-orange-500">Logout</a>
+                {% else %}
+                    <a href="/login" class="block py-2 text-gray-600 hover:text-orange-500">Login</a>
+                    <a href="/signup" class="block py-2 text-gray-600 hover:text-orange-500">Sign Up</a>
+                {% endif %}
+                <a href="/assessment" class="block mt-2 bg-orange-500 text-white text-center py-2 rounded-full">Start Assessment</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="gradient-bg pt-32 pb-20 px-4">
+        <div class="max-w-6xl mx-auto text-center">
+            <h1 class="text-4xl md:text-6xl font-bold text-white mb-6">
+                Discover Your Perfect Career Path
+            </h1>
+            <p class="text-xl text-orange-100 mb-8 max-w-3xl mx-auto">
+                AI-powered career guidance using Machine Learning, Psychology, and Real-time Job Market Data 
+                to help you find your ideal career, predict future salaries, and create a personalized roadmap.
+            </p>
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                <a href="/assessment" class="bg-white text-orange-500 px-8 py-4 rounded-full font-semibold text-lg hover:bg-gray-100 transition">
+                    <i class="fas fa-rocket mr-2"></i>Start Free Assessment
+                </a>
+                <a href="#features" class="border-2 border-white text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-white hover:text-orange-500 transition">
+                    <i class="fas fa-info-circle mr-2"></i>Learn More
+                </a>
+            </div>
+            <div class="mt-12 flex justify-center gap-8 text-white">
+                <div class="text-center">
+                    <div class="text-3xl font-bold">25+</div>
+                    <div class="text-orange-200">Career Paths</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-3xl font-bold">15+</div>
+                    <div class="text-orange-200">Top Colleges</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-3xl font-bold">10yr</div>
+                    <div class="text-orange-200">Job Forecast</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-20 px-4">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
+                    Super Advanced AI Features
+                </h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">
+                    Our platform uses cutting-edge AI and ML technologies to provide you with 
+                    the most accurate and personalized career guidance.
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Feature 1 -->
+                <a href="/assessment" class="bg-white rounded-xl p-6 shadow-lg card-hover transition duration-300 cursor-pointer block">
+                    <div class="feature-icon bg-orange-100 mb-4">
+                        <i class="fas fa-brain text-2xl text-orange-600"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">AI Skill Detection Test</h3>
+                    <p class="text-gray-600">
+                        Interactive AI-based test that identifies your natural strengths and abilities.
+                    </p>
+                    <span class="text-orange-500 text-sm mt-3 inline-block">Start Test →</span>
+                </a>
+                
+                <!-- Feature 2 -->
+                <a href="/assessment" class="bg-white rounded-xl p-6 shadow-lg card-hover transition duration-300 cursor-pointer block">
+                    <div class="feature-icon bg-green-100 mb-4">
+                        <i class="fas fa-chart-line text-2xl text-green-600"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Academic Performance Analyzer</h3>
+                    <p class="text-gray-600">
+                        ML model analyzes your marks to predict suitable career fields.
+                    </p>
+                    <span class="text-orange-500 text-sm mt-3 inline-block">Analyze Now →</span>
+                </a>
+                
+                <!-- Feature 3 -->
+                <a href="/assessment" class="bg-white rounded-xl p-6 shadow-lg card-hover transition duration-300 cursor-pointer block">
+                    <div class="feature-icon bg-orange-100 mb-4">
+                        <i class="fas fa-user-circle text-2xl text-orange-500"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Personality Profiler</h3>
+                    <p class="text-gray-600">
+                        Built using MBTI + Big Five psychology models for accurate personality analysis.
+                    </p>
+                    <span class="text-orange-500 text-sm mt-3 inline-block">Take Test →</span>
+                </a>
+                
+                <!-- Feature 4 -->
+                <a href="/assessment" class="bg-white rounded-xl p-6 shadow-lg card-hover transition duration-300 cursor-pointer block">
+                    <div class="feature-icon bg-yellow-100 mb-4">
+                        <i class="fas fa-bullseye text-2xl text-yellow-600"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Career Match Engine</h3>
+                    <p class="text-gray-600">
+                        Matches your profile with 25+ career paths using weighted ML scoring.
+                    </p>
+                    <span class="text-orange-500 text-sm mt-3 inline-block">Find Careers →</span>
+                </a>
+                
+                <!-- Feature 5 -->
+                <a href="/assessment" class="bg-white rounded-xl p-6 shadow-lg card-hover transition duration-300 cursor-pointer block">
+                    <div class="feature-icon bg-red-100 mb-4">
+                        <i class="fas fa-route text-2xl text-red-600"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">AI Roadmap Generator</h3>
+                    <p class="text-gray-600">
+                        Creates personalized 5-year learning plan for your chosen career.
+                    </p>
+                    <span class="text-orange-500 text-sm mt-3 inline-block">Get Roadmap →</span>
+                </a>
+                
+                <!-- Feature 6 -->
+                <a href="/assessment" class="bg-white rounded-xl p-6 shadow-lg card-hover transition duration-300 cursor-pointer block">
+                    <div class="feature-icon bg-orange-100 mb-4">
+                        <i class="fas fa-dollar-sign text-2xl text-orange-600"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Salary Predictor</h3>
+                    <p class="text-gray-600">
+                        Uses real job market data to estimate starting, mid-career, and senior salaries.
+                    </p>
+                    <span class="text-orange-500 text-sm mt-3 inline-block">Predict Salary →</span>
+                </a>
+                
+                <!-- Feature 7 -->
+                <a href="/careers" class="bg-white rounded-xl p-6 shadow-lg card-hover transition duration-300 cursor-pointer block">
+                    <div class="feature-icon bg-pink-100 mb-4">
+                        <i class="fas fa-trending-up text-2xl text-pink-600"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Job Market Forecast</h3>
+                    <p class="text-gray-600">
+                        10-year job demand prediction using trend analysis and AI impact assessment.
+                    </p>
+                    <span class="text-orange-500 text-sm mt-3 inline-block">View Forecast →</span>
+                </a>
+                
+                <!-- Feature 8 -->
+                <a href="/assessment" class="bg-white rounded-xl p-6 shadow-lg card-hover transition duration-300 cursor-pointer block">
+                    <div class="feature-icon bg-cyan-100 mb-4">
+                        <i class="fas fa-university text-2xl text-cyan-600"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">College Finder</h3>
+                    <p class="text-gray-600">
+                        Suggests best colleges based on budget, location, cutoff, and course quality.
+                    </p>
+                    <span class="text-orange-500 text-sm mt-3 inline-block">Find Colleges →</span>
+                </a>
+                
+                <!-- Feature 9 -->
+                <a href="/scam-detector" class="bg-white rounded-xl p-6 shadow-lg card-hover transition duration-300 cursor-pointer block">
+                    <div class="feature-icon bg-orange-100 mb-4">
+                        <i class="fas fa-shield-alt text-2xl text-orange-600"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Scam Detector</h3>
+                    <p class="text-gray-600">
+                        Detects fake career advice, scam courses, and unrealistic promises.
+                    </p>
+                    <span class="text-orange-500 text-sm mt-3 inline-block">Check Now →</span>
+                </a>
+                
+                <!-- Feature 10 -->
+                <a href="/chat" class="bg-white rounded-xl p-6 shadow-lg card-hover transition duration-300 md:col-span-2 lg:col-span-3 lg:max-w-md lg:mx-auto cursor-pointer block">
+                    <div class="feature-icon bg-teal-100 mb-4 mx-auto lg:mx-0">
+                        <i class="fas fa-robot text-2xl text-teal-600"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2 text-center lg:text-left">24/7 AI Mentor Chatbot</h3>
+                    <p class="text-gray-600 text-center lg:text-left">
+                        Your personal AI career counselor available anytime for guidance and support.
+                    </p>
+                    <span class="text-orange-500 text-sm mt-3 inline-block">Chat Now →</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section id="how-it-works" class="py-20 px-4 bg-gray-100">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
+                    How It Works
+                </h2>
+                <p class="text-gray-600">Simple 4-step process to discover your perfect career</p>
+            </div>
+            
+            <div class="grid md:grid-cols-4 gap-8">
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-orange-500 text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">
+                        1
+                    </div>
+                    <h3 class="font-semibold mb-2">Enter Your Details</h3>
+                    <p class="text-gray-600 text-sm">Share your academic scores, interests, and preferences</p>
+                </div>
+                
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-orange-500 text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">
+                        2
+                    </div>
+                    <h3 class="font-semibold mb-2">Take Personality Test</h3>
+                    <p class="text-gray-600 text-sm">Complete the MBTI-based personality assessment</p>
+                </div>
+                
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-orange-500 text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">
+                        3
+                    </div>
+                    <h3 class="font-semibold mb-2">AI Analysis</h3>
+                    <p class="text-gray-600 text-sm">Our ML models analyze 70+ parameters</p>
+                </div>
+                
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-orange-500 text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">
+                        4
+                    </div>
+                    <h3 class="font-semibold mb-2">Get Your Report</h3>
+                    <p class="text-gray-600 text-sm">Receive detailed career recommendations & roadmap</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="gradient-bg py-20 px-4">
+        <div class="max-w-4xl mx-auto text-center">
+            <h2 class="text-3xl md:text-4xl font-bold text-white mb-6">
+                Ready to Discover Your Dream Career?
+            </h2>
+            <p class="text-orange-100 mb-8 text-lg">
+                Join thousands of students who have found their perfect career path with our AI-powered guidance.
+            </p>
+            <a href="/assessment" class="inline-block bg-white text-orange-500 px-10 py-4 rounded-full font-semibold text-lg hover:bg-gray-100 transition">
+                <i class="fas fa-rocket mr-2"></i>Start Free Assessment Now
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-gray-300 py-12 px-4">
+        <div class="max-w-6xl mx-auto">
+            <div class="grid md:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center space-x-2 mb-4">
+                        <i class="fas fa-graduation-cap text-2xl text-orange-400"></i>
+                        <span class="text-xl font-bold text-white">Cariax</span>
+                    </div>
+                    <p class="text-sm">
+                        AI-powered career guidance platform helping students discover their perfect career path.
+                    </p>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold text-white mb-4">Features</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" class="hover:text-orange-400">Career Matching</a></li>
+                        <li><a href="#" class="hover:text-orange-400">Personality Test</a></li>
+                        <li><a href="#" class="hover:text-orange-400">Salary Predictor</a></li>
+                        <li><a href="#" class="hover:text-orange-400">College Finder</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold text-white mb-4">Resources</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="/careers" class="hover:text-orange-400">Explore Careers</a></li>
+                        <li><a href="/chat" class="hover:text-orange-400">AI Mentor</a></li>
+                        <li><a href="/scam-detector" class="hover:text-orange-400">Scam Detector</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold text-white mb-4">Contact</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><i class="fas fa-envelope mr-2"></i>support@cariax.com</li>
+                        <li><i class="fas fa-globe mr-2"></i>www.cariax.com</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-sm">
+                <p>&copy; 2024 AI Career Guide. All rights reserved. | Powered by AI & Machine Learning</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('hidden');
+        }
+    </script>
+</body>
+</html>
+
+
+
+

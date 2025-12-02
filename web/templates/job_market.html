@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Job Market Forecast - Cariax</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
+    <style>
+        body { background: #f8fafc; }
+        .market-header {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            padding: 20px;
+            padding-top: 60px;
+            color: white;
+            position: relative;
+        }
+        .back-btn {
+            position: absolute;
+            top: 16px;
+            left: 16px;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255,255,255,0.2);
+            border-radius: 12px;
+            color: white;
+            text-decoration: none;
+        }
+        .market-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        .market-subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 20px;
+            max-width: 480px;
+            margin: 0 auto;
+            padding-bottom: 100px;
+        }
+
+        /* Trend Card */
+        .trend-card {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
+            border: 1px solid #f1f5f9;
+        }
+        .trend-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+        .trend-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1e293b;
+        }
+        .trend-badge {
+            padding: 4px 12px;
+            border-radius: 9999px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .trend-badge.hot {
+            background: #fef3c7;
+            color: #d97706;
+        }
+        .trend-badge.growing {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+        .trend-badge.stable {
+            background: #dbeafe;
+            color: #3b82f6;
+        }
+        .trend-badge.declining {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        /* Industry Item */
+        .industry-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px 0;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        .industry-item:last-child { border-bottom: none; }
+        .industry-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+        .industry-info { flex: 1; }
+        .industry-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 4px;
+        }
+        .industry-growth {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+        }
+        .industry-growth.positive { color: #16a34a; }
+        .industry-growth.negative { color: #dc2626; }
+        .industry-jobs {
+            text-align: right;
+        }
+        .industry-jobs-value {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1e293b;
+        }
+        .industry-jobs-label {
+            font-size: 11px;
+            color: #94a3b8;
+        }
+
+        /* Salary Trends */
+        .salary-trend-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        .salary-trend-item:last-child { border-bottom: none; }
+        .salary-role {
+            flex: 1;
+            font-size: 14px;
+            color: #475569;
+        }
+        .salary-values {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .salary-current {
+            text-align: right;
+        }
+        .salary-current-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1e293b;
+        }
+        .salary-current-label {
+            font-size: 10px;
+            color: #94a3b8;
+        }
+        .salary-change {
+            font-size: 13px;
+            font-weight: 600;
+            padding: 4px 8px;
+            border-radius: 6px;
+        }
+        .salary-change.up {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+        .salary-change.down {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        /* Skills Demand */
+        .skill-demand-item {
+            margin-bottom: 16px;
+        }
+        .skill-demand-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+        .skill-name {
+            font-size: 14px;
+            font-weight: 500;
+            color: #1e293b;
+        }
+        .skill-demand-value {
+            font-size: 13px;
+            color: #f97316;
+            font-weight: 600;
+        }
+        .skill-bar {
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 9999px;
+            overflow: hidden;
+        }
+        .skill-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #f97316, #ea580c);
+            border-radius: 9999px;
+            transition: width 0.5s ease;
+        }
+
+        /* Forecast Tips */
+        .tip-card {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 14px;
+            padding: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            gap: 12px;
+        }
+        .tip-icon {
+            width: 40px;
+            height: 40px;
+            background: #f97316;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            flex-shrink: 0;
+        }
+        .tip-content h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 4px;
+        }
+        .tip-content p {
+            font-size: 13px;
+            color: #64748b;
+            line-height: 1.5;
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-top: 1px solid #e2e8f0;
+            padding: 8px 0;
+            display: flex;
+            justify-content: space-around;
+            z-index: 50;
+        }
+        .bottom-nav a {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 8px 16px;
+            color: #64748b;
+            text-decoration: none;
+            font-size: 11px;
+        }
+        .bottom-nav a i { font-size: 20px; margin-bottom: 4px; }
+        .bottom-nav a.active { color: #f97316; }
+    </style>
+</head>
+<body>
+    <div class="market-header">
+        <a href="/dashboard" class="back-btn">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+        <h1 class="market-title">📈 Job Market Forecast</h1>
+        <p class="market-subtitle">Industry trends & future demand analysis</p>
+        <p class="market-update" style="font-size: 11px; opacity: 0.8; margin-top: 8px;">🔄 Updated on {{ market_data.update_date }}</p>
+    </div>
+
+    <div class="content">
+        <!-- Today's Market Insight -->
+        <div class="trend-card" style="background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%); border: 2px solid #f97316;">
+            <div class="trend-header">
+                <h3 class="trend-title">📢 Today's Market Insight</h3>
+                <span class="trend-badge hot">Live</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 12px; padding: 12px 0;">
+                <div style="width: 48px; height: 48px; background: #f97316; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white;">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div>
+                    <div style="font-size: 16px; font-weight: 600; color: #1e293b;">{{ market_data.daily_insight.title }}</div>
+                    <div style="font-size: 13px; color: #64748b; margin-top: 4px;">{{ market_data.daily_insight.desc }}</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hot Industries -->
+        <div class="trend-card">
+            <div class="trend-header">
+                <h3 class="trend-title">🔥 Trending Industries</h3>
+                <span class="trend-badge hot">2024-2025</span>
+            </div>
+            
+            <div class="industry-item">
+                <div class="industry-icon" style="background: rgba(99, 102, 241, 0.1); color: #f97316;">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <div class="industry-info">
+                    <div class="industry-name">AI & Machine Learning</div>
+                    <div class="industry-growth positive">
+                        <i class="fas fa-arrow-up"></i> +45% growth
+                    </div>
+                </div>
+                <div class="industry-jobs">
+                    <div class="industry-jobs-value">{{ market_data.ai_jobs }}</div>
+                    <div class="industry-jobs-label">Jobs in India</div>
+                </div>
+            </div>
+
+            <div class="industry-item">
+                <div class="industry-icon" style="background: rgba(16, 185, 129, 0.1); color: #10b981;">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <div class="industry-info">
+                    <div class="industry-name">Cybersecurity</div>
+                    <div class="industry-growth positive">
+                        <i class="fas fa-arrow-up"></i> +38% growth
+                    </div>
+                </div>
+                <div class="industry-jobs">
+                    <div class="industry-jobs-value">{{ market_data.cyber_jobs }}</div>
+                    <div class="industry-jobs-label">Jobs in India</div>
+                </div>
+            </div>
+
+            <div class="industry-item">
+                <div class="industry-icon" style="background: rgba(245, 158, 11, 0.1); color: #f59e0b;">
+                    <i class="fas fa-database"></i>
+                </div>
+                <div class="industry-info">
+                    <div class="industry-name">Data Science</div>
+                    <div class="industry-growth positive">
+                        <i class="fas fa-arrow-up"></i> +35% growth
+                    </div>
+                </div>
+                <div class="industry-jobs">
+                    <div class="industry-jobs-value">{{ market_data.data_jobs }}</div>
+                    <div class="industry-jobs-label">Jobs in India</div>
+                </div>
+            </div>
+
+            <div class="industry-item">
+                <div class="industry-icon" style="background: rgba(236, 72, 153, 0.1); color: #ec4899;">
+                    <i class="fas fa-heartbeat"></i>
+                </div>
+                <div class="industry-info">
+                    <div class="industry-name">Healthcare Tech</div>
+                    <div class="industry-growth positive">
+                        <i class="fas fa-arrow-up"></i> +28% growth
+                    </div>
+                </div>
+                <div class="industry-jobs">
+                    <div class="industry-jobs-value">350K+</div>
+                    <div class="industry-jobs-label">Jobs in India</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Salary Trends -->
+        <div class="trend-card">
+            <div class="trend-header">
+                <h3 class="trend-title">💰 Salary Trends (YoY)</h3>
+                <span class="trend-badge growing">Rising</span>
+            </div>
+            
+            <div class="salary-trend-item">
+                <div class="salary-role">AI/ML Engineer</div>
+                <div class="salary-values">
+                    <div class="salary-current">
+                        <div class="salary-current-value">₹18-35 LPA</div>
+                        <div class="salary-current-label">Avg Salary</div>
+                    </div>
+                    <div class="salary-change up">+22%</div>
+                </div>
+            </div>
+
+            <div class="salary-trend-item">
+                <div class="salary-role">Full Stack Developer</div>
+                <div class="salary-values">
+                    <div class="salary-current">
+                        <div class="salary-current-value">₹12-25 LPA</div>
+                        <div class="salary-current-label">Avg Salary</div>
+                    </div>
+                    <div class="salary-change up">+15%</div>
+                </div>
+            </div>
+
+            <div class="salary-trend-item">
+                <div class="salary-role">DevOps Engineer</div>
+                <div class="salary-values">
+                    <div class="salary-current">
+                        <div class="salary-current-value">₹14-28 LPA</div>
+                        <div class="salary-current-label">Avg Salary</div>
+                    </div>
+                    <div class="salary-change up">+18%</div>
+                </div>
+            </div>
+
+            <div class="salary-trend-item">
+                <div class="salary-role">Product Manager</div>
+                <div class="salary-values">
+                    <div class="salary-current">
+                        <div class="salary-current-value">₹20-45 LPA</div>
+                        <div class="salary-current-label">Avg Salary</div>
+                    </div>
+                    <div class="salary-change up">+12%</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Skills in Demand -->
+        <div class="trend-card">
+            <div class="trend-header">
+                <h3 class="trend-title">🎯 Most In-Demand Skills</h3>
+                <span class="trend-badge stable">2025</span>
+            </div>
+            
+            <div class="skill-demand-item">
+                <div class="skill-demand-header">
+                    <span class="skill-name">Python / AI & ML</span>
+                    <span class="skill-demand-value">95%</span>
+                </div>
+                <div class="skill-bar">
+                    <div class="skill-bar-fill" style="width: 95%;"></div>
+                </div>
+            </div>
+
+            <div class="skill-demand-item">
+                <div class="skill-demand-header">
+                    <span class="skill-name">Cloud (AWS/Azure/GCP)</span>
+                    <span class="skill-demand-value">88%</span>
+                </div>
+                <div class="skill-bar">
+                    <div class="skill-bar-fill" style="width: 88%;"></div>
+                </div>
+            </div>
+
+            <div class="skill-demand-item">
+                <div class="skill-demand-header">
+                    <span class="skill-name">React / Node.js</span>
+                    <span class="skill-demand-value">82%</span>
+                </div>
+                <div class="skill-bar">
+                    <div class="skill-bar-fill" style="width: 82%;"></div>
+                </div>
+            </div>
+
+            <div class="skill-demand-item">
+                <div class="skill-demand-header">
+                    <span class="skill-name">Data Analysis / SQL</span>
+                    <span class="skill-demand-value">78%</span>
+                </div>
+                <div class="skill-bar">
+                    <div class="skill-bar-fill" style="width: 78%;"></div>
+                </div>
+            </div>
+
+            <div class="skill-demand-item">
+                <div class="skill-demand-header">
+                    <span class="skill-name">Cybersecurity</span>
+                    <span class="skill-demand-value">75%</span>
+                </div>
+                <div class="skill-bar">
+                    <div class="skill-bar-fill" style="width: 75%;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pro Tips -->
+        <div class="trend-card">
+            <div class="trend-header">
+                <h3 class="trend-title">💡 Today's Career Tips</h3>
+                <span class="trend-badge stable">Daily</span>
+            </div>
+            
+            {% for tip in market_data.daily_tips %}
+            <div class="tip-card">
+                <div class="tip-icon">
+                    <i class="fas fa-{{ tip.icon }}"></i>
+                </div>
+                <div class="tip-content">
+                    <h4>{{ tip.title }}</h4>
+                    <p>{{ tip.desc }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <a href="/dashboard">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </a>
+        <a href="/careers">
+            <i class="fas fa-compass"></i>
+            <span>Explore</span>
+        </a>
+        <a href="/onboarding">
+            <i class="fas fa-clipboard-check"></i>
+            <span>Assess</span>
+        </a>
+        <a href="/roadmap">
+            <i class="fas fa-route"></i>
+            <span>Roadmap</span>
+        </a>
+        <a href="/profile">
+            <i class="fas fa-user"></i>
+            <span>Profile</span>
+        </a>
+    </nav>
+</body>
+</html>
+
+
+
+

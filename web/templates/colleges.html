@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>College Finder - Cariax</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
+    <style>
+        body { background: #f8fafc; }
+        .college-header {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            padding: 20px;
+            padding-top: 60px;
+            color: white;
+            position: relative;
+        }
+        .back-btn {
+            position: absolute;
+            top: 16px;
+            left: 16px;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255,255,255,0.2);
+            border-radius: 12px;
+            color: white;
+            text-decoration: none;
+        }
+        .college-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        .college-subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 20px;
+            max-width: 480px;
+            margin: 0 auto;
+            padding-bottom: 100px;
+        }
+
+        /* Filters */
+        .filter-section {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid #f1f5f9;
+        }
+        .filter-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 12px;
+        }
+        .filter-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .filter-chip {
+            padding: 8px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 9999px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: white;
+        }
+        .filter-chip:hover { border-color: #c7d2fe; }
+        .filter-chip.active {
+            background: #f97316;
+            border-color: #f97316;
+            color: white;
+        }
+
+        /* College Cards */
+        .college-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            margin-bottom: 16px;
+            border: 1px solid #f1f5f9;
+            transition: all 0.2s;
+        }
+        .college-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+        }
+        .college-banner {
+            height: 120px;
+            background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .college-rank {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background: rgba(0,0,0,0.3);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 9999px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .college-logo {
+            width: 64px;
+            height: 64px;
+            background: white;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        .college-body {
+            padding: 16px;
+        }
+        .college-name {
+            font-size: 17px;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 4px;
+        }
+        .college-location {
+            font-size: 13px;
+            color: #64748b;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .college-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #f1f5f9;
+        }
+        .stat {
+            text-align: center;
+        }
+        .stat-value {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1e293b;
+        }
+        .stat-label {
+            font-size: 10px;
+            color: #94a3b8;
+            text-transform: uppercase;
+        }
+        .college-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 12px;
+        }
+        .college-tag {
+            padding: 4px 10px;
+            background: #f1f5f9;
+            border-radius: 9999px;
+            font-size: 11px;
+            color: #64748b;
+        }
+        .college-tag.highlight {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-top: 1px solid #e2e8f0;
+            padding: 8px 0;
+            display: flex;
+            justify-content: space-around;
+            z-index: 50;
+        }
+        .bottom-nav a {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 8px 16px;
+            color: #64748b;
+            text-decoration: none;
+            font-size: 11px;
+        }
+        .bottom-nav a i { font-size: 20px; margin-bottom: 4px; }
+        .bottom-nav a.active { color: #f97316; }
+    </style>
+</head>
+<body>
+    <div class="college-header">
+        <a href="/dashboard" class="back-btn">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+        <h1 class="college-title">🎓 College Finder</h1>
+        <p class="college-subtitle">Best colleges matched to your career goals</p>
+    </div>
+
+    <div class="content">
+        <!-- Filters -->
+        <div class="filter-section">
+            <div class="filter-title">🌍 Country</div>
+            <div class="filter-chips">
+                <div class="filter-chip active" data-country="all">All Countries</div>
+                <div class="filter-chip" data-country="india">🇮🇳 India</div>
+                <div class="filter-chip" data-country="usa">🇺🇸 USA</div>
+                <div class="filter-chip" data-country="uk">🇬🇧 UK</div>
+                <div class="filter-chip" data-country="canada">🇨🇦 Canada</div>
+                <div class="filter-chip" data-country="australia">🇦🇺 Australia</div>
+                <div class="filter-chip" data-country="germany">🇩🇪 Germany</div>
+            </div>
+        </div>
+
+        <div class="filter-section">
+            <div class="filter-title">📚 Stream</div>
+            <div class="filter-chips">
+                <div class="filter-chip active" data-filter="all">All</div>
+                <div class="filter-chip" data-filter="engineering">Engineering</div>
+                <div class="filter-chip" data-filter="medical">Medical</div>
+                <div class="filter-chip" data-filter="business">Business</div>
+                <div class="filter-chip" data-filter="arts">Arts & Design</div>
+                <div class="filter-chip" data-filter="science">Science</div>
+            </div>
+        </div>
+
+        <div class="filter-section">
+            <div class="filter-title">💰 Budget Range</div>
+            <div class="filter-chips">
+                <div class="filter-chip active" data-budget="all">Any Budget</div>
+                <div class="filter-chip" data-budget="low">< ₹5 LPA</div>
+                <div class="filter-chip" data-budget="medium">₹5-15 LPA</div>
+                <div class="filter-chip" data-budget="high">₹15+ LPA</div>
+            </div>
+        </div>
+
+        <!-- College List -->
+        <div id="collegeList">
+            <!-- Colleges will be loaded dynamically -->
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <a href="/dashboard">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </a>
+        <a href="/careers">
+            <i class="fas fa-compass"></i>
+            <span>Explore</span>
+        </a>
+        <a href="/onboarding">
+            <i class="fas fa-clipboard-check"></i>
+            <span>Assess</span>
+        </a>
+        <a href="/roadmap">
+            <i class="fas fa-route"></i>
+            <span>Roadmap</span>
+        </a>
+        <a href="/profile">
+            <i class="fas fa-user"></i>
+            <span>Profile</span>
+        </a>
+    </nav>
+
+    <script>
+        const colleges = [
+            // India - Engineering
+            {
+                name: 'IIT Delhi',
+                location: 'New Delhi, India',
+                country: 'india',
+                stream: 'engineering',
+                rank: 1,
+                rating: 4.8,
+                fees: '₹2.2 LPA',
+                feesNum: 220000,
+                placement: '₹25 LPA',
+                tags: ['Top 5', 'Excellent Placement', 'Research Focus'],
+                color: '#f97316'
+            },
+            {
+                name: 'IIT Bombay',
+                location: 'Mumbai, India',
+                country: 'india',
+                stream: 'engineering',
+                rank: 2,
+                rating: 4.9,
+                fees: '₹2.2 LPA',
+                feesNum: 220000,
+                placement: '₹28 LPA',
+                tags: ['Top 5', 'Industry Connect', 'Innovation Hub'],
+                color: '#dc2626'
+            },
+            {
+                name: 'IIT Madras',
+                location: 'Chennai, India',
+                country: 'india',
+                stream: 'engineering',
+                rank: 3,
+                rating: 4.8,
+                fees: '₹2.2 LPA',
+                feesNum: 220000,
+                placement: '₹22 LPA',
+                tags: ['Top 5', 'Research', 'Startups'],
+                color: '#0891b2'
+            },
+            // India - Medical
+            {
+                name: 'AIIMS Delhi',
+                location: 'New Delhi, India',
+                country: 'india',
+                stream: 'medical',
+                rank: 1,
+                rating: 4.9,
+                fees: '₹1.5K/Year',
+                feesNum: 1500,
+                placement: 'PG/Research',
+                tags: ['Top Medical', 'Government', 'Research'],
+                color: '#059669'
+            },
+            {
+                name: 'CMC Vellore',
+                location: 'Vellore, India',
+                country: 'india',
+                stream: 'medical',
+                rank: 3,
+                rating: 4.7,
+                fees: '₹75K/Year',
+                feesNum: 75000,
+                placement: 'Excellent',
+                tags: ['Medical', 'Affordable', 'Service'],
+                color: '#16a34a'
+            },
+            // India - Business
+            {
+                name: 'IIM Ahmedabad',
+                location: 'Ahmedabad, India',
+                country: 'india',
+                stream: 'business',
+                rank: 1,
+                rating: 4.9,
+                fees: '₹25 LPA',
+                feesNum: 2500000,
+                placement: '₹32 LPA',
+                tags: ['Top B-School', 'Global Network'],
+                color: '#d97706'
+            },
+            {
+                name: 'IIM Bangalore',
+                location: 'Bangalore, India',
+                country: 'india',
+                stream: 'business',
+                rank: 2,
+                rating: 4.8,
+                fees: '₹24 LPA',
+                feesNum: 2400000,
+                placement: '₹30 LPA',
+                tags: ['Top B-School', 'Tech Hub'],
+                color: '#7c3aed'
+            },
+            // India - Arts & Science
+            {
+                name: 'NID Ahmedabad',
+                location: 'Ahmedabad, India',
+                country: 'india',
+                stream: 'arts',
+                rank: 1,
+                rating: 4.7,
+                fees: '₹3.5 LPA',
+                feesNum: 350000,
+                placement: '₹12 LPA',
+                tags: ['Top Design', 'Creative Hub'],
+                color: '#ec4899'
+            },
+            {
+                name: 'IISc Bangalore',
+                location: 'Bangalore, India',
+                country: 'india',
+                stream: 'science',
+                rank: 1,
+                rating: 4.9,
+                fees: '₹35K/Year',
+                feesNum: 35000,
+                placement: 'Research/PhD',
+                tags: ['Top Research', 'Science Excellence'],
+                color: '#0ea5e9'
+            },
+            // USA
+            {
+                name: 'MIT',
+                location: 'Massachusetts, USA',
+                country: 'usa',
+                stream: 'engineering',
+                rank: 1,
+                rating: 5.0,
+                fees: '$58K/Year',
+                feesNum: 4800000,
+                placement: '$150K+',
+                tags: ['World #1', 'Innovation', 'Research'],
+                color: '#b91c1c'
+            },
+            {
+                name: 'Stanford University',
+                location: 'California, USA',
+                country: 'usa',
+                stream: 'engineering',
+                rank: 2,
+                rating: 5.0,
+                fees: '$56K/Year',
+                feesNum: 4640000,
+                placement: '$145K+',
+                tags: ['Silicon Valley', 'Startups', 'AI/ML'],
+                color: '#991b1b'
+            },
+            {
+                name: 'Harvard Medical School',
+                location: 'Massachusetts, USA',
+                country: 'usa',
+                stream: 'medical',
+                rank: 1,
+                rating: 5.0,
+                fees: '$67K/Year',
+                feesNum: 5560000,
+                placement: 'Top Residencies',
+                tags: ['World #1 Medical', 'Research'],
+                color: '#7c2d12'
+            },
+            {
+                name: 'Harvard Business School',
+                location: 'Massachusetts, USA',
+                country: 'usa',
+                stream: 'business',
+                rank: 1,
+                rating: 5.0,
+                fees: '$75K/Year',
+                feesNum: 6200000,
+                placement: '$180K+',
+                tags: ['World #1 MBA', 'Global Network'],
+                color: '#1e3a8a'
+            },
+            // UK
+            {
+                name: 'University of Oxford',
+                location: 'Oxford, UK',
+                country: 'uk',
+                stream: 'science',
+                rank: 1,
+                rating: 5.0,
+                fees: '£32K/Year',
+                feesNum: 3400000,
+                placement: 'Research/Industry',
+                tags: ['World #1', 'Historic', 'Research'],
+                color: '#1e3a5f'
+            },
+            {
+                name: 'Imperial College London',
+                location: 'London, UK',
+                country: 'uk',
+                stream: 'engineering',
+                rank: 1,
+                rating: 4.9,
+                fees: '£35K/Year',
+                feesNum: 3700000,
+                placement: '£55K+',
+                tags: ['Top Engineering', 'London Hub'],
+                color: '#003e74'
+            },
+            {
+                name: 'London Business School',
+                location: 'London, UK',
+                country: 'uk',
+                stream: 'business',
+                rank: 1,
+                rating: 4.9,
+                fees: '£95K/MBA',
+                feesNum: 10000000,
+                placement: '£100K+',
+                tags: ['Top MBA', 'Finance Hub'],
+                color: '#002147'
+            },
+            // Canada
+            {
+                name: 'University of Toronto',
+                location: 'Toronto, Canada',
+                country: 'canada',
+                stream: 'engineering',
+                rank: 1,
+                rating: 4.8,
+                fees: 'CAD 58K/Year',
+                feesNum: 3600000,
+                placement: 'CAD 80K+',
+                tags: ['Top Canadian', 'Research', 'AI Hub'],
+                color: '#1d4ed8'
+            },
+            {
+                name: 'McGill University',
+                location: 'Montreal, Canada',
+                country: 'canada',
+                stream: 'medical',
+                rank: 1,
+                rating: 4.8,
+                fees: 'CAD 45K/Year',
+                feesNum: 2800000,
+                placement: 'Residencies',
+                tags: ['Top Medical', 'Research'],
+                color: '#be123c'
+            },
+            // Australia
+            {
+                name: 'University of Melbourne',
+                location: 'Melbourne, Australia',
+                country: 'australia',
+                stream: 'science',
+                rank: 1,
+                rating: 4.8,
+                fees: 'AUD 45K/Year',
+                feesNum: 2500000,
+                placement: 'Research/Industry',
+                tags: ['Top Australian', 'Research', 'Innovation'],
+                color: '#1e3a8a'
+            },
+            {
+                name: 'UNSW Sydney',
+                location: 'Sydney, Australia',
+                country: 'australia',
+                stream: 'engineering',
+                rank: 2,
+                rating: 4.7,
+                fees: 'AUD 48K/Year',
+                feesNum: 2650000,
+                placement: 'AUD 85K+',
+                tags: ['Engineering Excellence', 'Industry Connect'],
+                color: '#fbbf24'
+            },
+            // Germany
+            {
+                name: 'TU Munich',
+                location: 'Munich, Germany',
+                country: 'germany',
+                stream: 'engineering',
+                rank: 1,
+                rating: 4.8,
+                fees: '€150/Sem',
+                feesNum: 30000,
+                placement: '€65K+',
+                tags: ['Almost Free', 'Top Tech', 'Industry'],
+                color: '#1d4ed8'
+            },
+            {
+                name: 'Heidelberg University',
+                location: 'Heidelberg, Germany',
+                country: 'germany',
+                stream: 'medical',
+                rank: 1,
+                rating: 4.7,
+                fees: '€3K/Year',
+                feesNum: 270000,
+                placement: 'Research/Practice',
+                tags: ['Historic', 'Medical Excellence', 'Affordable'],
+                color: '#b91c1c'
+            }
+        ];
+
+        let currentFilter = 'all';
+        let currentCountry = 'all';
+        let currentBudget = 'all';
+
+        function renderColleges() {
+            const filtered = colleges.filter(c => {
+                const streamMatch = currentFilter === 'all' || c.stream === currentFilter;
+                const countryMatch = currentCountry === 'all' || c.country === currentCountry;
+                
+                let budgetMatch = true;
+                if (currentBudget === 'low') budgetMatch = c.feesNum < 500000;
+                else if (currentBudget === 'medium') budgetMatch = c.feesNum >= 500000 && c.feesNum <= 1500000;
+                else if (currentBudget === 'high') budgetMatch = c.feesNum > 1500000;
+                
+                return streamMatch && countryMatch && budgetMatch;
+            });
+
+            const html = filtered.map(college => `
+                <div class="college-card">
+                    <div class="college-banner" style="background: linear-gradient(135deg, ${college.color} 0%, ${college.color}99 100%);">
+                        <div class="college-rank">#${college.rank} in ${college.stream.charAt(0).toUpperCase() + college.stream.slice(1)}</div>
+                        <div class="college-logo">🏛️</div>
+                    </div>
+                    <div class="college-body">
+                        <h3 class="college-name">${college.name}</h3>
+                        <div class="college-location">
+                            <i class="fas fa-map-marker-alt"></i>
+                            ${college.location}
+                        </div>
+                        <div class="college-stats">
+                            <div class="stat">
+                                <div class="stat-value">⭐ ${college.rating}</div>
+                                <div class="stat-label">Rating</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-value">${college.fees}</div>
+                                <div class="stat-label">Fees</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-value">${college.placement}</div>
+                                <div class="stat-label">Avg Package</div>
+                            </div>
+                        </div>
+                        <div class="college-tags">
+                            ${college.tags.map(tag => `
+                                <span class="college-tag ${tag.includes('Top') || tag.includes('World') ? 'highlight' : ''}">${tag}</span>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            document.getElementById('collegeList').innerHTML = html || '<p style="text-align: center; color: #64748b; padding: 40px;">No colleges found for this filter combination.</p>';
+        }
+
+        // Filter event listeners
+        document.querySelectorAll('.filter-chip[data-filter]').forEach(chip => {
+            chip.addEventListener('click', function() {
+                document.querySelectorAll('.filter-chip[data-filter]').forEach(c => c.classList.remove('active'));
+                this.classList.add('active');
+                currentFilter = this.dataset.filter;
+                renderColleges();
+            });
+        });
+
+        document.querySelectorAll('.filter-chip[data-country]').forEach(chip => {
+            chip.addEventListener('click', function() {
+                document.querySelectorAll('.filter-chip[data-country]').forEach(c => c.classList.remove('active'));
+                this.classList.add('active');
+                currentCountry = this.dataset.country;
+                renderColleges();
+            });
+        });
+
+        document.querySelectorAll('.filter-chip[data-budget]').forEach(chip => {
+            chip.addEventListener('click', function() {
+                document.querySelectorAll('.filter-chip[data-budget]').forEach(c => c.classList.remove('active'));
+                this.classList.add('active');
+                currentBudget = this.dataset.budget;
+                renderColleges();
+            });
+        });
+
+        // Initialize
+        renderColleges();
+    </script>
+</body>
+</html>
+
+
+
+

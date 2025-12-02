@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Career Assessment - AI Career Guidance System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .gradient-bg { background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); }
+        .step-indicator.active { background: #f97316; color: white; }
+        .step-indicator.completed { background: #10b981; color: white; }
+        .option-card { transition: all 0.2s ease; }
+        .option-card:hover { border-color: #f97316; background: #fff7ed; transform: translateY(-2px); }
+        .option-card.selected { border-color: #f97316; background: #fff7ed; box-shadow: 0 0 0 2px #f97316; }
+        .fade-in { animation: fadeIn 0.3s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .progress-bar { transition: width 0.3s ease; }
+        .scale-option { transition: all 0.2s ease; }
+        .scale-option:hover { transform: scale(1.1); }
+        .scale-option.selected { background: #f97316; color: white; transform: scale(1.1); }
+        .timer-warning { animation: pulse 1s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        .question-nav { transition: all 0.2s ease; }
+        .question-nav.answered { background: #10b981; color: white; }
+        .question-nav.current { background: #f97316; color: white; }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <a href="/" class="flex items-center space-x-2">
+                    <i class="fas fa-rocket text-2xl text-orange-500"></i>
+                    <span class="text-xl font-bold text-gray-800">AI Career Guide</span>
+                </a>
+                <div class="flex items-center space-x-4">
+                    <div id="timerDisplay" class="hidden bg-orange-100 text-orange-600 px-4 py-2 rounded-lg font-mono text-lg">
+                        <i class="fas fa-clock mr-2"></i><span id="timer">45:00</span>
+                    </div>
+                    <a href="/" class="text-gray-600 hover:text-orange-500">
+                        <i class="fas fa-home mr-1"></i> Home
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-5xl mx-auto px-4 py-8">
+        <!-- Education Level Selection (Initial Step) -->
+        <div id="educationSelection" class="bg-white rounded-2xl shadow-xl p-8 fade-in">
+            <div class="text-center mb-8">
+                <div class="w-20 h-20 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-graduation-cap text-4xl text-orange-500"></i>
+                </div>
+                <h1 class="text-3xl font-bold text-gray-800 mb-2">Career Assessment</h1>
+                <p class="text-gray-600">Select your education level to begin your personalized assessment</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-4 max-w-4xl mx-auto">
+                <div class="education-option option-card border-2 border-gray-200 rounded-xl p-6 cursor-pointer text-center" data-level="10th">
+                    <i class="fas fa-school text-4xl text-orange-500 mb-4"></i>
+                    <h3 class="font-semibold text-gray-800 mb-1">Class 10th</h3>
+                    <p class="text-sm text-gray-500">Secondary school student</p>
+                    <span class="inline-block mt-3 text-xs bg-orange-100 text-orange-600 px-3 py-1 rounded-full">30 min</span>
+                </div>
+                <div class="education-option option-card border-2 border-gray-200 rounded-xl p-6 cursor-pointer text-center" data-level="12th">
+                    <i class="fas fa-graduation-cap text-4xl text-orange-500 mb-4"></i>
+                    <h3 class="font-semibold text-gray-800 mb-1">Class 12th</h3>
+                    <p class="text-sm text-gray-500">Higher secondary student</p>
+                    <span class="inline-block mt-3 text-xs bg-orange-100 text-orange-600 px-3 py-1 rounded-full">45 min</span>
+                </div>
+                <div class="education-option option-card border-2 border-gray-200 rounded-xl p-6 cursor-pointer text-center" data-level="undergraduate">
+                    <i class="fas fa-university text-4xl text-orange-500 mb-4"></i>
+                    <h3 class="font-semibold text-gray-800 mb-1">Undergraduate</h3>
+                    <p class="text-sm text-gray-500">Bachelor's degree student</p>
+                    <span class="inline-block mt-3 text-xs bg-orange-100 text-orange-600 px-3 py-1 rounded-full">60 min</span>
+                </div>
+                <div class="education-option option-card border-2 border-gray-200 rounded-xl p-6 cursor-pointer text-center" data-level="graduate">
+                    <i class="fas fa-user-graduate text-4xl text-orange-500 mb-4"></i>
+                    <h3 class="font-semibold text-gray-800 mb-1">Graduate</h3>
+                    <p class="text-sm text-gray-500">Completed Bachelor's degree</p>
+                    <span class="inline-block mt-3 text-xs bg-orange-100 text-orange-600 px-3 py-1 rounded-full">75 min</span>
+                </div>
+                <div class="education-option option-card border-2 border-gray-200 rounded-xl p-6 cursor-pointer text-center" data-level="postgraduate">
+                    <i class="fas fa-award text-4xl text-orange-500 mb-4"></i>
+                    <h3 class="font-semibold text-gray-800 mb-1">Post Graduate</h3>
+                    <p class="text-sm text-gray-500">Master's or PhD student</p>
+                    <span class="inline-block mt-3 text-xs bg-orange-100 text-orange-600 px-3 py-1 rounded-full">60 min</span>
+                </div>
+                <div class="education-option option-card border-2 border-gray-200 rounded-xl p-6 cursor-pointer text-center" data-level="working_professional">
+                    <i class="fas fa-briefcase text-4xl text-orange-500 mb-4"></i>
+                    <h3 class="font-semibold text-gray-800 mb-1">Working Professional</h3>
+                    <p class="text-sm text-gray-500">Currently employed</p>
+                    <span class="inline-block mt-3 text-xs bg-orange-100 text-orange-600 px-3 py-1 rounded-full">45 min</span>
+                </div>
+            </div>
+
+            <div class="mt-8 text-center">
+                <button id="startAssessmentBtn" disabled class="px-8 py-4 bg-gray-300 text-gray-500 rounded-xl font-semibold cursor-not-allowed transition-all">
+                    <i class="fas fa-play mr-2"></i>Start Assessment
+                </button>
+                <p class="mt-4 text-sm text-gray-500">
+                    <i class="fas fa-info-circle mr-1"></i>
+                    Questions will be tailored to your education level
+                </p>
+            </div>
+        </div>
+
+        <!-- Assessment Container (Hidden Initially) -->
+        <div id="assessmentContainer" class="hidden">
+            <!-- Progress Bar -->
+            <div class="mb-6 bg-white rounded-xl p-4 shadow">
+                <div class="flex justify-between items-center mb-2">
+                    <div class="flex items-center">
+                        <span class="text-sm font-medium text-orange-500" id="sectionName">Aptitude Test</span>
+                        <span class="mx-2 text-gray-300">•</span>
+                        <span class="text-sm text-gray-500" id="questionProgress">Question 1 of 10</span>
+                    </div>
+                    <div class="text-sm text-gray-500" id="overallProgress">0% Complete</div>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2">
+                    <div class="progress-bar bg-gradient-to-r from-orange-500 to-orange-600 h-2 rounded-full" id="progressBar" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <!-- Question Navigation (For larger sections) -->
+            <div id="questionNav" class="mb-4 hidden">
+                <div class="flex flex-wrap gap-2 justify-center" id="questionNavBtns"></div>
+            </div>
+
+            <!-- Question Card -->
+            <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
+                <!-- Question Header -->
+                <div class="gradient-bg p-6 text-white">
+                    <div class="flex items-center justify-between">
+                        <span class="px-3 py-1 bg-white/20 rounded-full text-sm" id="questionCategory">Category</span>
+                        <span class="px-3 py-1 bg-white/20 rounded-full text-sm" id="questionDifficulty">Difficulty</span>
+                    </div>
+                </div>
+
+                <!-- Question Content -->
+                <div class="p-8">
+                    <h2 class="text-xl font-semibold text-gray-800 mb-6" id="questionText">Question text will appear here</h2>
+                    
+                    <!-- Dynamic Answer Options -->
+                    <div id="answerOptions" class="space-y-3">
+                        <!-- Options will be dynamically inserted here -->
+                    </div>
+
+                    <!-- Scale Input (for scale questions) -->
+                    <div id="scaleInput" class="hidden">
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-500" id="scaleMinLabel">1</span>
+                            <div class="flex gap-2" id="scaleButtons"></div>
+                            <span class="text-sm text-gray-500" id="scaleMaxLabel">5</span>
+                        </div>
+                    </div>
+
+                    <!-- Text Input (for text questions) -->
+                    <div id="textInput" class="hidden">
+                        <textarea id="textAnswer" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-orange-500 focus:ring-0 transition-colors" rows="5" placeholder="Type your answer here..."></textarea>
+                        <div class="flex justify-between mt-2 text-sm text-gray-500">
+                            <span id="charCount">0 characters</span>
+                            <span id="maxChars"></span>
+                        </div>
+                    </div>
+
+                    <!-- Multiple Select (for checkbox questions) -->
+                    <div id="multipleSelect" class="hidden space-y-3"></div>
+                </div>
+
+                <!-- Navigation Buttons -->
+                <div class="border-t p-6 flex justify-between items-center bg-gray-50">
+                    <button id="prevBtn" onclick="prevQuestion()" class="flex items-center px-6 py-3 text-gray-600 hover:text-gray-800 transition-colors">
+                        <i class="fas fa-arrow-left mr-2"></i> Previous
+                    </button>
+                    <div class="flex gap-3">
+                        <button id="skipBtn" onclick="skipQuestion()" class="px-6 py-3 text-gray-500 hover:text-gray-700 transition-colors">
+                            Skip <i class="fas fa-forward ml-1"></i>
+                        </button>
+                        <button id="nextBtn" onclick="nextQuestion()" class="px-8 py-3 bg-orange-500 text-white rounded-xl font-semibold hover:bg-orange-600 transition-colors shadow-lg hover:shadow-xl">
+                            Next <i class="fas fa-arrow-right ml-2"></i>
+                        </button>
+                        <button id="submitBtn" onclick="submitAssessment()" class="hidden px-8 py-3 bg-green-600 text-white rounded-xl font-semibold hover:bg-green-700 transition-colors shadow-lg hover:shadow-xl">
+                            <i class="fas fa-check mr-2"></i>Submit Assessment
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section Summary (shown between sections) -->
+            <div id="sectionSummary" class="hidden bg-white rounded-2xl shadow-xl p-8 text-center">
+                <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-check text-4xl text-green-600"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-gray-800 mb-2" id="sectionCompleteTitle">Section Complete!</h2>
+                <p class="text-gray-600 mb-6" id="sectionCompleteText">Moving to the next section...</p>
+                <button onclick="nextSection()" class="px-8 py-3 bg-orange-500 text-white rounded-xl font-semibold hover:bg-orange-600 transition-colors">
+                    Continue <i class="fas fa-arrow-right ml-2"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Loading State -->
+        <div id="loadingState" class="hidden text-center py-12">
+            <div class="w-16 h-16 border-4 border-orange-200 border-t-orange-500 rounded-full animate-spin mx-auto mb-4"></div>
+            <p class="text-gray-600">Loading your personalized assessment...</p>
+        </div>
+
+        <!-- Results Processing -->
+        <div id="processingState" class="hidden bg-white rounded-2xl shadow-xl p-12 text-center">
+            <div class="w-24 h-24 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <i class="fas fa-brain text-5xl text-orange-500 animate-pulse"></i>
+            </div>
+            <h2 class="text-2xl font-bold text-gray-800 mb-2">Analyzing Your Responses</h2>
+            <p class="text-gray-600 mb-6">Our AI is processing your assessment to generate personalized career recommendations...</p>
+            <div class="w-full max-w-md mx-auto bg-gray-200 rounded-full h-2">
+                <div class="bg-gradient-to-r from-orange-500 to-orange-600 h-2 rounded-full animate-pulse" style="width: 60%"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // State
+        let selectedEducationLevel = null;
+        let questionsData = null;
+        let currentSection = 0;
+        let currentQuestionIndex = 0;
+        let sections = [];
+        let answers = {};
+        let timerInterval = null;
+        let timeRemaining = 0;
+
+        // DOM Elements
+        const educationOptions = document.querySelectorAll('.education-option');
+        const startBtn = document.getElementById('startAssessmentBtn');
+        const educationSelection = document.getElementById('educationSelection');
+        const assessmentContainer = document.getElementById('assessmentContainer');
+        const loadingState = document.getElementById('loadingState');
+        const timerDisplay = document.getElementById('timerDisplay');
+
+        // Education level selection
+        educationOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                educationOptions.forEach(o => o.classList.remove('selected'));
+                option.classList.add('selected');
+                selectedEducationLevel = option.dataset.level;
+                startBtn.disabled = false;
+                startBtn.classList.remove('bg-gray-300', 'text-gray-500', 'cursor-not-allowed');
+                startBtn.classList.add('bg-orange-500', 'text-white', 'hover:bg-orange-600', 'cursor-pointer');
+            });
+        });
+
+        // Start Assessment
+        startBtn.addEventListener('click', async () => {
+            if (!selectedEducationLevel) return;
+            
+            educationSelection.classList.add('hidden');
+            loadingState.classList.remove('hidden');
+            
+            try {
+                const response = await fetch(`/api/assessment/questions/${selectedEducationLevel}`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    questionsData = data;
+                    timeRemaining = data.time_limit_minutes * 60;
+                    initializeAssessment();
+                } else {
+                    alert('Failed to load questions: ' + data.error);
+                    educationSelection.classList.remove('hidden');
+                    loadingState.classList.add('hidden');
+                }
+            } catch (error) {
+                console.error('Error loading questions:', error);
+                alert('Failed to load questions. Please try again.');
+                educationSelection.classList.remove('hidden');
+                loadingState.classList.add('hidden');
+            }
+        });
+
+        // Initialize assessment
+        function initializeAssessment() {
+            loadingState.classList.add('hidden');
+            assessmentContainer.classList.remove('hidden');
+            timerDisplay.classList.remove('hidden');
+            
+            // Build sections from questions data
+            sections = Object.keys(questionsData.questions).filter(key => {
+                const section = questionsData.questions[key];
+                return Array.isArray(section) && section.length > 0;
+            });
+            
+            // Start timer
+            startTimer();
+            
+            // Render first question
+            renderQuestion();
+        }
+
+        // Timer
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                timeRemaining--;
+                updateTimerDisplay();
+                
+                if (timeRemaining <= 0) {
+                    clearInterval(timerInterval);
+                    submitAssessment();
+                }
+                
+                if (timeRemaining <= 300) { // 5 minutes warning
+                    document.getElementById('timer').parentElement.classList.add('timer-warning', 'bg-red-100', 'text-red-700');
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeRemaining / 60);
+            const seconds = timeRemaining % 60;
+            document.getElementById('timer').textContent = 
+                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        // Render question
+        function renderQuestion() {
+            const sectionKey = sections[currentSection];
+            let questions = questionsData.questions[sectionKey];
+            
+            // Handle nested sections (like technical_skills with sub-categories)
+            if (!Array.isArray(questions)) {
+                // Get first available sub-section
+                const subKeys = Object.keys(questions);
+                if (subKeys.length > 0) {
+                    questions = questions[subKeys[0]];
+                }
+            }
+            
+            if (!questions || !questions[currentQuestionIndex]) {
+                // Move to next section or complete
+                if (currentSection < sections.length - 1) {
+                    showSectionSummary();
+                } else {
+                    submitAssessment();
+                }
+                return;
+            }
+            
+            const question = questions[currentQuestionIndex];
+            
+            // Update UI
+            document.getElementById('sectionName').textContent = sectionKey.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+            document.getElementById('questionProgress').textContent = `Question ${currentQuestionIndex + 1} of ${questions.length}`;
+            document.getElementById('questionText').textContent = question.question;
+            document.getElementById('questionCategory').textContent = question.category || sectionKey;
+            document.getElementById('questionDifficulty').textContent = question.difficulty || 'Standard';
+            
+            // Update progress
+            const totalQuestions = getTotalQuestions();
+            const answeredQuestions = Object.keys(answers).length;
+            const progress = Math.round((answeredQuestions / totalQuestions) * 100);
+            document.getElementById('progressBar').style.width = `${progress}%`;
+            document.getElementById('overallProgress').textContent = `${progress}% Complete`;
+            
+            // Clear previous answer UI
+            document.getElementById('answerOptions').innerHTML = '';
+            document.getElementById('answerOptions').classList.add('hidden');
+            document.getElementById('scaleInput').classList.add('hidden');
+            document.getElementById('textInput').classList.add('hidden');
+            document.getElementById('multipleSelect').innerHTML = '';
+            document.getElementById('multipleSelect').classList.add('hidden');
+            
+            // Render answer input based on question type
+            switch (question.type) {
+                case 'mcq':
+                    renderMCQ(question);
+                    break;
+                case 'scale':
+                    renderScale(question);
+                    break;
+                case 'text':
+                    renderTextInput(question);
+                    break;
+                case 'choice':
+                    renderChoice(question);
+                    break;
+                case 'multiple_select':
+                    renderMultipleSelect(question);
+                    break;
+                case 'scenario':
+                    renderScenario(question);
+                    break;
+                default:
+                    renderMCQ(question);
+            }
+            
+            // Update navigation buttons
+            document.getElementById('prevBtn').classList.toggle('hidden', currentQuestionIndex === 0 && currentSection === 0);
+            
+            const isLastQuestion = currentSection === sections.length - 1 && 
+                                   currentQuestionIndex === questions.length - 1;
+            document.getElementById('nextBtn').classList.toggle('hidden', isLastQuestion);
+            document.getElementById('submitBtn').classList.toggle('hidden', !isLastQuestion);
+        }
+
+        function renderMCQ(question) {
+            const container = document.getElementById('answerOptions');
+            container.classList.remove('hidden');
+            
+            question.options.forEach((option, index) => {
+                const div = document.createElement('div');
+                div.className = 'option-card border-2 border-gray-200 rounded-xl p-4 cursor-pointer';
+                div.innerHTML = `
+                    <div class="flex items-center">
+                        <span class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-sm font-medium mr-3">${String.fromCharCode(65 + index)}</span>
+                        <span class="text-gray-700">${option}</span>
+                    </div>
+                `;
+                
+                // Check if already answered
+                if (answers[question.id] === index) {
+                    div.classList.add('selected');
+                }
+                
+                div.addEventListener('click', () => {
+                    container.querySelectorAll('.option-card').forEach(c => c.classList.remove('selected'));
+                    div.classList.add('selected');
+                    answers[question.id] = index;
+                });
+                
+                container.appendChild(div);
+            });
+        }
+
+        function renderScale(question) {
+            const container = document.getElementById('scaleInput');
+            container.classList.remove('hidden');
+            
+            const scale = question.scale;
+            document.getElementById('scaleMinLabel').textContent = scale.labels ? scale.labels[0] : scale.min;
+            document.getElementById('scaleMaxLabel').textContent = scale.labels ? scale.labels[scale.labels.length - 1] : scale.max;
+            
+            const buttonsContainer = document.getElementById('scaleButtons');
+            buttonsContainer.innerHTML = '';
+            
+            for (let i = scale.min; i <= scale.max; i++) {
+                const btn = document.createElement('button');
+                btn.className = 'scale-option w-12 h-12 rounded-full border-2 border-gray-200 flex items-center justify-center font-medium text-gray-700 hover:border-orange-500';
+                btn.textContent = i;
+                
+                if (answers[question.id] === i) {
+                    btn.classList.add('selected');
+                }
+                
+                btn.addEventListener('click', () => {
+                    buttonsContainer.querySelectorAll('.scale-option').forEach(b => b.classList.remove('selected'));
+                    btn.classList.add('selected');
+                    answers[question.id] = i;
+                });
+                
+                buttonsContainer.appendChild(btn);
+            }
+        }
+
+        function renderTextInput(question) {
+            const container = document.getElementById('textInput');
+            container.classList.remove('hidden');
+            
+            const textarea = document.getElementById('textAnswer');
+            textarea.value = answers[question.id] || '';
+            textarea.maxLength = question.max_length || 1000;
+            
+            document.getElementById('maxChars').textContent = `Max ${question.max_length || 1000} characters`;
+            
+            textarea.addEventListener('input', () => {
+                document.getElementById('charCount').textContent = `${textarea.value.length} characters`;
+                answers[question.id] = textarea.value;
+            });
+        }
+
+        function renderChoice(question) {
+            const container = document.getElementById('answerOptions');
+            container.classList.remove('hidden');
+            
+            question.options.forEach((option, index) => {
+                const div = document.createElement('div');
+                div.className = 'option-card border-2 border-gray-200 rounded-xl p-4 cursor-pointer';
+                div.innerHTML = `
+                    <div class="flex items-center">
+                        <span class="w-8 h-8 rounded-full bg-orange-100 flex items-center justify-center text-sm font-medium mr-3 text-orange-600">${String.fromCharCode(65 + index)}</span>
+                        <span class="text-gray-700">${option.text}</span>
+                    </div>
+                `;
+                
+                if (answers[question.id] && answers[question.id].index === index) {
+                    div.classList.add('selected');
+                }
+                
+                div.addEventListener('click', () => {
+                    container.querySelectorAll('.option-card').forEach(c => c.classList.remove('selected'));
+                    div.classList.add('selected');
+                    answers[question.id] = { index, traits: option.traits };
+                });
+                
+                container.appendChild(div);
+            });
+        }
+
+        function renderScenario(question) {
+            const container = document.getElementById('answerOptions');
+            container.classList.remove('hidden');
+            
+            question.options.forEach((option, index) => {
+                const div = document.createElement('div');
+                div.className = 'option-card border-2 border-gray-200 rounded-xl p-4 cursor-pointer';
+                div.innerHTML = `
+                    <div class="flex items-start">
+                        <span class="w-8 h-8 rounded-full bg-orange-100 flex items-center justify-center text-sm font-medium mr-3 text-orange-700 flex-shrink-0">${String.fromCharCode(65 + index)}</span>
+                        <span class="text-gray-700">${option.text}</span>
+                    </div>
+                `;
+                
+                if (answers[question.id] && answers[question.id].index === index) {
+                    div.classList.add('selected');
+                }
+                
+                div.addEventListener('click', () => {
+                    container.querySelectorAll('.option-card').forEach(c => c.classList.remove('selected'));
+                    div.classList.add('selected');
+                    answers[question.id] = { index, score: option.score, skills: option.skills };
+                });
+                
+                container.appendChild(div);
+            });
+        }
+
+        function renderMultipleSelect(question) {
+            const container = document.getElementById('multipleSelect');
+            container.classList.remove('hidden');
+            
+            const selectedOptions = answers[question.id] || [];
+            
+            question.options.forEach((option, index) => {
+                const div = document.createElement('div');
+                div.className = 'option-card border-2 border-gray-200 rounded-xl p-4 cursor-pointer flex items-center';
+                
+                const isSelected = selectedOptions.includes(option);
+                if (isSelected) {
+                    div.classList.add('selected');
+                }
+                
+                div.innerHTML = `
+                    <input type="checkbox" class="w-5 h-5 text-orange-500 rounded mr-3" ${isSelected ? 'checked' : ''}>
+                    <span class="text-gray-700">${option}</span>
+                `;
+                
+                div.addEventListener('click', (e) => {
+                    if (e.target.type !== 'checkbox') {
+                        const checkbox = div.querySelector('input');
+                        checkbox.checked = !checkbox.checked;
+                    }
+                    
+                    const checkbox = div.querySelector('input');
+                    
+                    if (checkbox.checked) {
+                        if (!answers[question.id]) answers[question.id] = [];
+                        if (question.max_selections && answers[question.id].length >= question.max_selections) {
+                            checkbox.checked = false;
+                            alert(`You can only select up to ${question.max_selections} options`);
+                            return;
+                        }
+                        answers[question.id].push(option);
+                        div.classList.add('selected');
+                    } else {
+                        answers[question.id] = answers[question.id].filter(o => o !== option);
+                        div.classList.remove('selected');
+                    }
+                });
+                
+                container.appendChild(div);
+            });
+            
+            if (question.max_selections) {
+                const hint = document.createElement('p');
+                hint.className = 'text-sm text-gray-500 mt-2';
+                hint.textContent = `Select up to ${question.max_selections} options`;
+                container.appendChild(hint);
+            }
+        }
+
+        function getTotalQuestions() {
+            let total = 0;
+            sections.forEach(sectionKey => {
+                const questions = questionsData.questions[sectionKey];
+                if (Array.isArray(questions)) {
+                    total += questions.length;
+                } else if (typeof questions === 'object') {
+                    Object.values(questions).forEach(subQuestions => {
+                        if (Array.isArray(subQuestions)) {
+                            total += subQuestions.length;
+                        }
+                    });
+                }
+            });
+            return total;
+        }
+
+        function nextQuestion() {
+            const sectionKey = sections[currentSection];
+            let questions = questionsData.questions[sectionKey];
+            
+            if (!Array.isArray(questions)) {
+                const subKeys = Object.keys(questions);
+                if (subKeys.length > 0) {
+                    questions = questions[subKeys[0]];
+                }
+            }
+            
+            if (currentQuestionIndex < questions.length - 1) {
+                currentQuestionIndex++;
+                renderQuestion();
+            } else if (currentSection < sections.length - 1) {
+                showSectionSummary();
+            } else {
+                submitAssessment();
+            }
+        }
+
+        function prevQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                renderQuestion();
+            } else if (currentSection > 0) {
+                currentSection--;
+                const sectionKey = sections[currentSection];
+                let questions = questionsData.questions[sectionKey];
+                if (!Array.isArray(questions)) {
+                    const subKeys = Object.keys(questions);
+                    if (subKeys.length > 0) {
+                        questions = questions[subKeys[0]];
+                    }
+                }
+                currentQuestionIndex = questions.length - 1;
+                renderQuestion();
+            }
+        }
+
+        function skipQuestion() {
+            nextQuestion();
+        }
+
+        function showSectionSummary() {
+            document.querySelector('.bg-white.rounded-2xl.shadow-xl.overflow-hidden').classList.add('hidden');
+            document.getElementById('sectionSummary').classList.remove('hidden');
+            
+            const completedSection = sections[currentSection].replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+            const nextSectionName = sections[currentSection + 1] ? 
+                sections[currentSection + 1].replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) : 
+                'Final Review';
+            
+            document.getElementById('sectionCompleteTitle').textContent = `${completedSection} Complete!`;
+            document.getElementById('sectionCompleteText').textContent = `Great job! Next up: ${nextSectionName}`;
+        }
+
+        function nextSection() {
+            document.getElementById('sectionSummary').classList.add('hidden');
+            document.querySelector('.bg-white.rounded-2xl.shadow-xl.overflow-hidden').classList.remove('hidden');
+            
+            currentSection++;
+            currentQuestionIndex = 0;
+            renderQuestion();
+        }
+
+        async function submitAssessment() {
+            clearInterval(timerInterval);
+            
+            // Show processing state
+            assessmentContainer.classList.add('hidden');
+            document.getElementById('processingState').classList.remove('hidden');
+            
+            try {
+                const response = await fetch('/api/assessment/submit', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        education_level: selectedEducationLevel,
+                        answers: answers,
+                        basic_info: {
+                            name: 'Student',
+                            age: selectedEducationLevel === '10th' ? 16 : selectedEducationLevel === '12th' ? 18 : 21,
+                            budget: 500000,
+                            locations: ['India']
+                        }
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    // Transform data for results page format
+                    const resultData = {
+                        name: 'Student',
+                        career_recommendations: data.recommendations || [],
+                        personality: data.report?.personality_profile || { mbti_type: 'INTJ' },
+                        skills: data.report?.skill_analysis ? Object.keys(data.report.skill_analysis) : [],
+                        skills_to_develop: ['Communication', 'Leadership'],
+                        salary_projection: data.report?.salary_predictions || {
+                            starting: 50000,
+                            '3_years': 75000,
+                            '5_years': 100000,
+                            '10_years': 150000
+                        },
+                        job_market_forecast: data.report?.job_forecast || {
+                            current_demand: 'High',
+                            '10_year_outlook': 'Growing',
+                            trend: [50, 55, 60, 70, 80, 90, 100]
+                        },
+                        roadmap: data.report?.roadmap?.phases || [],
+                        colleges: data.report?.colleges || [],
+                        skill_match_percent: 75,
+                        personality_fit_percent: 80
+                    };
+                    
+                    // Store results and redirect
+                    sessionStorage.setItem('careerResult', JSON.stringify(resultData));
+                    window.location.href = '/results';
+                } else {
+                    alert('Failed to submit assessment: ' + (data.error || 'Unknown error'));
+                    document.getElementById('processingState').classList.add('hidden');
+                    assessmentContainer.classList.remove('hidden');
+                }
+            } catch (error) {
+                console.error('Error submitting assessment:', error);
+                alert('Failed to submit assessment. Please try again.');
+                document.getElementById('processingState').classList.add('hidden');
+                assessmentContainer.classList.remove('hidden');
+            }
+        }
+
+        // Prevent accidental page leave
+        window.addEventListener('beforeunload', (e) => {
+            if (Object.keys(answers).length > 0 && timerInterval) {
+                e.preventDefault();
+                e.returnValue = '';
+            }
+        });
+    </script>
+</body>
+</html>
+
+
+
+

@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fake Career Trap Detector - AI Career Guidance System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .gradient-bg { background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); }
+        .risk-meter { transition: width 0.5s ease; }
+        .pulse-warning { animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <a href="/" class="flex items-center space-x-2">
+                    <i class="fas fa-rocket text-2xl text-orange-500"></i>
+                    <span class="text-xl font-bold text-gray-800">AI Career Guide</span>
+                </a>
+                <div class="flex items-center space-x-4">
+                    <a href="/" class="text-gray-600 hover:text-orange-500"><i class="fas fa-home mr-1"></i>Home</a>
+                    <a href="/assessment" class="text-gray-600 hover:text-orange-500"><i class="fas fa-clipboard-list mr-1"></i>Assessment</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-4xl mx-auto px-4 py-8">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <div class="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-shield-alt text-4xl text-red-600"></i>
+            </div>
+            <h1 class="text-3xl font-bold text-gray-800 mb-2">Fake Career Trap Detector</h1>
+            <p class="text-gray-600">Protect yourself from fraudulent job offers and career scams</p>
+        </div>
+
+        <!-- Scam Checker Form -->
+        <div class="bg-white rounded-2xl shadow-xl p-8 mb-8">
+            <h2 class="text-xl font-semibold text-gray-800 mb-6">
+                <i class="fas fa-search text-orange-500 mr-2"></i>Check a Job Offer
+            </h2>
+            
+            <form id="scamCheckForm" class="space-y-6">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Job Title</label>
+                    <input type="text" id="jobTitle" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500" placeholder="e.g., Data Entry Specialist, Marketing Manager">
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Company Name</label>
+                    <input type="text" id="companyName" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500" placeholder="Enter company name">
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Offered Salary (Monthly)</label>
+                    <div class="flex gap-2">
+                        <select id="currency" class="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500">
+                            <option value="INR">₹ INR</option>
+                            <option value="USD">$ USD</option>
+                            <option value="EUR">€ EUR</option>
+                            <option value="GBP">£ GBP</option>
+                        </select>
+                        <input type="number" id="salary" class="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500" placeholder="e.g., 50000">
+                    </div>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Job Description (paste the full description)</label>
+                    <textarea id="jobDescription" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500" rows="4" placeholder="Paste the job description here..."></textarea>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-3">Red Flags (Check if applicable)</label>
+                    <div class="grid md:grid-cols-2 gap-3">
+                        <label class="flex items-center space-x-2 p-3 bg-gray-50 rounded-lg cursor-pointer hover:bg-red-50">
+                            <input type="checkbox" name="redFlags" value="upfront_payment" class="text-red-600">
+                            <span class="text-sm">Asks for upfront payment/fees</span>
+                        </label>
+                        <label class="flex items-center space-x-2 p-3 bg-gray-50 rounded-lg cursor-pointer hover:bg-red-50">
+                            <input type="checkbox" name="redFlags" value="personal_info" class="text-red-600">
+                            <span class="text-sm">Requests bank/personal details early</span>
+                        </label>
+                        <label class="flex items-center space-x-2 p-3 bg-gray-50 rounded-lg cursor-pointer hover:bg-red-50">
+                            <input type="checkbox" name="redFlags" value="unrealistic_salary" class="text-red-600">
+                            <span class="text-sm">Salary seems too good to be true</span>
+                        </label>
+                        <label class="flex items-center space-x-2 p-3 bg-gray-50 rounded-lg cursor-pointer hover:bg-red-50">
+                            <input type="checkbox" name="redFlags" value="vague_description" class="text-red-600">
+                            <span class="text-sm">Vague job responsibilities</span>
+                        </label>
+                        <label class="flex items-center space-x-2 p-3 bg-gray-50 rounded-lg cursor-pointer hover:bg-red-50">
+                            <input type="checkbox" name="redFlags" value="no_interview" class="text-red-600">
+                            <span class="text-sm">Hired without proper interview</span>
+                        </label>
+                        <label class="flex items-center space-x-2 p-3 bg-gray-50 rounded-lg cursor-pointer hover:bg-red-50">
+                            <input type="checkbox" name="redFlags" value="generic_email" class="text-red-600">
+                            <span class="text-sm">Uses generic email (gmail, yahoo)</span>
+                        </label>
+                        <label class="flex items-center space-x-2 p-3 bg-gray-50 rounded-lg cursor-pointer hover:bg-red-50">
+                            <input type="checkbox" name="redFlags" value="pressure" class="text-red-600">
+                            <span class="text-sm">Pressures for quick decision</span>
+                        </label>
+                        <label class="flex items-center space-x-2 p-3 bg-gray-50 rounded-lg cursor-pointer hover:bg-red-50">
+                            <input type="checkbox" name="redFlags" value="no_website" class="text-red-600">
+                            <span class="text-sm">No company website/social presence</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <button type="submit" class="w-full py-4 bg-orange-500 text-white rounded-xl font-semibold hover:bg-orange-600 transition-colors shadow-lg">
+                    <i class="fas fa-search mr-2"></i>Analyze Job Offer
+                </button>
+            </form>
+        </div>
+
+        <!-- Results Section (Hidden Initially) -->
+        <div id="resultsSection" class="hidden">
+            <div class="bg-white rounded-2xl shadow-xl p-8 mb-8">
+                <h2 class="text-xl font-semibold text-gray-800 mb-6">
+                    <i class="fas fa-chart-bar text-orange-500 mr-2"></i>Analysis Results
+                </h2>
+                
+                <!-- Risk Score -->
+                <div class="mb-8">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="font-medium text-gray-700">Risk Score</span>
+                        <span id="riskPercentage" class="font-bold text-2xl">0%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-4">
+                        <div id="riskMeter" class="risk-meter h-4 rounded-full bg-green-500" style="width: 0%"></div>
+                    </div>
+                    <div class="flex justify-between text-xs text-gray-500 mt-1">
+                        <span>Low Risk</span>
+                        <span>Medium Risk</span>
+                        <span>High Risk</span>
+                    </div>
+                </div>
+
+                <!-- Verdict -->
+                <div id="verdict" class="p-6 rounded-xl mb-6">
+                    <!-- Dynamically filled -->
+                </div>
+
+                <!-- Detected Issues -->
+                <div id="issuesList" class="mb-6">
+                    <h3 class="font-semibold text-gray-800 mb-3">
+                        <i class="fas fa-exclamation-triangle text-yellow-500 mr-2"></i>Detected Issues
+                    </h3>
+                    <ul class="space-y-2" id="issuesUl">
+                        <!-- Dynamically filled -->
+                    </ul>
+                </div>
+
+                <!-- Recommendations -->
+                <div id="recommendations" class="bg-orange-50 rounded-xl p-6">
+                    <h3 class="font-semibold text-orange-800 mb-3">
+                        <i class="fas fa-lightbulb text-orange-500 mr-2"></i>Recommendations
+                    </h3>
+                    <ul class="space-y-2 text-orange-700" id="recsUl">
+                        <!-- Dynamically filled -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Common Scams Section -->
+        <div class="bg-white rounded-2xl shadow-xl p-8">
+            <h2 class="text-xl font-semibold text-gray-800 mb-6">
+                <i class="fas fa-exclamation-circle text-red-500 mr-2"></i>Common Career Scams to Watch For
+            </h2>
+            
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="border border-red-200 rounded-xl p-4 bg-red-50">
+                    <h3 class="font-semibold text-red-800 mb-2">
+                        <i class="fas fa-money-bill-wave mr-2"></i>Upfront Fee Scams
+                    </h3>
+                    <p class="text-sm text-red-700">Legitimate employers never ask candidates to pay for training, equipment, or job placement. Any request for money before starting work is a major red flag.</p>
+                </div>
+                
+                <div class="border border-orange-200 rounded-xl p-4 bg-orange-50">
+                    <h3 class="font-semibold text-orange-800 mb-2">
+                        <i class="fas fa-home mr-2"></i>Work From Home Scams
+                    </h3>
+                    <p class="text-sm text-orange-700">Be wary of "easy money" work-from-home jobs promising high earnings for simple tasks like data entry, surveys, or package reshipping.</p>
+                </div>
+                
+                <div class="border border-yellow-200 rounded-xl p-4 bg-yellow-50">
+                    <h3 class="font-semibold text-yellow-800 mb-2">
+                        <i class="fas fa-id-card mr-2"></i>Identity Theft Schemes
+                    </h3>
+                    <p class="text-sm text-yellow-700">Scammers may pose as employers to collect personal information like Aadhaar, PAN, or bank details for identity theft.</p>
+                </div>
+                
+                <div class="border border-orange-200 rounded-xl p-4 bg-orange-50">
+                    <h3 class="font-semibold text-orange-700 mb-2">
+                        <i class="fas fa-network-wired mr-2"></i>Pyramid/MLM Schemes
+                    </h3>
+                    <p class="text-sm text-orange-600">If the "job" focuses on recruiting others or requires buying products to sell, it's likely a pyramid scheme disguised as employment.</p>
+                </div>
+            </div>
+            
+            <div class="mt-6 p-4 bg-green-50 rounded-xl">
+                <h3 class="font-semibold text-green-800 mb-2">
+                    <i class="fas fa-shield-alt mr-2"></i>How to Protect Yourself
+                </h3>
+                <ul class="text-sm text-green-700 space-y-1">
+                    <li>• Research the company thoroughly before applying</li>
+                    <li>• Never pay money to get a job</li>
+                    <li>• Don't share sensitive personal information until you've verified the employer</li>
+                    <li>• Be suspicious of unsolicited job offers</li>
+                    <li>• Trust your instincts - if it seems too good to be true, it probably is</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('scamCheckForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const jobTitle = document.getElementById('jobTitle').value;
+            const companyName = document.getElementById('companyName').value;
+            const salary = document.getElementById('salary').value;
+            const currency = document.getElementById('currency').value;
+            const description = document.getElementById('jobDescription').value;
+            const redFlags = Array.from(document.querySelectorAll('input[name="redFlags"]:checked')).map(cb => cb.value);
+            
+            // Calculate risk score
+            let riskScore = 0;
+            let issues = [];
+            let recommendations = [];
+            
+            // Check red flags
+            if (redFlags.includes('upfront_payment')) {
+                riskScore += 40;
+                issues.push('Asks for upfront payment - this is a major red flag!');
+                recommendations.push('Never pay money to get a job. Legitimate employers don\'t charge candidates.');
+            }
+            if (redFlags.includes('personal_info')) {
+                riskScore += 25;
+                issues.push('Requests sensitive personal information early in the process');
+                recommendations.push('Only share personal details after verifying the company and receiving an official offer.');
+            }
+            if (redFlags.includes('unrealistic_salary')) {
+                riskScore += 20;
+                issues.push('Salary appears unrealistically high for the role');
+                recommendations.push('Research average salaries for this position on Glassdoor or LinkedIn.');
+            }
+            if (redFlags.includes('vague_description')) {
+                riskScore += 15;
+                issues.push('Job responsibilities are vague or unclear');
+                recommendations.push('Ask for specific details about daily tasks and responsibilities.');
+            }
+            if (redFlags.includes('no_interview')) {
+                riskScore += 30;
+                issues.push('Hired without proper interview process');
+                recommendations.push('Legitimate companies conduct thorough interviews. Be wary of instant offers.');
+            }
+            if (redFlags.includes('generic_email')) {
+                riskScore += 15;
+                issues.push('Uses personal email domain instead of company email');
+                recommendations.push('Verify the recruiter\'s identity through the company\'s official website.');
+            }
+            if (redFlags.includes('pressure')) {
+                riskScore += 20;
+                issues.push('Creates pressure for immediate decision');
+                recommendations.push('Take your time. Legitimate employers respect your need to think.');
+            }
+            if (redFlags.includes('no_website')) {
+                riskScore += 20;
+                issues.push('Company lacks online presence');
+                recommendations.push('Search for the company on LinkedIn, Glassdoor, and business registries.');
+            }
+            
+            // Check job description for suspicious keywords
+            const suspiciousKeywords = ['guaranteed income', 'no experience needed', 'work from home', 'unlimited earning', 'be your own boss', 'quick money'];
+            suspiciousKeywords.forEach(keyword => {
+                if (description.toLowerCase().includes(keyword)) {
+                    riskScore += 5;
+                    if (!issues.includes('Contains suspicious marketing language')) {
+                        issues.push('Contains suspicious marketing language');
+                    }
+                }
+            });
+            
+            // Cap at 100
+            riskScore = Math.min(riskScore, 100);
+            
+            // Add default recommendations
+            if (recommendations.length === 0) {
+                recommendations.push('Always verify the company through multiple sources');
+                recommendations.push('Check company reviews on Glassdoor and LinkedIn');
+                recommendations.push('Trust your instincts if something feels wrong');
+            }
+            
+            // Show results
+            document.getElementById('resultsSection').classList.remove('hidden');
+            document.getElementById('riskPercentage').textContent = riskScore + '%';
+            
+            const riskMeter = document.getElementById('riskMeter');
+            riskMeter.style.width = riskScore + '%';
+            
+            if (riskScore < 30) {
+                riskMeter.className = 'risk-meter h-4 rounded-full bg-green-500';
+            } else if (riskScore < 60) {
+                riskMeter.className = 'risk-meter h-4 rounded-full bg-yellow-500';
+            } else {
+                riskMeter.className = 'risk-meter h-4 rounded-full bg-red-500';
+            }
+            
+            // Verdict
+            const verdictDiv = document.getElementById('verdict');
+            if (riskScore < 30) {
+                verdictDiv.className = 'p-6 rounded-xl mb-6 bg-green-100 border border-green-300';
+                verdictDiv.innerHTML = `
+                    <div class="flex items-center">
+                        <i class="fas fa-check-circle text-4xl text-green-600 mr-4"></i>
+                        <div>
+                            <h3 class="font-bold text-green-800 text-lg">Low Risk</h3>
+                            <p class="text-green-700">This job offer appears to be legitimate. However, always do your own research before proceeding.</p>
+                        </div>
+                    </div>
+                `;
+            } else if (riskScore < 60) {
+                verdictDiv.className = 'p-6 rounded-xl mb-6 bg-yellow-100 border border-yellow-300';
+                verdictDiv.innerHTML = `
+                    <div class="flex items-center">
+                        <i class="fas fa-exclamation-triangle text-4xl text-yellow-600 mr-4"></i>
+                        <div>
+                            <h3 class="font-bold text-yellow-800 text-lg">Medium Risk - Proceed with Caution</h3>
+                            <p class="text-yellow-700">Some warning signs detected. Verify the company thoroughly before proceeding.</p>
+                        </div>
+                    </div>
+                `;
+            } else {
+                verdictDiv.className = 'p-6 rounded-xl mb-6 bg-red-100 border border-red-300 pulse-warning';
+                verdictDiv.innerHTML = `
+                    <div class="flex items-center">
+                        <i class="fas fa-times-circle text-4xl text-red-600 mr-4"></i>
+                        <div>
+                            <h3 class="font-bold text-red-800 text-lg">High Risk - Likely a Scam!</h3>
+                            <p class="text-red-700">Multiple red flags detected. We strongly advise against proceeding with this job offer.</p>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            // Issues list
+            const issuesUl = document.getElementById('issuesUl');
+            issuesUl.innerHTML = issues.length > 0 
+                ? issues.map(issue => `<li class="flex items-start"><i class="fas fa-times-circle text-red-500 mt-1 mr-2"></i><span class="text-gray-700">${issue}</span></li>`).join('')
+                : '<li class="text-green-600"><i class="fas fa-check-circle mr-2"></i>No major issues detected</li>';
+            
+            // Recommendations list
+            const recsUl = document.getElementById('recsUl');
+            recsUl.innerHTML = recommendations.map(rec => `<li class="flex items-start"><i class="fas fa-arrow-right mt-1 mr-2"></i><span>${rec}</span></li>`).join('');
+            
+            // Scroll to results
+            document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth' });
+        });
+    </script>
+</body>
+</html>
+
+
+
+

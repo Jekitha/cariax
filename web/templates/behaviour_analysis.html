@@ -1,0 +1,1227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interview Behaviour Analysis - AI Career Guidance System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .gradient-bg { background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); }
+        .score-ring { transition: stroke-dashoffset 1s ease; }
+        .pulse-recording { animation: pulse-rec 1.5s infinite; }
+        @keyframes pulse-rec { 
+            0%, 100% { transform: scale(1); opacity: 1; } 
+            50% { transform: scale(1.1); opacity: 0.8; } 
+        }
+        .typing-indicator span {
+            animation: typing 1.4s infinite ease-in-out;
+        }
+        .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+        .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes typing {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-10px); }
+        }
+        .strength-bar { transition: width 0.8s ease; }
+        .fade-in { animation: fadeIn 0.5s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        
+        /* Celebration animations */
+        @keyframes bounce-in {
+            0% { transform: scale(0.3); opacity: 0; }
+            50% { transform: scale(1.05); }
+            70% { transform: scale(0.9); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .animate-bounce-in { animation: bounce-in 0.6s ease-out; }
+        
+        .confetti-container {
+            display: flex;
+            gap: 10px;
+            font-size: 2rem;
+        }
+        .confetti {
+            animation: confetti-fall 2s ease-in-out infinite;
+            animation-delay: var(--delay);
+        }
+        @keyframes confetti-fall {
+            0%, 100% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            50% { transform: translateY(-20px) rotate(180deg); opacity: 0.8; }
+        }
+        
+        /* Progress bar styles */
+        .progress-ring {
+            position: relative;
+            width: 60px;
+            height: 60px;
+        }
+        .progress-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-weight: bold;
+            color: #f97316;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <a href="/dashboard" class="flex items-center space-x-2">
+                    <i class="fas fa-rocket text-2xl text-orange-500"></i>
+                    <span class="text-xl font-bold text-gray-800">AI Career Guide</span>
+                </a>
+                <div class="flex items-center space-x-4">
+                    <a href="/dashboard" class="text-gray-600 hover:text-orange-500"><i class="fas fa-home mr-1"></i>Home</a>
+                    <a href="/roadmap" class="text-gray-600 hover:text-orange-500"><i class="fas fa-route mr-1"></i>Roadmap</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-4xl mx-auto px-4 py-8">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <div class="w-20 h-20 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-brain text-4xl text-orange-500"></i>
+            </div>
+            <h1 class="text-3xl font-bold text-gray-800 mb-2">Interview Behaviour Analysis</h1>
+            <p class="text-gray-600 mb-4">Practice mock interviews and get AI-powered feedback on your responses</p>
+            <div class="inline-flex items-center gap-2 bg-orange-100 px-4 py-2 rounded-full text-sm">
+                <i class="fas fa-trophy text-orange-500"></i>
+                <span class="text-orange-700 font-medium">Goal: Complete 5 questions to unlock achievement! 🎯</span>
+            </div>
+        </div>
+
+        <!-- Question Selection -->
+        <div id="questionSection" class="bg-white rounded-2xl shadow-xl p-8 mb-8">
+            <h2 class="text-xl font-semibold text-gray-800 mb-6">
+                <i class="fas fa-list-ol text-orange-500 mr-2"></i>Choose Interview Category
+            </h2>
+            
+            <div class="grid md:grid-cols-2 gap-4 mb-6">
+                <button onclick="selectCategory('technical')" class="category-btn p-4 border-2 border-gray-200 rounded-xl hover:border-orange-500 hover:bg-orange-50 transition-all text-left">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
+                            <i class="fas fa-code text-blue-600 text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-gray-800">Technical Questions</h3>
+                            <p class="text-sm text-gray-500">Programming, DSA, System Design</p>
+                        </div>
+                    </div>
+                </button>
+                
+                <button onclick="selectCategory('behavioral')" class="category-btn p-4 border-2 border-gray-200 rounded-xl hover:border-orange-500 hover:bg-orange-50 transition-all text-left">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
+                            <i class="fas fa-users text-green-600 text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-gray-800">Behavioral Questions</h3>
+                            <p class="text-sm text-gray-500">STAR method, Situational</p>
+                        </div>
+                    </div>
+                </button>
+                
+                <button onclick="selectCategory('hr')" class="category-btn p-4 border-2 border-gray-200 rounded-xl hover:border-orange-500 hover:bg-orange-50 transition-all text-left">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
+                            <i class="fas fa-handshake text-purple-600 text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-gray-800">HR Questions</h3>
+                            <p class="text-sm text-gray-500">Salary, Culture fit, Goals</p>
+                        </div>
+                    </div>
+                </button>
+                
+                <button onclick="selectCategory('leadership')" class="category-btn p-4 border-2 border-gray-200 rounded-xl hover:border-orange-500 hover:bg-orange-50 transition-all text-left">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center">
+                            <i class="fas fa-crown text-orange-600 text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-gray-800">Leadership Questions</h3>
+                            <p class="text-sm text-gray-500">Management, Decision making</p>
+                        </div>
+                    </div>
+                </button>
+            </div>
+
+            <!-- Current Question Display -->
+            <div id="currentQuestion" class="hidden">
+                <div class="bg-gradient-to-r from-orange-50 to-amber-50 rounded-xl p-6 border border-orange-200 mb-6">
+                    <div class="flex items-start gap-4">
+                        <div class="w-10 h-10 bg-orange-500 rounded-full flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-question text-white"></i>
+                        </div>
+                        <div>
+                            <span class="text-xs text-orange-600 font-medium" id="questionCategory">TECHNICAL</span>
+                            <h3 class="text-lg font-semibold text-gray-800 mt-1" id="questionText">Loading question...</h3>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Response Input Options -->
+                <div class="space-y-4">
+                    <div class="flex gap-4 justify-center mb-4">
+                        <button onclick="startVoiceInput()" id="voiceBtn" class="flex items-center gap-2 px-6 py-3 bg-orange-500 text-white rounded-xl hover:bg-orange-600 transition-all">
+                            <i class="fas fa-microphone"></i>
+                            <span>Speak Answer</span>
+                        </button>
+                        <button onclick="showTextInput()" id="textBtn" class="flex items-center gap-2 px-6 py-3 border-2 border-orange-500 text-orange-500 rounded-xl hover:bg-orange-50 transition-all">
+                            <i class="fas fa-keyboard"></i>
+                            <span>Type Answer</span>
+                        </button>
+                    </div>
+
+                    <!-- Voice Recording UI -->
+                    <div id="voiceRecording" class="hidden text-center py-8">
+                        <div class="w-24 h-24 bg-red-500 rounded-full flex items-center justify-center mx-auto mb-4 pulse-recording">
+                            <i class="fas fa-microphone text-white text-3xl"></i>
+                        </div>
+                        <p class="text-gray-600 mb-2">Listening... Speak your answer</p>
+                        <p class="text-sm text-gray-400" id="recordingTime">0:00</p>
+                        <button onclick="stopVoiceInput()" class="mt-4 px-6 py-2 bg-gray-800 text-white rounded-xl hover:bg-gray-700">
+                            <i class="fas fa-stop mr-2"></i>Stop Recording
+                        </button>
+                    </div>
+
+                    <!-- Text Input -->
+                    <div id="textInput" class="hidden">
+                        <textarea id="answerText" class="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:border-orange-500 focus:ring-2 focus:ring-orange-200 transition-all" rows="6" placeholder="Type your answer here... Be as detailed as you would in a real interview."></textarea>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div id="submitSection" class="hidden">
+                        <button onclick="analyzeResponse()" class="w-full py-4 bg-gradient-to-r from-orange-500 to-amber-500 text-white rounded-xl font-semibold hover:from-orange-600 hover:to-amber-600 transition-all shadow-lg">
+                            <i class="fas fa-brain mr-2"></i>Analyze My Response
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Analysis Results Section -->
+        <div id="resultsSection" class="hidden fade-in">
+            <!-- Overall Score Card -->
+            <div class="bg-white rounded-2xl shadow-xl p-8 mb-6">
+                <h2 class="text-xl font-semibold text-gray-800 mb-6">
+                    <i class="fas fa-chart-pie text-orange-500 mr-2"></i>Response Analysis
+                </h2>
+                
+                <div class="flex flex-col md:flex-row items-center gap-8 mb-8">
+                    <!-- Score Circle -->
+                    <div class="relative">
+                        <svg class="w-40 h-40 transform -rotate-90">
+                            <circle cx="80" cy="80" r="70" stroke="#f3f4f6" stroke-width="12" fill="none"/>
+                            <circle id="scoreCircle" cx="80" cy="80" r="70" stroke="#f97316" stroke-width="12" fill="none" 
+                                    stroke-dasharray="440" stroke-dashoffset="440" stroke-linecap="round" class="score-ring"/>
+                        </svg>
+                        <div class="absolute inset-0 flex flex-col items-center justify-center">
+                            <span id="overallScore" class="text-4xl font-bold text-gray-800">0</span>
+                            <span class="text-sm text-gray-500">Overall Score</span>
+                        </div>
+                    </div>
+
+                    <!-- Score Breakdown -->
+                    <div class="flex-1 space-y-4 w-full">
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="text-sm font-medium text-gray-700">Confidence</span>
+                                <span id="confidenceValue" class="text-sm font-semibold text-orange-500">0%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-3">
+                                <div id="confidenceBar" class="strength-bar h-3 rounded-full bg-orange-500" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="text-sm font-medium text-gray-700">Clarity</span>
+                                <span id="clarityValue" class="text-sm font-semibold text-blue-500">0%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-3">
+                                <div id="clarityBar" class="strength-bar h-3 rounded-full bg-blue-500" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="text-sm font-medium text-gray-700">Technical Accuracy</span>
+                                <span id="accuracyValue" class="text-sm font-semibold text-green-500">0%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-3">
+                                <div id="accuracyBar" class="strength-bar h-3 rounded-full bg-green-500" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="text-sm font-medium text-gray-700">Tone & Professionalism</span>
+                                <span id="toneValue" class="text-sm font-semibold text-purple-500">0%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-3">
+                                <div id="toneBar" class="strength-bar h-3 rounded-full bg-purple-500" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Detailed Feedback -->
+            <div class="bg-white rounded-2xl shadow-xl p-8 mb-6">
+                <h2 class="text-xl font-semibold text-gray-800 mb-6">
+                    <i class="fas fa-comments text-orange-500 mr-2"></i>Detailed Feedback
+                </h2>
+
+                <!-- Strengths -->
+                <div class="mb-6">
+                    <h3 class="flex items-center gap-2 font-semibold text-green-700 mb-3">
+                        <i class="fas fa-check-circle"></i>Your Strengths
+                    </h3>
+                    <div id="strengthsList" class="space-y-2">
+                        <!-- Dynamically filled -->
+                    </div>
+                </div>
+
+                <!-- Areas of Hesitation -->
+                <div class="mb-6">
+                    <h3 class="flex items-center gap-2 font-semibold text-yellow-700 mb-3">
+                        <i class="fas fa-pause-circle"></i>Areas Where You Hesitated
+                    </h3>
+                    <div id="hesitationsList" class="space-y-2">
+                        <!-- Dynamically filled -->
+                    </div>
+                </div>
+
+                <!-- Improvement Suggestions -->
+                <div class="mb-6">
+                    <h3 class="flex items-center gap-2 font-semibold text-blue-700 mb-3">
+                        <i class="fas fa-lightbulb"></i>How to Improve
+                    </h3>
+                    <div id="improvementsList" class="space-y-2">
+                        <!-- Dynamically filled -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sample Better Answer -->
+            <div class="bg-white rounded-2xl shadow-xl p-8 mb-6">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4">
+                    <i class="fas fa-star text-orange-500 mr-2"></i>Sample Strong Answer
+                </h2>
+                <div class="bg-green-50 border border-green-200 rounded-xl p-6">
+                    <p id="sampleAnswer" class="text-gray-700 leading-relaxed"></p>
+                </div>
+            </div>
+
+            <!-- Next Questions to Prepare -->
+            <div class="bg-white rounded-2xl shadow-xl p-8 mb-6">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4">
+                    <i class="fas fa-forward text-orange-500 mr-2"></i>Questions to Prepare Next
+                </h2>
+                <div id="nextQuestions" class="space-y-3">
+                    <!-- Dynamically filled -->
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex gap-4">
+                <button onclick="tryAnotherQuestion()" class="flex-1 py-4 bg-orange-500 text-white rounded-xl font-semibold hover:bg-orange-600 transition-all">
+                    <i class="fas fa-redo mr-2"></i>Try Another Question
+                </button>
+                <button onclick="window.location.href='/roadmap'" class="flex-1 py-4 border-2 border-orange-500 text-orange-500 rounded-xl font-semibold hover:bg-orange-50 transition-all">
+                    <i class="fas fa-route mr-2"></i>View Full Roadmap
+                </button>
+            </div>
+        </div>
+
+        <!-- Analyzing Overlay -->
+        <div id="analyzingOverlay" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div class="bg-white rounded-2xl p-8 text-center max-w-sm">
+                <div class="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-brain text-orange-500 text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-800 mb-2">Analyzing Your Response</h3>
+                <p class="text-gray-600 mb-4">Our AI is evaluating your answer...</p>
+                <div class="typing-indicator flex justify-center gap-2">
+                    <span class="w-3 h-3 bg-orange-500 rounded-full"></span>
+                    <span class="w-3 h-3 bg-orange-500 rounded-full"></span>
+                    <span class="w-3 h-3 bg-orange-500 rounded-full"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Celebration Modal -->
+        <div id="celebrationModal" class="hidden fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
+            <div class="bg-white rounded-3xl p-10 text-center max-w-md mx-4 transform animate-bounce-in">
+                <div class="relative">
+                    <!-- Confetti Animation -->
+                    <div class="absolute -top-6 left-1/2 transform -translate-x-1/2">
+                        <div class="confetti-container">
+                            <span class="confetti" style="--delay: 0s; --color: #f97316;">🎉</span>
+                            <span class="confetti" style="--delay: 0.1s; --color: #22c55e;">⭐</span>
+                            <span class="confetti" style="--delay: 0.2s; --color: #3b82f6;">🎊</span>
+                            <span class="confetti" style="--delay: 0.3s; --color: #eab308;">✨</span>
+                            <span class="confetti" style="--delay: 0.4s; --color: #ec4899;">🌟</span>
+                        </div>
+                    </div>
+                    <div class="w-24 h-24 bg-gradient-to-r from-orange-400 to-orange-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
+                        <i class="fas fa-trophy text-white text-4xl"></i>
+                    </div>
+                </div>
+                <h2 class="text-3xl font-bold text-gray-800 mb-3">🎉 You Did It! 🎉</h2>
+                <p class="text-xl text-orange-600 font-semibold mb-2">Interview Practice Complete!</p>
+                <p class="text-gray-600 mb-6">You've mastered all 5 <span id="completedCategory" class="font-semibold text-orange-500"></span> questions! You're now ready to ace your dream job interview!</p>
+                
+                <div class="bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-2xl p-4 mb-6">
+                    <div class="flex items-center justify-center gap-3 mb-2">
+                        <i class="fas fa-star text-yellow-500"></i>
+                        <span class="font-semibold text-green-700">Your Achievement</span>
+                        <i class="fas fa-star text-yellow-500"></i>
+                    </div>
+                    <p class="text-gray-700">You practiced <span class="font-bold text-green-600">5/5</span> questions with an average score of <span id="avgScore" class="font-bold text-green-600">85%</span></p>
+                </div>
+
+                <div class="space-y-3">
+                    <button onclick="tryAnotherCategory()" class="w-full py-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-xl font-semibold hover:from-orange-600 hover:to-orange-700 transition-all shadow-lg">
+                        <i class="fas fa-redo mr-2"></i>Try Another Category
+                    </button>
+                    <button onclick="goToDashboard()" class="w-full py-4 border-2 border-orange-500 text-orange-500 rounded-xl font-semibold hover:bg-orange-50 transition-all">
+                        <i class="fas fa-home mr-2"></i>Back to Dashboard
+                    </button>
+                </div>
+                
+                <p class="text-sm text-gray-500 mt-4">💪 Keep practicing to stay interview-ready!</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Question database - 5 questions per category
+        const questions = {
+            technical: [
+                { q: "Explain the difference between a stack and a queue. When would you use each?", level: "Medium", 
+                  keywords: ["stack", "queue", "lifo", "fifo", "last", "first", "push", "pop", "order", "data structure"],
+                  concepts: ["LIFO (Last In First Out) for stack", "FIFO (First In First Out) for queue", "Use cases for each"] },
+                { q: "What is the time complexity of binary search and why?", level: "Easy",
+                  keywords: ["log", "o(log", "binary", "half", "divide", "sorted", "middle", "complexity", "time"],
+                  concepts: ["O(log n) time complexity", "Divides search space in half", "Requires sorted array"] },
+                { q: "Explain how you would design a URL shortening service like bit.ly.", level: "Hard",
+                  keywords: ["hash", "database", "unique", "id", "redirect", "store", "generate", "short", "url", "key"],
+                  concepts: ["Generate unique short codes", "Database to store mappings", "Redirect mechanism"] },
+                { q: "What are the SOLID principles in object-oriented programming?", level: "Medium",
+                  keywords: ["single", "open", "liskov", "interface", "dependency", "responsibility", "closed", "principle"],
+                  concepts: ["Single Responsibility", "Open/Closed", "Liskov Substitution", "Interface Segregation", "Dependency Inversion"] },
+                { q: "What is a REST API and what are its key principles?", level: "Easy",
+                  keywords: ["http", "get", "post", "put", "delete", "stateless", "resource", "endpoint", "rest", "api", "request"],
+                  concepts: ["HTTP methods (GET, POST, PUT, DELETE)", "Stateless communication", "Resource-based URLs"] }
+            ],
+            behavioral: [
+                { q: "Tell me about a time when you had to deal with a difficult team member.", level: "Medium",
+                  keywords: ["team", "member", "difficult", "conflict", "resolved", "talked", "situation", "approach", "communication", "colleague"],
+                  concepts: ["Describe the situation", "Your action taken", "The outcome/result"] },
+                { q: "Describe a situation where you failed. What did you learn from it?", level: "Medium",
+                  keywords: ["failed", "failure", "mistake", "learned", "lesson", "wrong", "improve", "experience", "realized"],
+                  concepts: ["Acknowledge the failure", "What you learned", "How you improved"] },
+                { q: "Give an example of when you had to meet a tight deadline.", level: "Easy",
+                  keywords: ["deadline", "time", "pressure", "delivered", "urgent", "prioritize", "completed", "project", "manage"],
+                  concepts: ["The deadline situation", "How you managed time", "The successful outcome"] },
+                { q: "Tell me about a time you had to learn a new technology quickly.", level: "Easy",
+                  keywords: ["learn", "new", "technology", "quickly", "study", "practice", "project", "skill", "picked up", "course"],
+                  concepts: ["The technology you learned", "Your learning approach", "How you applied it"] },
+                { q: "Describe a conflict you had at work and how you resolved it.", level: "Medium",
+                  keywords: ["conflict", "resolved", "disagreement", "solution", "talked", "compromise", "team", "issue", "approach"],
+                  concepts: ["The conflict situation", "Steps to resolve", "The resolution"] }
+            ],
+            hr: [
+                { q: "Where do you see yourself in 5 years?", level: "Easy",
+                  keywords: ["years", "goal", "grow", "position", "career", "learn", "lead", "develop", "future", "role"],
+                  concepts: ["Career growth vision", "Alignment with the role", "Realistic goals"] },
+                { q: "Why do you want to leave your current company?", level: "Medium",
+                  keywords: ["opportunity", "growth", "challenge", "learn", "new", "career", "looking for", "role", "current"],
+                  concepts: ["Positive reasons for change", "Growth opportunities", "Not badmouthing current employer"] },
+                { q: "What are your salary expectations?", level: "Medium",
+                  keywords: ["salary", "range", "market", "experience", "value", "compensation", "expect", "lpa", "package"],
+                  concepts: ["Research-based range", "Flexibility", "Value you bring"] },
+                { q: "Why should we hire you over other candidates?", level: "Medium",
+                  keywords: ["skill", "experience", "unique", "bring", "value", "team", "contribute", "quality", "strength"],
+                  concepts: ["Unique value proposition", "Relevant skills", "Cultural fit"] },
+                { q: "Tell me about yourself.", level: "Easy",
+                  keywords: ["experience", "work", "background", "skill", "education", "project", "role", "year", "passionate"],
+                  concepts: ["Professional background", "Key achievements", "Why you're here"] }
+            ],
+            leadership: [
+                { q: "Describe your leadership style.", level: "Medium",
+                  keywords: ["lead", "team", "style", "empower", "collaborative", "support", "guide", "delegate", "trust", "manage"],
+                  concepts: ["Your approach to leading", "How you work with teams", "Examples of leadership"] },
+                { q: "How do you motivate underperforming team members?", level: "Hard",
+                  keywords: ["motivate", "underperform", "support", "feedback", "goal", "help", "improve", "understand", "coach"],
+                  concepts: ["Understanding root cause", "Support strategies", "Measurable improvement"] },
+                { q: "Tell me about a difficult decision you had to make as a leader.", level: "Hard",
+                  keywords: ["decision", "difficult", "leader", "chose", "consider", "impact", "team", "result", "weigh"],
+                  concepts: ["The difficult situation", "Your decision process", "The outcome"] },
+                { q: "How do you handle disagreements with senior management?", level: "Medium",
+                  keywords: ["disagree", "management", "senior", "respectful", "opinion", "data", "approach", "discuss", "perspective"],
+                  concepts: ["Professional approach", "Data-driven discussion", "Respecting hierarchy"] },
+                { q: "How do you prioritize tasks when everything is urgent?", level: "Easy",
+                  keywords: ["prioritize", "urgent", "important", "task", "first", "deadline", "manage", "focus", "order"],
+                  concepts: ["Prioritization framework", "Stakeholder communication", "Time management"] }
+            ]
+        };
+
+        // Function to check if answer is relevant to the question
+        function checkAnswerRelevance(answer, question, category) {
+            const answerLower = answer.toLowerCase();
+            const questionData = questions[category].find(q => q.q === question);
+            
+            if (!questionData) return { relevant: true, score: 50, issues: [] };
+            
+            const keywords = questionData.keywords || [];
+            const concepts = questionData.concepts || [];
+            
+            // Count how many keywords are present in the answer
+            let keywordMatches = 0;
+            let matchedKeywords = [];
+            let missingKeywords = [];
+            
+            for (const keyword of keywords) {
+                if (answerLower.includes(keyword.toLowerCase())) {
+                    keywordMatches++;
+                    matchedKeywords.push(keyword);
+                } else {
+                    missingKeywords.push(keyword);
+                }
+            }
+            
+            const relevanceScore = keywords.length > 0 ? (keywordMatches / keywords.length) * 100 : 50;
+            
+            let issues = [];
+            let isRelevant = true;
+            
+            // If less than 20% keywords matched, answer is likely not relevant
+            if (relevanceScore < 20) {
+                isRelevant = false;
+                issues.push("Your answer doesn't seem to address the question asked.");
+                issues.push("Make sure you understand what the interviewer is asking.");
+            } else if (relevanceScore < 40) {
+                issues.push("Your answer only partially addresses the question.");
+                issues.push("Try to cover more aspects of what was asked.");
+            }
+            
+            return {
+                relevant: isRelevant,
+                score: relevanceScore,
+                matchedKeywords: matchedKeywords,
+                missingKeywords: missingKeywords.slice(0, 5), // Top 5 missing
+                concepts: concepts,
+                issues: issues
+            };
+        }
+
+        // Sample answers and feedback templates
+        const feedbackTemplates = {
+            technical: {
+                strengths: [
+                    "Good understanding of fundamental concepts",
+                    "Clear explanation with practical examples",
+                    "Mentioned real-world use cases",
+                    "Demonstrated problem-solving approach"
+                ],
+                hesitations: [
+                    "Could elaborate more on edge cases",
+                    "Time complexity analysis could be more detailed",
+                    "Consider mentioning trade-offs between approaches",
+                    "Add more specific examples from your experience"
+                ],
+                improvements: [
+                    "Practice explaining complex concepts in simple terms",
+                    "Always mention Big O notation when discussing algorithms",
+                    "Prepare concrete examples from past projects",
+                    "Study system design patterns for senior roles"
+                ]
+            },
+            behavioral: {
+                strengths: [
+                    "Good use of specific examples",
+                    "Clear problem-action-result structure",
+                    "Showed self-awareness and growth mindset",
+                    "Demonstrated emotional intelligence"
+                ],
+                hesitations: [
+                    "Could quantify the impact more specifically",
+                    "The situation context could be clearer",
+                    "Consider emphasizing your specific role more",
+                    "Add what you would do differently next time"
+                ],
+                improvements: [
+                    "Use the STAR method (Situation, Task, Action, Result)",
+                    "Prepare 5-7 strong stories that can be adapted to different questions",
+                    "Always include measurable outcomes when possible",
+                    "Practice keeping answers under 2 minutes"
+                ]
+            },
+            hr: {
+                strengths: [
+                    "Showed genuine interest in the role",
+                    "Aligned personal goals with company mission",
+                    "Professional and diplomatic tone",
+                    "Demonstrated research about the company"
+                ],
+                hesitations: [
+                    "Could show more enthusiasm",
+                    "Be more specific about why this company",
+                    "Connect your skills more directly to the role",
+                    "Prepare thoughtful questions to ask"
+                ],
+                improvements: [
+                    "Research the company's recent news and achievements",
+                    "Prepare specific examples of why you're a good fit",
+                    "Practice answering salary questions confidently",
+                    "Have a clear, concise elevator pitch ready"
+                ]
+            },
+            leadership: {
+                strengths: [
+                    "Demonstrated strategic thinking",
+                    "Showed empathy and team focus",
+                    "Clear decision-making framework",
+                    "Evidence of successful outcomes"
+                ],
+                hesitations: [
+                    "Could mention more about team development",
+                    "Add examples of handling resistance",
+                    "Discuss how you measure success",
+                    "Mention lessons learned from failures"
+                ],
+                improvements: [
+                    "Prepare stories about building high-performing teams",
+                    "Practice discussing difficult conversations you've had",
+                    "Be ready to discuss your management philosophy",
+                    "Have metrics ready to show your leadership impact"
+                ]
+            }
+        };
+
+        const sampleAnswers = {
+            technical: "I would explain this concept by first defining the fundamentals clearly, then providing a real-world analogy. For example, with stacks and queues: a stack is like a pile of plates where you always take from the top (LIFO), while a queue is like a line at a coffee shop where the first person in line gets served first (FIFO). I would then discuss time complexities - both have O(1) for push/pop or enqueue/dequeue operations. Finally, I'd give practical examples: stacks are great for undo operations or parsing expressions, while queues are ideal for task scheduling or BFS traversal.",
+            behavioral: "Using the STAR method: SITUATION - In my previous role, we had a critical project deadline and a team member was consistently missing their deliverables. TASK - As the lead, I needed to address this without damaging team morale. ACTION - I scheduled a private one-on-one, listened to their challenges (they were dealing with unclear requirements), clarified expectations, and offered to pair program on complex tasks. RESULT - The team member's productivity improved by 40%, and we delivered the project on time. I learned that performance issues often have underlying causes that need to be understood first.",
+            hr: "I've researched your company extensively and I'm excited about this opportunity for three specific reasons: First, your commitment to innovation aligns with my passion for solving complex problems. Second, your collaborative culture, which I learned about from current employees on LinkedIn, matches how I work best. Third, the growth trajectory of this role aligns perfectly with my 5-year goal of becoming a technical lead. I believe my experience in [specific skill] and track record of [specific achievement] make me uniquely qualified to contribute to your team's goals.",
+            leadership: "My leadership style is collaborative but decisive. I believe in empowering team members by giving them ownership while providing clear direction and support. For example, when I led a team of 8 engineers, I implemented weekly 1:1s to understand individual goals, created a shared decision-making framework for technical choices, but made final calls when consensus wasn't possible. This approach increased team satisfaction by 30% in our engagement survey and improved our delivery speed by 25%. I've learned that great leaders remove obstacles, provide context, and trust their teams to deliver."
+        };
+
+        const nextQuestionsTemplate = {
+            technical: [
+                "Explain how you would implement a cache with LRU eviction policy",
+                "What are microservices and when would you use them?",
+                "How do you ensure code quality in your projects?"
+            ],
+            behavioral: [
+                "Tell me about a time you disagreed with your manager",
+                "Describe a project you're most proud of",
+                "How do you handle multiple competing priorities?"
+            ],
+            hr: [
+                "What questions do you have for us?",
+                "How do you handle work-life balance?",
+                "What's your ideal work environment?"
+            ],
+            leadership: [
+                "How do you handle underperformers on your team?",
+                "Describe your approach to giving feedback",
+                "How do you foster innovation in your team?"
+            ]
+        };
+
+        let currentCategory = '';
+        let currentQuestion = '';
+        let recognition = null;
+        let recordingInterval = null;
+        let recordingSeconds = 0;
+        
+        // Track progress for each category
+        let categoryProgress = {
+            technical: { answered: 0, scores: [], questionsAsked: [] },
+            behavioral: { answered: 0, scores: [], questionsAsked: [] },
+            hr: { answered: 0, scores: [], questionsAsked: [] },
+            leadership: { answered: 0, scores: [], questionsAsked: [] }
+        };
+        
+        const QUESTIONS_TO_COMPLETE = 5;
+
+        function selectCategory(category) {
+            currentCategory = category;
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.classList.remove('border-orange-500', 'bg-orange-50');
+                btn.classList.add('border-gray-200');
+            });
+            event.currentTarget.classList.add('border-orange-500', 'bg-orange-50');
+            event.currentTarget.classList.remove('border-gray-200');
+            
+            // Pick a random question
+            const categoryQuestions = questions[category];
+            const randomQ = categoryQuestions[Math.floor(Math.random() * categoryQuestions.length)];
+            currentQuestion = randomQ.q;
+            
+            document.getElementById('questionCategory').textContent = category.toUpperCase() + ' • ' + randomQ.level;
+            document.getElementById('questionText').textContent = randomQ.q;
+            document.getElementById('currentQuestion').classList.remove('hidden');
+            document.getElementById('resultsSection').classList.add('hidden');
+        }
+
+        function startVoiceInput() {
+            if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+                alert('Speech recognition is not supported in your browser. Please use Chrome or type your answer.');
+                showTextInput();
+                return;
+            }
+
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            recognition = new SpeechRecognition();
+            recognition.continuous = true;
+            recognition.interimResults = true;
+            recognition.lang = 'en-US';
+
+            let finalTranscript = '';
+
+            recognition.onresult = function(event) {
+                let interimTranscript = '';
+                for (let i = event.resultIndex; i < event.results.length; i++) {
+                    if (event.results[i].isFinal) {
+                        finalTranscript += event.results[i][0].transcript + ' ';
+                    } else {
+                        interimTranscript += event.results[i][0].transcript;
+                    }
+                }
+                document.getElementById('answerText').value = finalTranscript + interimTranscript;
+            };
+
+            recognition.onerror = function(event) {
+                console.error('Speech recognition error:', event.error);
+                stopVoiceInput();
+                showTextInput();
+            };
+
+            recognition.start();
+            document.getElementById('voiceRecording').classList.remove('hidden');
+            document.getElementById('textInput').classList.remove('hidden');
+            document.getElementById('submitSection').classList.remove('hidden');
+            document.getElementById('voiceBtn').classList.add('hidden');
+            document.getElementById('textBtn').classList.add('hidden');
+
+            // Start timer
+            recordingSeconds = 0;
+            recordingInterval = setInterval(() => {
+                recordingSeconds++;
+                const mins = Math.floor(recordingSeconds / 60);
+                const secs = recordingSeconds % 60;
+                document.getElementById('recordingTime').textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+            }, 1000);
+        }
+
+        function stopVoiceInput() {
+            if (recognition) {
+                recognition.stop();
+            }
+            if (recordingInterval) {
+                clearInterval(recordingInterval);
+            }
+            document.getElementById('voiceRecording').classList.add('hidden');
+        }
+
+        function showTextInput() {
+            document.getElementById('textInput').classList.remove('hidden');
+            document.getElementById('submitSection').classList.remove('hidden');
+            document.getElementById('voiceBtn').classList.add('hidden');
+            document.getElementById('textBtn').classList.add('hidden');
+        }
+
+        // Function to check if text is valid (not gibberish)
+        function isValidText(text) {
+            // Remove extra spaces and get clean text
+            const cleanText = text.trim().toLowerCase();
+            
+            // Check minimum length (at least 2 words)
+            const words = cleanText.split(/\s+/).filter(w => w.length > 0);
+            if (words.length < 2) {
+                return { valid: false, reason: "Please write at least 2 words to form a proper answer." };
+            }
+            
+            // Common English words to check against
+            const commonWords = ['i', 'the', 'a', 'an', 'is', 'are', 'was', 'were', 'be', 'been', 'being', 
+                'have', 'has', 'had', 'do', 'does', 'did', 'will', 'would', 'could', 'should', 'may', 'might',
+                'my', 'me', 'we', 'you', 'he', 'she', 'it', 'they', 'them', 'this', 'that', 'these', 'those',
+                'and', 'or', 'but', 'if', 'then', 'so', 'because', 'when', 'where', 'what', 'who', 'how', 'why',
+                'for', 'to', 'of', 'in', 'on', 'at', 'by', 'with', 'from', 'about', 'into', 'through',
+                'work', 'team', 'project', 'time', 'experience', 'skills', 'problem', 'solution', 'company',
+                'job', 'role', 'manager', 'lead', 'develop', 'create', 'build', 'learn', 'grow', 'help',
+                'good', 'great', 'best', 'better', 'important', 'new', 'first', 'last', 'year', 'years',
+                'think', 'believe', 'know', 'understand', 'feel', 'want', 'need', 'like', 'make', 'take',
+                'use', 'used', 'using', 'can', 'able', 'also', 'just', 'only', 'very', 'more', 'most',
+                'example', 'situation', 'result', 'action', 'task', 'goal', 'challenge', 'success', 'failure'];
+            
+            // Check if at least 30% of words are recognizable English words
+            let recognizedWords = 0;
+            for (const word of words) {
+                // Check if word is in common words list OR is a proper word (has vowels and reasonable length)
+                const hasVowels = /[aeiou]/i.test(word);
+                const isReasonableLength = word.length >= 2 && word.length <= 20;
+                const isCommonWord = commonWords.includes(word);
+                const looksLikeWord = hasVowels && isReasonableLength && /^[a-z]+$/i.test(word);
+                
+                if (isCommonWord || looksLikeWord) {
+                    recognizedWords++;
+                }
+            }
+            
+            const recognitionRate = recognizedWords / words.length;
+            
+            if (recognitionRate < 0.3) {
+                return { valid: false, reason: "Your answer doesn't seem to contain valid words. Please write a proper response in English." };
+            }
+            
+            // Check for random character sequences (like "gvkj", "asdf", "qwerty")
+            const gibberishPattern = /^[bcdfghjklmnpqrstvwxz]{3,}$/i; // 3+ consonants only
+            let gibberishWords = 0;
+            for (const word of words) {
+                if (gibberishPattern.test(word) || (word.length > 2 && !/[aeiou]/i.test(word))) {
+                    gibberishWords++;
+                }
+            }
+            
+            if (gibberishWords / words.length > 0.5) {
+                return { valid: false, reason: "Your answer appears to contain random characters. Please provide a meaningful response." };
+            }
+            
+            return { valid: true, reason: "" };
+        }
+
+        function analyzeResponse() {
+            const answer = document.getElementById('answerText').value.trim();
+            if (!answer) {
+                showValidationError('Please provide an answer before analyzing.');
+                return;
+            }
+
+            // Validate the text
+            const validation = isValidText(answer);
+            if (!validation.valid) {
+                showValidationError(validation.reason);
+                return;
+            }
+
+            // Show analyzing overlay
+            document.getElementById('analyzingOverlay').classList.remove('hidden');
+
+            // Simulate AI analysis (in real app, this would call an API)
+            setTimeout(() => {
+                performAnalysis(answer);
+                document.getElementById('analyzingOverlay').classList.add('hidden');
+                document.getElementById('resultsSection').classList.remove('hidden');
+                document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth' });
+            }, 2500);
+        }
+
+        function showValidationError(message) {
+            // Create or update error message
+            let errorDiv = document.getElementById('validationError');
+            if (!errorDiv) {
+                errorDiv = document.createElement('div');
+                errorDiv.id = 'validationError';
+                errorDiv.className = 'bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-xl mb-4 flex items-center gap-3';
+                document.getElementById('submitSection').insertAdjacentElement('beforebegin', errorDiv);
+            }
+            errorDiv.innerHTML = `
+                <i class="fas fa-exclamation-circle text-red-500"></i>
+                <div>
+                    <strong>Invalid Answer:</strong> ${message}
+                    <p class="text-sm mt-1">💡 Tip: Write a proper answer as you would in a real interview. Even a short 2-3 sentence response works!</p>
+                </div>
+            `;
+            errorDiv.classList.remove('hidden');
+            
+            // Auto-hide after 5 seconds
+            setTimeout(() => {
+                errorDiv.classList.add('hidden');
+            }, 5000);
+        }
+
+        function performAnalysis(answer) {
+            // Hide any validation errors
+            const errorDiv = document.getElementById('validationError');
+            if (errorDiv) errorDiv.classList.add('hidden');
+            
+            // Check answer relevance to the question
+            const relevance = checkAnswerRelevance(answer, currentQuestion, currentCategory);
+            
+            // Calculate scores based on answer length, keywords, structure
+            const wordCount = answer.split(/\s+/).length;
+            const hasExamples = /for example|such as|like when|instance|when i|one time/i.test(answer);
+            const hasStructure = /first|second|finally|result|therefore|because|then|after|before/i.test(answer);
+            const hasNumbers = /\d+%|\d+ years|\d+ team|\d+ projects|\d+ months/i.test(answer);
+            const isConfident = !/maybe|i think|probably|not sure|i guess/i.test(answer);
+            const fillerWords = (answer.match(/um|uh|like|you know|basically|actually/gi) || []).length;
+
+            // Calculate individual scores - heavily weighted by relevance
+            let confidence, clarity, accuracy, tone;
+            
+            // Base accuracy on relevance score - THIS IS KEY
+            const relevanceMultiplier = relevance.score / 100;
+            
+            // If answer is not relevant at all (wrong answer)
+            if (!relevance.relevant || relevance.score < 20) {
+                confidence = 15 + Math.floor(Math.random() * 10);
+                clarity = 20 + Math.floor(Math.random() * 10);
+                accuracy = 5 + Math.floor(Math.random() * 10); // Very low accuracy for wrong answers
+                tone = 25 + Math.floor(Math.random() * 10);
+            }
+            // Partially relevant answer
+            else if (relevance.score < 40) {
+                confidence = 30 + Math.floor(Math.random() * 10);
+                clarity = 35 + Math.floor(Math.random() * 10);
+                accuracy = 20 + Math.floor(Math.random() * 15); // Low accuracy
+                tone = 35 + Math.floor(Math.random() * 10);
+            }
+            // Very short answers (2-10 words) get lower scores
+            else if (wordCount < 10) {
+                confidence = 25 + Math.floor(Math.random() * 15);
+                clarity = 20 + Math.floor(Math.random() * 15);
+                accuracy = Math.round(15 + (relevance.score * 0.2)); // Some credit for relevance
+                tone = 30 + Math.floor(Math.random() * 15);
+            } 
+            // Short answers (10-30 words) get medium-low scores
+            else if (wordCount < 30) {
+                confidence = 40 + (isConfident ? 10 : 0) + Math.floor(Math.random() * 10);
+                clarity = 35 + (hasStructure ? 15 : 0) + Math.floor(Math.random() * 10);
+                accuracy = Math.round(25 + (relevance.score * 0.3) + (hasExamples ? 10 : 0));
+                tone = 45 + Math.floor(Math.random() * 10);
+            }
+            // Medium answers (30-80 words) get medium scores
+            else if (wordCount < 80) {
+                confidence = 55 + (isConfident ? 15 : 0) - (fillerWords * 3) + Math.floor(Math.random() * 10);
+                clarity = 50 + (hasStructure ? 20 : 0) + Math.floor(Math.random() * 10);
+                accuracy = Math.round(35 + (relevance.score * 0.4) + (hasExamples ? 10 : 0) + (hasNumbers ? 5 : 0));
+                tone = 55 + (isConfident ? 10 : 0) + Math.floor(Math.random() * 10);
+            }
+            // Good length answers (80+ words) get higher scores
+            else {
+                confidence = 65 + (isConfident ? 15 : 0) - (fillerWords * 3) + Math.floor(Math.random() * 15);
+                clarity = 60 + (hasStructure ? 20 : 0) + Math.floor(Math.random() * 15);
+                accuracy = Math.round(45 + (relevance.score * 0.45) + (hasExamples ? 10 : 0) + (hasNumbers ? 5 : 0));
+                tone = 65 + (isConfident ? 10 : 0) + (hasStructure ? 5 : 0) + Math.floor(Math.random() * 10);
+            }
+
+            // Cap scores between 5 and 98
+            confidence = Math.min(98, Math.max(5, confidence));
+            clarity = Math.min(98, Math.max(5, clarity));
+            accuracy = Math.min(98, Math.max(5, accuracy));
+            tone = Math.min(98, Math.max(5, tone));
+
+            const overall = Math.round((confidence + clarity + accuracy + tone) / 4);
+
+            // Update UI
+            setTimeout(() => {
+                // Animate score circle
+                const circumference = 2 * Math.PI * 70;
+                const offset = circumference - (overall / 100) * circumference;
+                document.getElementById('scoreCircle').style.strokeDashoffset = offset;
+                document.getElementById('overallScore').textContent = overall;
+
+                // Update bars with color coding
+                document.getElementById('confidenceBar').style.width = confidence + '%';
+                document.getElementById('confidenceValue').textContent = confidence + '%';
+                document.getElementById('clarityBar').style.width = clarity + '%';
+                document.getElementById('clarityValue').textContent = clarity + '%';
+                document.getElementById('accuracyBar').style.width = accuracy + '%';
+                document.getElementById('accuracyValue').textContent = accuracy + '%';
+                
+                // Color code accuracy bar based on relevance
+                const accuracyBar = document.getElementById('accuracyBar');
+                if (accuracy < 30) {
+                    accuracyBar.className = 'strength-bar h-3 rounded-full bg-red-500';
+                } else if (accuracy < 50) {
+                    accuracyBar.className = 'strength-bar h-3 rounded-full bg-yellow-500';
+                } else {
+                    accuracyBar.className = 'strength-bar h-3 rounded-full bg-green-500';
+                }
+                
+                document.getElementById('toneBar').style.width = tone + '%';
+                document.getElementById('toneValue').textContent = tone + '%';
+            }, 100);
+
+            // Get feedback based on category
+            const feedback = feedbackTemplates[currentCategory];
+            
+            // Populate strengths based on actual answer quality
+            let strengths = [];
+            
+            // Only show strengths if answer is somewhat relevant
+            if (relevance.relevant && relevance.score >= 20) {
+                if (relevance.score >= 60) strengths.push("Your answer addresses the question well");
+                if (relevance.matchedKeywords && relevance.matchedKeywords.length >= 3) {
+                    strengths.push(`Mentioned key concepts: ${relevance.matchedKeywords.slice(0, 3).join(', ')}`);
+                }
+                if (wordCount >= 30) strengths.push("Provided a reasonably detailed response");
+                if (wordCount >= 80) strengths.push("Good answer length - shows thorough thinking");
+                if (hasExamples) strengths.push("Included specific examples to support your points");
+                if (hasStructure) strengths.push("Used a structured approach in your answer");
+                if (hasNumbers) strengths.push("Included quantifiable metrics - very impressive!");
+                if (isConfident && fillerWords === 0) strengths.push("Confident and clear communication style");
+            }
+            
+            // If answer is wrong/irrelevant, minimal strengths
+            if (!relevance.relevant || relevance.score < 20) {
+                strengths = ["You attempted to answer the question - keep practicing!"];
+            } else if (strengths.length === 0) {
+                strengths.push("Made an effort to answer - room for improvement");
+            }
+            
+            // Limit to 3 strengths max
+            strengths = strengths.slice(0, 3);
+            
+            document.getElementById('strengthsList').innerHTML = strengths.map(s => 
+                `<div class="flex items-start gap-2 p-3 bg-green-50 rounded-lg">
+                    <i class="fas fa-check text-green-500 mt-1"></i>
+                    <span class="text-gray-700">${s}</span>
+                </div>`
+            ).join('');
+
+            // Populate hesitations based on actual analysis
+            let hesitations = [];
+            
+            // Critical: Check if answer is wrong/irrelevant
+            if (!relevance.relevant || relevance.score < 20) {
+                hesitations.push("⚠️ Your answer does NOT address the question asked!");
+                hesitations.push("The interviewer asked about something different than what you answered.");
+                hesitations.push("Please read the question carefully and answer what is being asked.");
+            } else if (relevance.score < 40) {
+                hesitations.push("Your answer only partially addresses the question - missing key points.");
+                if (relevance.missingKeywords && relevance.missingKeywords.length > 0) {
+                    hesitations.push(`Consider mentioning: ${relevance.missingKeywords.slice(0, 3).join(', ')}`);
+                }
+            } else if (relevance.score < 60) {
+                hesitations.push("Your answer covers some aspects but misses important points.");
+                if (relevance.concepts && relevance.concepts.length > 0) {
+                    hesitations.push(`Try to cover: ${relevance.concepts[0]}`);
+                }
+            }
+            
+            if (wordCount < 10 && relevance.relevant) {
+                hesitations.push("Your answer is too short. Interviewers expect at least 3-4 sentences minimum.");
+            } else if (wordCount < 30 && relevance.relevant) {
+                hesitations.push("Answer was brief - try to provide more context and details.");
+            }
+            
+            if (fillerWords > 2) hesitations.push("Used filler words (um, uh, like) which may indicate uncertainty");
+            if (!hasExamples && wordCount >= 20 && relevance.score >= 40) hesitations.push("Could benefit from specific examples or real stories");
+            if (!hasStructure && wordCount >= 30 && relevance.score >= 40) hesitations.push("Consider structuring your answer with clear beginning, middle, and end");
+            if (!isConfident) hesitations.push("Phrases like 'I think' or 'maybe' can make you sound uncertain");
+            
+            // Limit to 4 hesitations
+            hesitations = hesitations.slice(0, 4);
+
+            document.getElementById('hesitationsList').innerHTML = hesitations.map(h =>
+                `<div class="flex items-start gap-2 p-3 ${h.includes('⚠️') || h.includes('NOT address') ? 'bg-red-100' : 'bg-yellow-50'} rounded-lg">
+                    <i class="fas fa-exclamation-circle ${h.includes('⚠️') || h.includes('NOT address') ? 'text-red-500' : 'text-yellow-500'} mt-1"></i>
+                    <span class="text-gray-700">${h}</span>
+                </div>`
+            ).join('');
+
+            // Populate improvements based on actual needs
+            let improvements = [];
+            
+            // If answer was wrong, focus on understanding the question
+            if (!relevance.relevant || relevance.score < 30) {
+                improvements.push("🎯 First, make sure you understand what the question is asking");
+                improvements.push("Listen carefully to the question before answering");
+                if (relevance.concepts && relevance.concepts.length > 0) {
+                    improvements.push(`For this question, you should cover: ${relevance.concepts.join(', ')}`);
+                }
+            } else {
+                if (wordCount < 50) {
+                    improvements.push("Practice giving more detailed answers - aim for at least 100 words");
+                }
+                if (!hasExamples) {
+                    improvements.push("Always include at least one specific example from your experience");
+                }
+                if (!hasStructure) {
+                    improvements.push("Use frameworks like STAR (Situation, Task, Action, Result) to structure answers");
+                }
+                if (!hasNumbers) {
+                    improvements.push("Try to include numbers and metrics to make your achievements more concrete");
+                }
+                if (relevance.missingKeywords && relevance.missingKeywords.length > 0 && relevance.score < 70) {
+                    improvements.push(`Study these concepts: ${relevance.missingKeywords.slice(0, 4).join(', ')}`);
+                }
+            }
+            
+            // Add category-specific improvements
+            improvements = improvements.concat(feedback.improvements.slice(0, 4 - improvements.length));
+            improvements = improvements.slice(0, 4);
+            
+            document.getElementById('improvementsList').innerHTML = improvements.map(i =>
+                `<div class="flex items-start gap-2 p-3 bg-blue-50 rounded-lg">
+                    <i class="fas fa-arrow-up text-blue-500 mt-1"></i>
+                    <span class="text-gray-700">${i}</span>
+                </div>`
+            ).join('');
+
+            // Set sample answer
+            document.getElementById('sampleAnswer').textContent = sampleAnswers[currentCategory];
+
+            // Set next questions
+            const nextQs = nextQuestionsTemplate[currentCategory];
+            document.getElementById('nextQuestions').innerHTML = nextQs.map((q, i) =>
+                `<div class="flex items-center gap-3 p-4 bg-gray-50 rounded-xl hover:bg-orange-50 cursor-pointer transition-all" onclick="practiceQuestion('${q}')">
+                    <div class="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center text-orange-500 font-semibold">${i + 1}</div>
+                    <span class="text-gray-700">${q}</span>
+                    <i class="fas fa-chevron-right text-gray-400 ml-auto"></i>
+                </div>`
+            ).join('');
+            
+            // Track progress - only if this question wasn't already answered
+            if (currentCategory && !categoryProgress[currentCategory].questionsAsked.includes(currentQuestion)) {
+                categoryProgress[currentCategory].answered++;
+                categoryProgress[currentCategory].scores.push(overall);
+                categoryProgress[currentCategory].questionsAsked.push(currentQuestion);
+                
+                // Update progress indicator
+                updateProgressIndicator();
+                
+                // Check if all 5 questions completed
+                if (categoryProgress[currentCategory].answered >= QUESTIONS_TO_COMPLETE) {
+                    setTimeout(() => {
+                        showCelebration();
+                    }, 1500);
+                }
+            }
+        }
+
+        function practiceQuestion(question) {
+            document.getElementById('questionText').textContent = question;
+            currentQuestion = question;
+            document.getElementById('answerText').value = '';
+            document.getElementById('voiceBtn').classList.remove('hidden');
+            document.getElementById('textBtn').classList.remove('hidden');
+            document.getElementById('textInput').classList.add('hidden');
+            document.getElementById('submitSection').classList.add('hidden');
+            document.getElementById('resultsSection').classList.add('hidden');
+            document.getElementById('currentQuestion').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function tryAnotherQuestion() {
+            document.getElementById('answerText').value = '';
+            document.getElementById('voiceBtn').classList.remove('hidden');
+            document.getElementById('textBtn').classList.remove('hidden');
+            document.getElementById('textInput').classList.add('hidden');
+            document.getElementById('submitSection').classList.add('hidden');
+            document.getElementById('resultsSection').classList.add('hidden');
+            
+            // Pick new question from same category
+            if (currentCategory) {
+                const categoryQuestions = questions[currentCategory];
+                const randomQ = categoryQuestions[Math.floor(Math.random() * categoryQuestions.length)];
+                currentQuestion = randomQ.q;
+                document.getElementById('questionText').textContent = randomQ.q;
+                document.getElementById('questionCategory').textContent = currentCategory.toUpperCase() + ' • ' + randomQ.level;
+            }
+            
+            document.getElementById('questionSection').scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        function updateProgressIndicator() {
+            // Create or update progress indicator in header
+            let progressDiv = document.getElementById('progressIndicator');
+            if (!progressDiv && currentCategory) {
+                progressDiv = document.createElement('div');
+                progressDiv.id = 'progressIndicator';
+                progressDiv.className = 'fixed top-20 right-4 bg-white shadow-lg rounded-xl p-4 z-40 border border-orange-200';
+                document.body.appendChild(progressDiv);
+            }
+            
+            if (progressDiv && currentCategory) {
+                const progress = categoryProgress[currentCategory];
+                const percentage = Math.round((progress.answered / QUESTIONS_TO_COMPLETE) * 100);
+                const avgScore = progress.scores.length > 0 
+                    ? Math.round(progress.scores.reduce((a, b) => a + b, 0) / progress.scores.length)
+                    : 0;
+                
+                progressDiv.innerHTML = `
+                    <div class="text-sm font-semibold text-gray-700 mb-2">
+                        <i class="fas fa-chart-line text-orange-500 mr-1"></i>Progress
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div class="relative w-12 h-12">
+                            <svg class="w-12 h-12 transform -rotate-90">
+                                <circle cx="24" cy="24" r="20" stroke="#fed7aa" stroke-width="4" fill="none"/>
+                                <circle cx="24" cy="24" r="20" stroke="#f97316" stroke-width="4" fill="none"
+                                    stroke-dasharray="${2 * Math.PI * 20}"
+                                    stroke-dashoffset="${2 * Math.PI * 20 * (1 - percentage / 100)}"
+                                    stroke-linecap="round"/>
+                            </svg>
+                            <span class="absolute inset-0 flex items-center justify-center text-xs font-bold text-orange-600">
+                                ${progress.answered}/${QUESTIONS_TO_COMPLETE}
+                            </span>
+                        </div>
+                        <div class="text-xs text-gray-600">
+                            <div class="font-semibold text-orange-600">${currentCategory.charAt(0).toUpperCase() + currentCategory.slice(1)}</div>
+                            <div>Avg: ${avgScore}%</div>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+        
+        function showCelebration() {
+            const progress = categoryProgress[currentCategory];
+            const avgScore = Math.round(progress.scores.reduce((a, b) => a + b, 0) / progress.scores.length);
+            
+            document.getElementById('completedCategory').textContent = currentCategory.charAt(0).toUpperCase() + currentCategory.slice(1);
+            document.getElementById('avgScore').textContent = avgScore + '%';
+            document.getElementById('celebrationModal').classList.remove('hidden');
+            
+            // Play celebration sound if available
+            try {
+                const audio = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQ==');
+                audio.volume = 0.3;
+                audio.play().catch(() => {}); // Ignore if audio fails
+            } catch(e) {}
+        }
+        
+        function tryAnotherCategory() {
+            document.getElementById('celebrationModal').classList.add('hidden');
+            
+            // Hide progress indicator
+            const progressDiv = document.getElementById('progressIndicator');
+            if (progressDiv) progressDiv.remove();
+            
+            // Reset UI
+            document.getElementById('answerText').value = '';
+            document.getElementById('voiceBtn').classList.remove('hidden');
+            document.getElementById('textBtn').classList.remove('hidden');
+            document.getElementById('textInput').classList.add('hidden');
+            document.getElementById('submitSection').classList.add('hidden');
+            document.getElementById('resultsSection').classList.add('hidden');
+            document.getElementById('currentQuestion').classList.add('hidden');
+            
+            // Reset category selection
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.classList.remove('border-orange-500', 'bg-orange-50');
+                btn.classList.add('border-gray-200');
+            });
+            
+            currentCategory = '';
+            currentQuestion = '';
+            
+            document.getElementById('questionSection').scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        function goToDashboard() {
+            window.location.href = '/dashboard';
+        }
+    </script>
+</body>
+</html>

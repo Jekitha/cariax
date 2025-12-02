@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Your Career Matches - Cariax</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
+    <style>
+        body { background: #f8fafc; }
+        .results-header {
+            background: linear-gradient(135deg, #f97316 0%, #ea580c 50%, #c2410c 100%);
+            padding: 20px;
+            padding-top: 60px;
+            padding-bottom: 80px;
+            color: white;
+            text-align: center;
+            position: relative;
+        }
+        .back-btn {
+            position: absolute;
+            top: 16px;
+            left: 16px;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255,255,255,0.2);
+            border-radius: 12px;
+            color: white;
+            text-decoration: none;
+        }
+        .results-title {
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+        .results-subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        .personality-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255,255,255,0.2);
+            padding: 10px 20px;
+            border-radius: 9999px;
+            margin-top: 16px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .results-content {
+            padding: 20px;
+            margin-top: -60px;
+            max-width: 480px;
+            margin-left: auto;
+            margin-right: auto;
+            padding-bottom: 100px;
+        }
+
+        .top-match-card {
+            background: white;
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            border: 2px solid #f97316;
+            position: relative;
+            overflow: hidden;
+        }
+        .top-match-card::before {
+            content: '🏆 TOP MATCH';
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 6px 16px;
+            border-radius: 0 0 0 12px;
+        }
+        .career-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+            margin-bottom: 16px;
+        }
+        .career-name {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 4px;
+        }
+        .match-percentage {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 16px;
+            font-weight: 700;
+            color: #10b981;
+            margin-bottom: 16px;
+        }
+        .career-desc {
+            font-size: 14px;
+            color: #64748b;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .salary-forecast {
+            background: #f8fafc;
+            border-radius: 14px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+        .salary-forecast-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: #64748b;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+        .salary-timeline {
+            display: flex;
+            justify-content: space-between;
+        }
+        .salary-point {
+            text-align: center;
+            flex: 1;
+            position: relative;
+        }
+        .salary-point:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 20px;
+            width: 50%;
+            height: 2px;
+            background: #e2e8f0;
+        }
+        .salary-point:not(:first-child)::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 20px;
+            width: 50%;
+            height: 2px;
+            background: #e2e8f0;
+        }
+        .salary-dot {
+            width: 12px;
+            height: 12px;
+            background: #f97316;
+            border-radius: 50%;
+            margin: 0 auto 8px;
+            position: relative;
+            z-index: 1;
+        }
+        .salary-year {
+            font-size: 11px;
+            color: #94a3b8;
+            margin-bottom: 4px;
+        }
+        .salary-amount {
+            font-size: 15px;
+            font-weight: 700;
+            color: #1e293b;
+        }
+
+        .career-cta {
+            display: flex;
+            gap: 12px;
+        }
+        .career-cta .btn { flex: 1; }
+
+        .other-matches-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 16px;
+            margin-top: 24px;
+        }
+
+        .career-card {
+            background: white;
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            border: 1px solid #f1f5f9;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .career-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+            border-color: #c7d2fe;
+        }
+        .career-card-rank {
+            width: 36px;
+            height: 36px;
+            background: #f1f5f9;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: #64748b;
+            flex-shrink: 0;
+        }
+        .career-card-rank.gold { background: #fef3c7; color: #d97706; }
+        .career-card-rank.silver { background: #f1f5f9; color: #64748b; }
+        .career-card-rank.bronze { background: #fed7aa; color: #c2410c; }
+        .career-card-info { flex: 1; }
+        .career-card-name {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 2px;
+        }
+        .career-card-match {
+            font-size: 13px;
+            color: #10b981;
+            font-weight: 500;
+        }
+        .career-card-salary {
+            text-align: right;
+        }
+        .career-card-salary-label {
+            font-size: 10px;
+            color: #94a3b8;
+        }
+        .career-card-salary-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1e293b;
+        }
+        .career-card-arrow {
+            color: #cbd5e1;
+        }
+
+        /* Career Detail Modal */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 100;
+            display: none;
+            align-items: flex-end;
+            justify-content: center;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal-content {
+            background: white;
+            border-radius: 24px 24px 0 0;
+            width: 100%;
+            max-width: 480px;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: slideUp 0.3s ease;
+        }
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid #f1f5f9;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            background: white;
+        }
+        .modal-close {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: #f1f5f9;
+            border: none;
+            cursor: pointer;
+        }
+        .modal-body { padding: 20px; }
+
+        /* College Section */
+        .college-section {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            margin-top: 24px;
+            border: 1px solid #f1f5f9;
+        }
+        .college-section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+        .college-section-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1e293b;
+        }
+        .college-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        .college-item:last-child { border-bottom: none; }
+        .college-icon {
+            width: 40px;
+            height: 40px;
+            background: #dbeafe;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #3b82f6;
+        }
+        .college-info { flex: 1; }
+        .college-name {
+            font-size: 14px;
+            font-weight: 500;
+            color: #1e293b;
+        }
+        .college-location {
+            font-size: 12px;
+            color: #64748b;
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-top: 1px solid #e2e8f0;
+            padding: 8px 0;
+            padding-bottom: env(safe-area-inset-bottom, 8px);
+            display: flex;
+            justify-content: space-around;
+            z-index: 50;
+        }
+        .bottom-nav a {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 8px 16px;
+            color: #64748b;
+            text-decoration: none;
+            font-size: 11px;
+            font-weight: 500;
+        }
+        .bottom-nav a i {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+        .bottom-nav a.active { color: #f97316; }
+    </style>
+</head>
+<body>
+    <div class="results-header">
+        <a href="/dashboard" class="back-btn">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+        <h1 class="results-title">Your Career Matches</h1>
+        <p class="results-subtitle">Based on your assessment results</p>
+        <div class="personality-badge">
+            <i class="fas fa-brain"></i>
+            <span id="personalityType">Analyzing...</span>
+        </div>
+    </div>
+
+    <div class="results-content">
+        <!-- Top Match -->
+        <div class="top-match-card" id="topMatchCard">
+            <div class="career-icon" id="topCareerIcon">
+                <i class="fas fa-laptop-code"></i>
+            </div>
+            <h2 class="career-name" id="topCareerName">Loading...</h2>
+            <div class="match-percentage">
+                <i class="fas fa-check-circle"></i>
+                <span id="topMatchPercent">0%</span> Match
+            </div>
+            <p class="career-desc" id="topCareerDesc">
+                Analyzing your profile to find the perfect career match...
+            </p>
+            
+            <div class="salary-forecast">
+                <div class="salary-forecast-title">💰 Salary Forecast (India)</div>
+                <div class="salary-timeline">
+                    <div class="salary-point">
+                        <div class="salary-dot"></div>
+                        <div class="salary-year">NOW</div>
+                        <div class="salary-amount" id="salaryNow">-</div>
+                    </div>
+                    <div class="salary-point">
+                        <div class="salary-dot" style="background: #ea580c;"></div>
+                        <div class="salary-year">5 YEARS</div>
+                        <div class="salary-amount" id="salary5yr">-</div>
+                    </div>
+                    <div class="salary-point">
+                        <div class="salary-dot" style="background: #10b981;"></div>
+                        <div class="salary-year">10 YEARS</div>
+                        <div class="salary-amount" id="salary10yr">-</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="career-cta">
+                <a href="#" class="btn btn-primary" id="viewRoadmapBtn">
+                    <i class="fas fa-route"></i> View Roadmap
+                </a>
+                <button class="btn btn-secondary" onclick="showCareerDetails(0)">
+                    <i class="fas fa-info-circle"></i> Details
+                </button>
+            </div>
+        </div>
+
+        <!-- Other Matches -->
+        <h3 class="other-matches-title">Other Great Matches</h3>
+        <div id="otherMatches">
+            <!-- Will be populated dynamically -->
+        </div>
+
+        <!-- College Section (for students) -->
+        <div class="college-section" id="collegeSection" style="display: none;">
+            <div class="college-section-header">
+                <h3 class="college-section-title">🎓 Top Colleges for You</h3>
+                <a href="/colleges" class="section-link" style="color: #f97316; font-size: 13px; text-decoration: none;">See All</a>
+            </div>
+            <div id="collegeList">
+                <!-- Colleges will be populated -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Career Detail Modal -->
+    <div class="modal-overlay" id="careerModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalCareerName">Career Details</h3>
+                <button class="modal-close" onclick="closeModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Career details will be populated -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <a href="/dashboard">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </a>
+        <a href="/careers">
+            <i class="fas fa-compass"></i>
+            <span>Explore</span>
+        </a>
+        <a href="/onboarding">
+            <i class="fas fa-clipboard-check"></i>
+            <span>Assess</span>
+        </a>
+        <a href="/roadmap" class="active">
+            <i class="fas fa-route"></i>
+            <span>Roadmap</span>
+        </a>
+        <a href="/profile">
+            <i class="fas fa-user"></i>
+            <span>Profile</span>
+        </a>
+    </nav>
+
+    <script>
+        let resultsData = null;
+
+        // Career icons mapping
+        const careerIcons = {
+            'software': 'fa-laptop-code',
+            'data': 'fa-database',
+            'doctor': 'fa-stethoscope',
+            'engineer': 'fa-cogs',
+            'designer': 'fa-palette',
+            'business': 'fa-briefcase',
+            'teacher': 'fa-chalkboard-teacher',
+            'scientist': 'fa-flask',
+            'finance': 'fa-chart-line',
+            'marketing': 'fa-bullhorn',
+            'default': 'fa-star'
+        };
+
+        function getCareerIcon(careerName) {
+            const name = careerName.toLowerCase();
+            for (const [key, icon] of Object.entries(careerIcons)) {
+                if (name.includes(key)) return icon;
+            }
+            return careerIcons.default;
+        }
+
+        function formatSalary(amount) {
+            if (amount >= 10000000) {
+                return '₹' + (amount / 10000000).toFixed(1) + ' Cr';
+            } else if (amount >= 100000) {
+                return '₹' + (amount / 100000).toFixed(1) + ' LPA';
+            }
+            return '₹' + amount.toLocaleString('en-IN');
+        }
+
+        function loadResults() {
+            console.log('Loading results...');
+            // Try to get from session storage first
+            const stored = sessionStorage.getItem('careerResults');
+            console.log('Session storage data:', stored ? 'Found' : 'Not found');
+            
+            if (stored) {
+                try {
+                    resultsData = JSON.parse(stored);
+                    console.log('Parsed results:', resultsData);
+                    displayResults(resultsData);
+                    return;
+                } catch (e) {
+                    console.error('Error parsing stored results:', e);
+                }
+            }
+            
+            // Try to fetch from API
+            console.log('Fetching from API...');
+            fetch('/api/user/results')
+                .then(res => res.json())
+                .then(data => {
+                    console.log('API response:', data);
+                    if (data.success && data.recommendations && data.recommendations.length > 0) {
+                        resultsData = data;
+                        displayResults(data);
+                    } else {
+                        console.log('No data from API, showing sample');
+                        showSampleResults();
+                    }
+                })
+                .catch(err => {
+                    console.error('Error loading results:', err);
+                    showSampleResults();
+                });
+        }
+
+        function displayResults(data) {
+            const recommendations = data.recommendations || data.report?.career_recommendations || [];
+            const profile = data.profile_analysis || {};
+            
+            // Update personality type
+            document.getElementById('personalityType').textContent = profile.personality_type || 'INTJ - The Architect';
+            
+            if (recommendations.length > 0) {
+                const topMatch = recommendations[0];
+                
+                // Update top match card
+                document.getElementById('topCareerIcon').innerHTML = `<i class="fas ${getCareerIcon(topMatch.career || topMatch.name)}"></i>`;
+                document.getElementById('topCareerName').textContent = topMatch.career || topMatch.name || 'Software Engineer';
+                document.getElementById('topMatchPercent').textContent = (topMatch.match_score || topMatch.score || 95) + '%';
+                document.getElementById('topCareerDesc').textContent = topMatch.description || 'A great match based on your skills, interests, and personality profile.';
+                
+                // Salary predictions
+                const baseSalary = topMatch.salary?.entry || topMatch.base_salary || 600000;
+                document.getElementById('salaryNow').textContent = formatSalary(baseSalary);
+                document.getElementById('salary5yr').textContent = formatSalary(baseSalary * 2.5);
+                document.getElementById('salary10yr').textContent = formatSalary(baseSalary * 5);
+                
+                // Roadmap link
+                document.getElementById('viewRoadmapBtn').href = `/roadmap?career=${encodeURIComponent(topMatch.career || topMatch.name)}`;
+                
+                // Other matches
+                const otherMatchesHtml = recommendations.slice(1, 5).map((career, idx) => `
+                    <div class="career-card" onclick="showCareerDetails(${idx + 1})">
+                        <div class="career-card-rank ${idx === 0 ? 'silver' : idx === 1 ? 'bronze' : ''}">${idx + 2}</div>
+                        <div class="career-card-info">
+                            <div class="career-card-name">${career.career || career.name}</div>
+                            <div class="career-card-match">
+                                <i class="fas fa-check-circle"></i> ${career.match_score || career.score || 85}% Match
+                            </div>
+                        </div>
+                        <div class="career-card-salary">
+                            <div class="career-card-salary-label">Starting</div>
+                            <div class="career-card-salary-value">${formatSalary(career.salary?.entry || career.base_salary || 500000)}</div>
+                        </div>
+                        <i class="fas fa-chevron-right career-card-arrow"></i>
+                    </div>
+                `).join('');
+                
+                document.getElementById('otherMatches').innerHTML = otherMatchesHtml;
+            } else {
+                showSampleResults();
+            }
+            
+            // Show college section for students
+            const educationLevel = profile.education_level || 'undergraduate';
+            if (['10th', '12th', 'undergraduate'].includes(educationLevel)) {
+                loadColleges();
+            }
+        }
+
+        function showSampleResults() {
+            // Sample data for science stream demo
+            const sampleData = {
+                recommendations: [
+                    { career: 'Data Scientist', name: 'Data Scientist', match_score: 92, score: 92, salary: { entry: 900000 }, description: 'Analyze complex data to uncover insights and drive business decisions using statistical methods and machine learning.', required_skills: ['Python', 'Machine Learning', 'Statistics', 'SQL'] },
+                    { career: 'Software Engineer', name: 'Software Engineer', match_score: 88, score: 88, salary: { entry: 800000 }, description: 'Build innovative software solutions and applications that impact millions of users worldwide.', required_skills: ['Programming', 'Problem Solving', 'System Design'] },
+                    { career: 'Research Scientist', name: 'Research Scientist', match_score: 85, score: 85, salary: { entry: 700000 }, description: 'Conduct cutting-edge research to advance scientific knowledge and develop new technologies.', required_skills: ['Research Methods', 'Data Analysis', 'Scientific Writing'] },
+                    { career: 'Machine Learning Engineer', name: 'Machine Learning Engineer', match_score: 82, score: 82, salary: { entry: 1000000 }, description: 'Design and implement machine learning models and AI systems for real-world applications.', required_skills: ['Deep Learning', 'TensorFlow', 'Python'] },
+                    { career: 'Biomedical Engineer', name: 'Biomedical Engineer', match_score: 78, score: 78, salary: { entry: 600000 }, description: 'Apply engineering principles to healthcare, developing medical devices and diagnostic equipment.', required_skills: ['Biology', 'Engineering', 'Medical Devices'] }
+                ],
+                profile_analysis: {
+                    personality_type: 'INTJ - The Architect',
+                    education_level: 'undergraduate'
+                }
+            };
+            
+            resultsData = sampleData;
+            displayResults(sampleData);
+        }
+
+        function showCareerDetails(index) {
+            const career = resultsData.recommendations[index];
+            
+            document.getElementById('modalCareerName').textContent = career.career || career.name;
+            document.getElementById('modalBody').innerHTML = `
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <div class="career-icon" style="margin: 0 auto 16px;">
+                        <i class="fas ${getCareerIcon(career.career || career.name)}"></i>
+                    </div>
+                    <div class="match-percentage" style="justify-content: center;">
+                        <i class="fas fa-check-circle"></i>
+                        <span>${career.match_score || career.score || 85}%</span> Match
+                    </div>
+                </div>
+                
+                <p style="color: #64748b; margin-bottom: 20px; line-height: 1.6;">
+                    ${career.description || 'A great career option based on your profile.'}
+                </p>
+                
+                <div style="background: #f8fafc; border-radius: 12px; padding: 16px; margin-bottom: 16px;">
+                    <h4 style="font-size: 14px; font-weight: 600; color: #1e293b; margin-bottom: 12px;">
+                        💰 Salary Growth Projection
+                    </h4>
+                    <div style="display: flex; justify-content: space-between;">
+                        <div style="text-align: center;">
+                            <div style="font-size: 11px; color: #94a3b8;">Entry Level</div>
+                            <div style="font-size: 16px; font-weight: 700; color: #1e293b;">${formatSalary(career.salary?.entry || 600000)}</div>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="font-size: 11px; color: #94a3b8;">5 Years</div>
+                            <div style="font-size: 16px; font-weight: 700; color: #ea580c;">${formatSalary((career.salary?.entry || 600000) * 2.5)}</div>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="font-size: 11px; color: #94a3b8;">10 Years</div>
+                            <div style="font-size: 16px; font-weight: 700; color: #10b981;">${formatSalary((career.salary?.entry || 600000) * 5)}</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="background: #f8fafc; border-radius: 12px; padding: 16px; margin-bottom: 20px;">
+                    <h4 style="font-size: 14px; font-weight: 600; color: #1e293b; margin-bottom: 12px;">
+                        📈 Key Skills Required
+                    </h4>
+                    <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                        ${(career.required_skills || ['Problem Solving', 'Communication', 'Technical Skills']).map(skill => `
+                            <span style="background: #dbeafe; color: #3b82f6; padding: 6px 12px; border-radius: 9999px; font-size: 12px;">
+                                ${skill}
+                            </span>
+                        `).join('')}
+                    </div>
+                </div>
+                
+                <a href="/roadmap?career=${encodeURIComponent(career.career || career.name)}" class="btn btn-primary btn-full">
+                    <i class="fas fa-route"></i> View Career Roadmap
+                </a>
+            `;
+            
+            document.getElementById('careerModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('careerModal').classList.remove('active');
+        }
+
+        function loadColleges() {
+            document.getElementById('collegeSection').style.display = 'block';
+            
+            // Sample colleges - in real app, fetch from API
+            const colleges = [
+                { name: 'IIT Delhi', location: 'New Delhi, India' },
+                { name: 'IIT Bombay', location: 'Mumbai, India' },
+                { name: 'BITS Pilani', location: 'Pilani, India' }
+            ];
+            
+            document.getElementById('collegeList').innerHTML = colleges.map(college => `
+                <div class="college-item">
+                    <div class="college-icon">
+                        <i class="fas fa-university"></i>
+                    </div>
+                    <div class="college-info">
+                        <div class="college-name">${college.name}</div>
+                        <div class="college-location">${college.location}</div>
+                    </div>
+                    <i class="fas fa-chevron-right" style="color: #cbd5e1;"></i>
+                </div>
+            `).join('');
+        }
+
+        // Close modal on outside click
+        document.getElementById('careerModal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', loadResults);
+    </script>
+</body>
+</html>
+
+
+
+

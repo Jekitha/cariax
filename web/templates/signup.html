@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - AI Career Guidance System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .gradient-bg {
+            background: #fff7ed;
+        }
+        .glass-card {
+            background: #ffffff;
+            backdrop-filter: blur(10px);
+            border: 1px solid #fdba74;
+        }
+        .oauth-btn {
+            transition: all 0.3s ease;
+        }
+        .oauth-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        .input-field:focus {
+            border-color: #f97316;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        .strength-bar {
+            transition: all 0.3s ease;
+        }
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 0;
+        }
+        .particle {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            animation: float 15s infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100vh) rotate(720deg); opacity: 0; }
+        }
+        .education-card {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .education-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .education-card.selected {
+            border-color: #f97316;
+            background-color: rgba(102, 126, 234, 0.1);
+        }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen flex items-center justify-center p-4">
+    <!-- Animated Particles Background -->
+    <div class="particles" id="particles"></div>
+    
+    <div class="glass-card rounded-2xl shadow-2xl w-full max-w-lg p-8 relative z-10 my-8">
+        <!-- Logo and Title -->
+        <div class="text-center mb-6">
+            <div class="w-16 h-16 bg-gradient-to-r from-orange-500 to-orange-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+                <i class="fas fa-user-plus text-white text-2xl"></i>
+            </div>
+            <h1 class="text-2xl font-bold text-gray-800">Create Your Account</h1>
+            <p class="text-gray-600 mt-2">Start your personalized career guidance journey</p>
+        </div>
+
+        <!-- Error Message -->
+        {% if error %}
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg mb-6 flex items-center">
+            <i class="fas fa-exclamation-circle mr-2"></i>
+            <span>{{ error }}</span>
+        </div>
+        {% endif %}
+
+        <!-- OAuth Buttons -->
+        <div class="grid grid-cols-3 gap-3 mb-6">
+            <a href="/auth/google" class="oauth-btn flex items-center justify-center p-3 border border-gray-300 rounded-lg bg-white hover:bg-gray-50 transition-all" title="Sign up with Google">
+                <svg class="w-6 h-6" viewBox="0 0 24 24">
+                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                </svg>
+            </a>
+            
+            <a href="/auth/github" class="oauth-btn flex items-center justify-center p-3 border border-gray-300 rounded-lg bg-white hover:bg-gray-50 transition-all" title="Sign up with GitHub">
+                <svg class="w-6 h-6" fill="#333" viewBox="0 0 24 24">
+                    <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                </svg>
+            </a>
+
+            <a href="/auth/linkedin" class="oauth-btn flex items-center justify-center p-3 border border-gray-300 rounded-lg bg-white hover:bg-gray-50 transition-all" title="Sign up with LinkedIn">
+                <svg class="w-6 h-6" fill="#0A66C2" viewBox="0 0 24 24">
+                    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                </svg>
+            </a>
+        </div>
+
+        <!-- Divider -->
+        <div class="relative flex items-center justify-center mb-6">
+            <div class="border-t border-gray-300 w-full"></div>
+            <span class="bg-white px-4 text-sm text-gray-500 absolute">or sign up with email</span>
+        </div>
+
+        <!-- Sign Up Form -->
+        <form action="/signup" method="POST" class="space-y-4" id="signupForm">
+            <!-- Name -->
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label for="first_name" class="block text-sm font-medium text-gray-700 mb-1">First Name</label>
+                    <input type="text" id="first_name" name="first_name" required
+                        class="input-field w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none transition-all"
+                        placeholder="John">
+                </div>
+                <div>
+                    <label for="last_name" class="block text-sm font-medium text-gray-700 mb-1">Last Name</label>
+                    <input type="text" id="last_name" name="last_name" required
+                        class="input-field w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none transition-all"
+                        placeholder="Doe">
+                </div>
+            </div>
+
+            <!-- Email -->
+            <div>
+                <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+                <div class="relative">
+                    <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                        <i class="fas fa-envelope"></i>
+                    </span>
+                    <input type="email" id="email" name="email" required
+                        class="input-field w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none transition-all"
+                        placeholder="john@example.com">
+                </div>
+            </div>
+
+            <!-- Education Level -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Education Level</label>
+                <div class="grid grid-cols-2 gap-2" id="educationGrid">
+                    <div class="education-card border-2 border-gray-200 rounded-lg p-3 text-center" data-value="10th">
+                        <i class="fas fa-school text-orange-500 text-xl mb-1"></i>
+                        <div class="text-sm font-medium text-gray-700">Class 10th</div>
+                    </div>
+                    <div class="education-card border-2 border-gray-200 rounded-lg p-3 text-center" data-value="12th">
+                        <i class="fas fa-graduation-cap text-orange-500 text-xl mb-1"></i>
+                        <div class="text-sm font-medium text-gray-700">Class 12th</div>
+                    </div>
+                    <div class="education-card border-2 border-gray-200 rounded-lg p-3 text-center" data-value="undergraduate">
+                        <i class="fas fa-university text-orange-500 text-xl mb-1"></i>
+                        <div class="text-sm font-medium text-gray-700">Undergraduate</div>
+                    </div>
+                    <div class="education-card border-2 border-gray-200 rounded-lg p-3 text-center" data-value="graduate">
+                        <i class="fas fa-user-graduate text-orange-500 text-xl mb-1"></i>
+                        <div class="text-sm font-medium text-gray-700">Graduate</div>
+                    </div>
+                    <div class="education-card border-2 border-gray-200 rounded-lg p-3 text-center" data-value="postgraduate">
+                        <i class="fas fa-award text-orange-500 text-xl mb-1"></i>
+                        <div class="text-sm font-medium text-gray-700">Post Graduate</div>
+                    </div>
+                    <div class="education-card border-2 border-gray-200 rounded-lg p-3 text-center" data-value="working_professional">
+                        <i class="fas fa-briefcase text-orange-500 text-xl mb-1"></i>
+                        <div class="text-sm font-medium text-gray-700">Working Professional</div>
+                    </div>
+                </div>
+                <input type="hidden" id="education_level" name="education_level" required>
+            </div>
+
+            <!-- Stream (shown conditionally for 12th students) -->
+            <div id="streamSection" class="hidden">
+                <label for="stream" class="block text-sm font-medium text-gray-700 mb-1">Stream/Branch</label>
+                <select id="stream" name="stream" class="input-field w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none transition-all">
+                    <option value="">Select your stream</option>
+                    <option value="science_pcm">Science (PCM)</option>
+                    <option value="science_pcb">Science (PCB)</option>
+                    <option value="commerce">Commerce</option>
+                    <option value="arts">Arts/Humanities</option>
+                </select>
+            </div>
+
+            <!-- Field (shown for undergrads and above) -->
+            <div id="fieldSection" class="hidden">
+                <label for="field" class="block text-sm font-medium text-gray-700 mb-1">Field of Study/Work</label>
+                <select id="field" name="field" class="input-field w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none transition-all">
+                    <option value="">Select your field</option>
+                    <option value="computer_science">Computer Science / IT</option>
+                    <option value="engineering">Engineering (Non-CS)</option>
+                    <option value="business">Business / Commerce / MBA</option>
+                    <option value="data_science">Data Science / AI / ML</option>
+                    <option value="software_engineering">Software Engineering</option>
+                    <option value="management">Management</option>
+                    <option value="medicine">Medicine / Healthcare</option>
+                    <option value="law">Law</option>
+                    <option value="design">Design / Creative</option>
+                    <option value="science">Pure Sciences</option>
+                    <option value="arts">Arts / Humanities</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+
+            <!-- Password -->
+            <div>
+                <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                <div class="relative">
+                    <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                        <i class="fas fa-lock"></i>
+                    </span>
+                    <input type="password" id="password" name="password" required minlength="8"
+                        class="input-field w-full pl-10 pr-12 py-2.5 border border-gray-300 rounded-lg focus:outline-none transition-all"
+                        placeholder="Min 8 characters"
+                        oninput="checkPasswordStrength()">
+                    <button type="button" onclick="togglePassword('password')" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                        <i class="fas fa-eye" id="password-eye"></i>
+                    </button>
+                </div>
+                <!-- Password Strength Indicator -->
+                <div class="mt-2">
+                    <div class="flex gap-1">
+                        <div class="strength-bar h-1 flex-1 bg-gray-200 rounded" id="strength-1"></div>
+                        <div class="strength-bar h-1 flex-1 bg-gray-200 rounded" id="strength-2"></div>
+                        <div class="strength-bar h-1 flex-1 bg-gray-200 rounded" id="strength-3"></div>
+                        <div class="strength-bar h-1 flex-1 bg-gray-200 rounded" id="strength-4"></div>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-1" id="strength-text">Password strength</p>
+                </div>
+            </div>
+
+            <!-- Confirm Password -->
+            <div>
+                <label for="confirm_password" class="block text-sm font-medium text-gray-700 mb-1">Confirm Password</label>
+                <div class="relative">
+                    <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                        <i class="fas fa-lock"></i>
+                    </span>
+                    <input type="password" id="confirm_password" name="confirm_password" required
+                        class="input-field w-full pl-10 pr-12 py-2.5 border border-gray-300 rounded-lg focus:outline-none transition-all"
+                        placeholder="Confirm your password"
+                        oninput="checkPasswordMatch()">
+                    <span class="absolute right-3 top-1/2 transform -translate-y-1/2 hidden" id="password-match-icon">
+                        <i class="fas fa-check text-green-500"></i>
+                    </span>
+                </div>
+                <p class="text-xs text-red-500 mt-1 hidden" id="password-mismatch">Passwords do not match</p>
+            </div>
+
+            <!-- Terms -->
+            <div class="flex items-start">
+                <input type="checkbox" id="terms" name="terms" required class="mt-1 w-4 h-4 text-orange-500 border-gray-300 rounded focus:ring-orange-500">
+                <label for="terms" class="ml-2 text-sm text-gray-600">
+                    I agree to the <a href="/terms" class="text-orange-500 hover:underline">Terms of Service</a> and <a href="/privacy" class="text-orange-500 hover:underline">Privacy Policy</a>
+                </label>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="w-full py-3 px-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white font-semibold rounded-lg hover:from-orange-600 hover:to-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 transition-all transform hover:scale-[1.02] shadow-lg">
+                <i class="fas fa-user-plus mr-2"></i>Create Account
+            </button>
+        </form>
+
+        <!-- Login Link -->
+        <p class="text-center mt-6 text-gray-600">
+            Already have an account? 
+            <a href="/login" class="text-orange-500 hover:text-orange-700 font-semibold">Login here</a>
+        </p>
+    </div>
+
+    <script>
+        // Education level selection
+        const educationCards = document.querySelectorAll('.education-card');
+        const educationInput = document.getElementById('education_level');
+        const streamSection = document.getElementById('streamSection');
+        const fieldSection = document.getElementById('fieldSection');
+
+        educationCards.forEach(card => {
+            card.addEventListener('click', () => {
+                // Remove selection from all
+                educationCards.forEach(c => c.classList.remove('selected'));
+                // Add selection to clicked
+                card.classList.add('selected');
+                // Set hidden input value
+                const value = card.dataset.value;
+                educationInput.value = value;
+
+                // Show/hide conditional fields
+                if (value === '12th') {
+                    streamSection.classList.remove('hidden');
+                    fieldSection.classList.add('hidden');
+                } else if (['undergraduate', 'graduate', 'postgraduate', 'working_professional'].includes(value)) {
+                    streamSection.classList.add('hidden');
+                    fieldSection.classList.remove('hidden');
+                } else {
+                    streamSection.classList.add('hidden');
+                    fieldSection.classList.add('hidden');
+                }
+            });
+        });
+
+        // Toggle password visibility
+        function togglePassword(inputId) {
+            const input = document.getElementById(inputId);
+            const icon = document.getElementById(inputId + '-eye');
+            
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+
+        // Check password strength
+        function checkPasswordStrength() {
+            const password = document.getElementById('password').value;
+            let strength = 0;
+            
+            if (password.length >= 8) strength++;
+            if (password.match(/[a-z]/) && password.match(/[A-Z]/)) strength++;
+            if (password.match(/\d/)) strength++;
+            if (password.match(/[^a-zA-Z\d]/)) strength++;
+
+            const colors = ['bg-red-500', 'bg-orange-500', 'bg-yellow-500', 'bg-green-500'];
+            const texts = ['Weak', 'Fair', 'Good', 'Strong'];
+            
+            for (let i = 1; i <= 4; i++) {
+                const bar = document.getElementById('strength-' + i);
+                bar.className = 'strength-bar h-1 flex-1 rounded ' + (i <= strength ? colors[strength - 1] : 'bg-gray-200');
+            }
+            
+            document.getElementById('strength-text').textContent = strength > 0 ? texts[strength - 1] + ' password' : 'Password strength';
+        }
+
+        // Check password match
+        function checkPasswordMatch() {
+            const password = document.getElementById('password').value;
+            const confirm = document.getElementById('confirm_password').value;
+            const icon = document.getElementById('password-match-icon');
+            const mismatch = document.getElementById('password-mismatch');
+            
+            if (confirm.length > 0) {
+                if (password === confirm) {
+                    icon.classList.remove('hidden');
+                    icon.innerHTML = '<i class="fas fa-check text-green-500"></i>';
+                    mismatch.classList.add('hidden');
+                } else {
+                    icon.classList.remove('hidden');
+                    icon.innerHTML = '<i class="fas fa-times text-red-500"></i>';
+                    mismatch.classList.remove('hidden');
+                }
+            } else {
+                icon.classList.add('hidden');
+                mismatch.classList.add('hidden');
+            }
+        }
+
+        // Create floating particles
+        function createParticles() {
+            const container = document.getElementById('particles');
+            for (let i = 0; i < 20; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 15 + 's';
+                particle.style.animationDuration = (15 + Math.random() * 10) + 's';
+                particle.style.width = (5 + Math.random() * 10) + 'px';
+                particle.style.height = particle.style.width;
+                container.appendChild(particle);
+            }
+        }
+        createParticles();
+
+        // Form validation
+        document.getElementById('signupForm').addEventListener('submit', function(e) {
+            const password = document.getElementById('password').value;
+            const confirm = document.getElementById('confirm_password').value;
+            const education = document.getElementById('education_level').value;
+            
+            if (!education) {
+                e.preventDefault();
+                alert('Please select your education level');
+                return;
+            }
+            
+            if (password !== confirm) {
+                e.preventDefault();
+                alert('Passwords do not match');
+                return;
+            }
+        });
+    </script>
+</body>
+</html>
+
+
+
+

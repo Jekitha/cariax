@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Career Assessment - Cariax</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .gradient-bg { background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); }
+        .step-indicator.active { background: #f97316; color: white; }
+        .step-indicator.completed { background: #10b981; color: white; }
+        .option-card:hover { border-color: #f97316; background: #fff7ed; }
+        .option-card.selected { border-color: #f97316; background: #fff7ed; }
+        .fade-in { animation: fadeIn 0.3s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .progress-bar { transition: width 0.3s ease; }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <a href="/" class="flex items-center space-x-2">
+                    <i class="fas fa-graduation-cap text-2xl text-orange-500"></i>
+                    <span class="text-xl font-bold text-gray-800">Cariax</span>
+                </a>
+                <a href="/" class="text-gray-600 hover:text-orange-500">
+                    <i class="fas fa-home mr-1"></i> Home
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-4xl mx-auto px-4 py-8">
+        <!-- Progress Bar -->
+        <div class="mb-8">
+            <div class="flex justify-between mb-2">
+                <span class="text-sm font-medium text-orange-500">Progress</span>
+                <span class="text-sm text-gray-500" id="progressText">Step 1 of 4</span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-2">
+                <div class="progress-bar bg-orange-500 h-2 rounded-full" id="progressBar" style="width: 25%"></div>
+            </div>
+        </div>
+
+        <!-- Step Indicators -->
+        <div class="flex justify-center mb-8">
+            <div class="flex items-center space-x-4">
+                <div class="step-indicator active w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold" id="step1">1</div>
+                <div class="w-12 h-1 bg-gray-300" id="line1"></div>
+                <div class="step-indicator bg-gray-300 w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold" id="step2">2</div>
+                <div class="w-12 h-1 bg-gray-300" id="line2"></div>
+                <div class="step-indicator bg-gray-300 w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold" id="step3">3</div>
+                <div class="w-12 h-1 bg-gray-300" id="line3"></div>
+                <div class="step-indicator bg-gray-300 w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold" id="step4">4</div>
+            </div>
+        </div>
+
+        <!-- Assessment Form -->
+        <form id="assessmentForm">
+            <!-- Step 1: Basic Info -->
+            <div id="section1" class="bg-white rounded-xl shadow-lg p-8 fade-in">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6">
+                    <i class="fas fa-user text-orange-500 mr-2"></i>Basic Information
+                </h2>
+                
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
+                        <input type="text" id="name" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent" placeholder="Enter your name" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Age</label>
+                        <input type="number" id="age" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent" placeholder="Enter your age" min="14" max="30" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Current Grade/Class</label>
+                        <select id="grade" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent" required>
+                            <option value="">Select Grade</option>
+                            <option value="10th">10th Grade</option>
+                            <option value="11th">11th Grade</option>
+                            <option value="12th">12th Grade</option>
+                            <option value="undergraduate">Undergraduate</option>
+                            <option value="graduate">Graduate</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Preferred Location</label>
+                        <select id="location" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                            <option value="">Select Location</option>
+                            <option value="India">India</option>
+                            <option value="USA">USA</option>
+                            <option value="UK">UK</option>
+                            <option value="Canada">Canada</option>
+                            <option value="Australia">Australia</option>
+                            <option value="Any">Open to Any</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="mt-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Annual Budget for Education (₹)</label>
+                    <input type="number" id="budget" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent" placeholder="e.g., 500000" min="0">
+                </div>
+                
+                <div class="mt-8 flex justify-end">
+                    <button type="button" onclick="nextStep(1)" class="bg-orange-500 text-white px-8 py-3 rounded-lg font-semibold hover:bg-orange-600 transition">
+                        Next <i class="fas fa-arrow-right ml-2"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Step 2: Academic Performance -->
+            <div id="section2" class="bg-white rounded-xl shadow-lg p-8 hidden fade-in">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6">
+                    <i class="fas fa-book text-orange-500 mr-2"></i>Academic Performance
+                </h2>
+                
+                <p class="text-gray-600 mb-6">Enter your marks/percentage in each subject (out of 100)</p>
+                
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Mathematics</label>
+                        <input type="number" id="math" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500" placeholder="0-100" min="0" max="100">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Science/Physics</label>
+                        <input type="number" id="science" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500" placeholder="0-100" min="0" max="100">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">English</label>
+                        <input type="number" id="english" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500" placeholder="0-100" min="0" max="100">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Computer Science</label>
+                        <input type="number" id="computer" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500" placeholder="0-100" min="0" max="100">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Commerce/Economics</label>
+                        <input type="number" id="commerce" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500" placeholder="0-100" min="0" max="100">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Arts/Creative</label>
+                        <input type="number" id="arts" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500" placeholder="0-100" min="0" max="100">
+                    </div>
+                </div>
+                
+                <div class="mt-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Subject Preferences (Select all that apply)</label>
+                    <div class="flex flex-wrap gap-3">
+                        <label class="flex items-center space-x-2 bg-gray-100 px-4 py-2 rounded-lg cursor-pointer hover:bg-orange-100">
+                            <input type="checkbox" name="subjects" value="Mathematics" class="text-orange-500">
+                            <span>Mathematics</span>
+                        </label>
+                        <label class="flex items-center space-x-2 bg-gray-100 px-4 py-2 rounded-lg cursor-pointer hover:bg-orange-100">
+                            <input type="checkbox" name="subjects" value="Science" class="text-orange-500">
+                            <span>Science</span>
+                        </label>
+                        <label class="flex items-center space-x-2 bg-gray-100 px-4 py-2 rounded-lg cursor-pointer hover:bg-orange-100">
+                            <input type="checkbox" name="subjects" value="Computer Science" class="text-orange-500">
+                            <span>Computer Science</span>
+                        </label>
+                        <label class="flex items-center space-x-2 bg-gray-100 px-4 py-2 rounded-lg cursor-pointer hover:bg-orange-100">
+                            <input type="checkbox" name="subjects" value="Commerce" class="text-orange-500">
+                            <span>Commerce</span>
+                        </label>
+                        <label class="flex items-center space-x-2 bg-gray-100 px-4 py-2 rounded-lg cursor-pointer hover:bg-orange-100">
+                            <input type="checkbox" name="subjects" value="Arts" class="text-orange-500">
+                            <span>Arts</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="mt-8 flex justify-between">
+                    <button type="button" onclick="prevStep(2)" class="text-gray-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition">
+                        <i class="fas fa-arrow-left mr-2"></i> Back
+                    </button>
+                    <button type="button" id="nextBtn2" class="bg-orange-500 text-white px-8 py-3 rounded-lg font-semibold hover:bg-orange-600 transition">
+                        Next <i class="fas fa-arrow-right ml-2"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Step 3: Interests & Skills -->
+            <div id="section3" class="bg-white rounded-xl shadow-lg p-8 hidden fade-in">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6">
+                    <i class="fas fa-heart text-orange-500 mr-2"></i>Interests & Skills
+                </h2>
+                
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-3">What are your interests? (Select all that apply)</label>
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+                        <label class="flex items-center space-x-2 bg-gray-100 px-4 py-3 rounded-lg cursor-pointer hover:bg-orange-100">
+                            <input type="checkbox" name="interests" value="Technology" class="text-orange-500">
+                            <span>Technology</span>
+                        </label>
+                        <label class="flex items-center space-x-2 bg-gray-100 px-4 py-3 rounded-lg cursor-pointer hover:bg-orange-100">
+                            <input type="checkbox" name="interests" value="Healthcare" class="text-orange-500">
+                            <span>Healthcare</span>
+                        </label>
+                        <label class="flex items-center space-x-2 bg-gray-100 px-4 py-3 rounded-lg cursor-pointer hover:bg-orange-100">
+                            <input type="checkbox" name="interests" value="Finance" class="text-orange-500">
+                            <span>Finance</span>
+                        </label>
+                        <label class="flex items-center space-x-2 bg-gray-100 px-4 py-3 rounded-lg cursor-pointer hover:bg-orange-100">
+                            <input type="checkbox" name="interests" value="Creative" class="text-orange-500">
+                            <span>Creative Arts</span>
+                        </label>
+                        <label class="flex items-center space-x-2 bg-gray-100 px-4 py-3 rounded-lg cursor-pointer hover:bg-orange-100">
+                            <input type="checkbox" name="interests" value="Engineering" class="text-orange-500">
+                            <span>Engineering</span>
+                        </label>
+                        <label class="flex items-center space-x-2 bg-gray-100 px-4 py-3 rounded-lg cursor-pointer hover:bg-orange-100">
+                            <input type="checkbox" name="interests" value="Business" class="text-orange-500">
+                            <span>Business</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-3">Rate your skills (1-10)</label>
+                    <div class="space-y-4">
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="text-sm text-gray-600">Programming/Technical</span>
+                                <span class="text-sm text-orange-500" id="programmingValue">5</span>
+                            </div>
+                            <input type="range" id="programming" min="1" max="10" value="5" class="w-full" oninput="document.getElementById('programmingValue').textContent = this.value">
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="text-sm text-gray-600">Communication</span>
+                                <span class="text-sm text-orange-500" id="communicationValue">5</span>
+                            </div>
+                            <input type="range" id="communication" min="1" max="10" value="5" class="w-full" oninput="document.getElementById('communicationValue').textContent = this.value">
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="text-sm text-gray-600">Creativity</span>
+                                <span class="text-sm text-orange-500" id="creativityValue">5</span>
+                            </div>
+                            <input type="range" id="creativity" min="1" max="10" value="5" class="w-full" oninput="document.getElementById('creativityValue').textContent = this.value">
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="text-sm text-gray-600">Leadership</span>
+                                <span class="text-sm text-orange-500" id="leadershipValue">5</span>
+                            </div>
+                            <input type="range" id="leadership" min="1" max="10" value="5" class="w-full" oninput="document.getElementById('leadershipValue').textContent = this.value">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-8 flex justify-between">
+                    <button type="button" onclick="prevStep(3)" class="text-gray-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition">
+                        <i class="fas fa-arrow-left mr-2"></i> Back
+                    </button>
+                    <button type="button" onclick="nextStep(3)" class="bg-orange-500 text-white px-8 py-3 rounded-lg font-semibold hover:bg-orange-600 transition">
+                        Next <i class="fas fa-arrow-right ml-2"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Step 4: Personality Test -->
+            <div id="section4" class="bg-white rounded-xl shadow-lg p-8 hidden fade-in">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6">
+                    <i class="fas fa-brain text-orange-500 mr-2"></i>Personality Assessment
+                </h2>
+                
+                <p class="text-gray-600 mb-6">Answer these questions to help us understand your personality type</p>
+                
+                <div class="space-y-6" id="personalityQuestions">
+                    <!-- Question 1 -->
+                    <div class="border rounded-lg p-4">
+                        <p class="font-medium mb-3">1. At a social event, you tend to:</p>
+                        <div class="space-y-2">
+                            <label class="option-card flex items-center p-3 border rounded-lg cursor-pointer">
+                                <input type="radio" name="q1" value="E" class="mr-3 text-orange-500">
+                                <span>Interact with many people, including strangers</span>
+                            </label>
+                            <label class="option-card flex items-center p-3 border rounded-lg cursor-pointer">
+                                <input type="radio" name="q1" value="I" class="mr-3 text-orange-500">
+                                <span>Stick with a few people you know well</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <!-- Question 2 -->
+                    <div class="border rounded-lg p-4">
+                        <p class="font-medium mb-3">2. When making decisions, you rely more on:</p>
+                        <div class="space-y-2">
+                            <label class="option-card flex items-center p-3 border rounded-lg cursor-pointer">
+                                <input type="radio" name="q2" value="T" class="mr-3 text-orange-500">
+                                <span>Logic and objective analysis</span>
+                            </label>
+                            <label class="option-card flex items-center p-3 border rounded-lg cursor-pointer">
+                                <input type="radio" name="q2" value="F" class="mr-3 text-orange-500">
+                                <span>Personal values and impact on people</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <!-- Question 3 -->
+                    <div class="border rounded-lg p-4">
+                        <p class="font-medium mb-3">3. You are more interested in:</p>
+                        <div class="space-y-2">
+                            <label class="option-card flex items-center p-3 border rounded-lg cursor-pointer">
+                                <input type="radio" name="q3" value="S" class="mr-3 text-orange-500">
+                                <span>What is actual and present</span>
+                            </label>
+                            <label class="option-card flex items-center p-3 border rounded-lg cursor-pointer">
+                                <input type="radio" name="q3" value="N" class="mr-3 text-orange-500">
+                                <span>What is possible and future</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <!-- Question 4 -->
+                    <div class="border rounded-lg p-4">
+                        <p class="font-medium mb-3">4. In your work, you prefer:</p>
+                        <div class="space-y-2">
+                            <label class="option-card flex items-center p-3 border rounded-lg cursor-pointer">
+                                <input type="radio" name="q4" value="J" class="mr-3 text-orange-500">
+                                <span>Clear guidelines and structure</span>
+                            </label>
+                            <label class="option-card flex items-center p-3 border rounded-lg cursor-pointer">
+                                <input type="radio" name="q4" value="P" class="mr-3 text-orange-500">
+                                <span>Flexibility and spontaneity</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-8 flex justify-between">
+                    <button type="button" onclick="prevStep(4)" class="text-gray-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition">
+                        <i class="fas fa-arrow-left mr-2"></i> Back
+                    </button>
+                    <button type="button" onclick="submitAssessment()" class="bg-green-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-green-700 transition">
+                        <i class="fas fa-check mr-2"></i> Get My Results
+                    </button>
+                </div>
+            </div>
+        </form>
+
+        <!-- Results Section (Hidden initially) -->
+        <div id="resultsSection" class="hidden">
+            <div class="bg-white rounded-xl shadow-lg p-8 fade-in">
+                <div class="text-center mb-8">
+                    <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-check-circle text-4xl text-green-600"></i>
+                    </div>
+                    <h2 class="text-2xl font-bold text-gray-800">Analysis Complete!</h2>
+                    <p class="text-gray-600">Here are your personalized career recommendations</p>
+                </div>
+                
+                <div id="resultsContent">
+                    <!-- Results will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading Overlay -->
+        <div id="loadingOverlay" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div class="bg-white rounded-xl p-8 text-center">
+                <div class="animate-spin rounded-full h-16 w-16 border-b-2 border-orange-500 mx-auto mb-4"></div>
+                <p class="text-gray-600">Analyzing your profile...</p>
+                <p class="text-sm text-gray-400">This may take a few seconds</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentStep = 1;
+        
+        function updateProgress() {
+            const progress = (currentStep / 4) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+            document.getElementById('progressText').textContent = `Step ${currentStep} of 4`;
+            
+            // Update step indicators
+            for (let i = 1; i <= 4; i++) {
+                const step = document.getElementById('step' + i);
+                if (i < currentStep) {
+                    step.className = 'step-indicator completed w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold';
+                } else if (i === currentStep) {
+                    step.className = 'step-indicator active w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold';
+                } else {
+                    step.className = 'step-indicator bg-gray-300 w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold';
+                }
+            }
+        }
+        
+        function showValidationError(message) {
+            // Remove existing error if any
+            const existingError = document.querySelector('.validation-error');
+            if (existingError) existingError.remove();
+            
+            // Create error alert
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'validation-error fixed top-4 left-1/2 transform -translate-x-1/2 bg-red-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 flex items-center space-x-2';
+            errorDiv.innerHTML = `
+                <i class="fas fa-exclamation-circle"></i>
+                <span>${message}</span>
+                <button onclick="this.parentElement.remove()" class="ml-4 text-white hover:text-red-200">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            document.body.appendChild(errorDiv);
+            
+            // Auto remove after 4 seconds
+            setTimeout(() => {
+                if (errorDiv.parentElement) errorDiv.remove();
+            }, 4000);
+        }
+        
+        function validateStep(step) {
+            let isValid = true;
+            let errorMessage = '';
+            
+            if (step === 1) {
+                // Validate Basic Info
+                const name = document.getElementById('name').value.trim();
+                const age = document.getElementById('age').value;
+                const grade = document.getElementById('grade').value;
+                
+                if (!name) {
+                    errorMessage = 'Please enter your full name';
+                    document.getElementById('name').focus();
+                    isValid = false;
+                } else if (!age || age < 14 || age > 30) {
+                    errorMessage = 'Please enter a valid age (14-30)';
+                    document.getElementById('age').focus();
+                    isValid = false;
+                } else if (!grade) {
+                    errorMessage = 'Please select your current grade/class';
+                    document.getElementById('grade').focus();
+                    isValid = false;
+                }
+            } else if (step === 2) {
+                // Validate Academic Performance - all core subjects must have marks
+                const math = document.getElementById('math').value.trim();
+                const science = document.getElementById('science').value.trim();
+                const english = document.getElementById('english').value.trim();
+                
+                if (math === '' || isNaN(math) || parseInt(math) < 0 || parseInt(math) > 100) {
+                    errorMessage = 'Please enter valid marks for Mathematics (0-100)';
+                    document.getElementById('math').focus();
+                    isValid = false;
+                } else if (science === '' || isNaN(science) || parseInt(science) < 0 || parseInt(science) > 100) {
+                    errorMessage = 'Please enter valid marks for Science/Physics (0-100)';
+                    document.getElementById('science').focus();
+                    isValid = false;
+                } else if (english === '' || isNaN(english) || parseInt(english) < 0 || parseInt(english) > 100) {
+                    errorMessage = 'Please enter valid marks for English (0-100)';
+                    document.getElementById('english').focus();
+                    isValid = false;
+                }
+                
+                // Also require at least one subject preference
+                const subjectPrefs = document.querySelectorAll('input[name="subjects"]:checked');
+                if (isValid && subjectPrefs.length === 0) {
+                    errorMessage = 'Please select at least one subject preference';
+                    isValid = false;
+                }
+            } else if (step === 3) {
+                // Validate Interests - at least one interest should be selected
+                const interests = document.querySelectorAll('input[name="interests"]:checked');
+                if (interests.length === 0) {
+                    errorMessage = 'Please select at least one area of interest';
+                    isValid = false;
+                }
+            } else if (step === 4) {
+                // Validate Personality Questions - all must be answered
+                const q1 = document.querySelector('input[name="q1"]:checked');
+                const q2 = document.querySelector('input[name="q2"]:checked');
+                const q3 = document.querySelector('input[name="q3"]:checked');
+                const q4 = document.querySelector('input[name="q4"]:checked');
+                
+                if (!q1 || !q2 || !q3 || !q4) {
+                    errorMessage = 'Please answer all personality questions before submitting';
+                    isValid = false;
+                }
+            }
+            
+            if (!isValid) {
+                showValidationError(errorMessage);
+            }
+            
+            return isValid;
+        }
+        
+        function nextStep(step) {
+            console.log('nextStep called with step:', step);
+            // Validate current step before moving to next
+            const isValid = validateStep(step);
+            console.log('Validation result:', isValid);
+            if (!isValid) {
+                console.log('Validation failed, stopping');
+                alert('Please fill all required fields before continuing!');
+                return false;
+            }
+            
+            console.log('Validation passed, moving to next step');
+            document.getElementById('section' + step).classList.add('hidden');
+            document.getElementById('section' + (step + 1)).classList.remove('hidden');
+            currentStep = step + 1;
+            updateProgress();
+            window.scrollTo(0, 0);
+            return true;
+        }
+        
+        function prevStep(step) {
+            document.getElementById('section' + step).classList.add('hidden');
+            document.getElementById('section' + (step - 1)).classList.remove('hidden');
+            currentStep = step - 1;
+            updateProgress();
+            window.scrollTo(0, 0);
+        }
+        
+        function collectFormData() {
+            // Collect basic info
+            const name = document.getElementById('name').value;
+            const age = parseInt(document.getElementById('age').value) || 18;
+            const grade = document.getElementById('grade').value;
+            const location = document.getElementById('location').value;
+            const budget = parseInt(document.getElementById('budget').value) || 500000;
+            
+            // Collect academic marks
+            const marks_12th = {
+                mathematics: parseFloat(document.getElementById('math').value) || 50,
+                science: parseFloat(document.getElementById('science').value) || 50,
+                english: parseFloat(document.getElementById('english').value) || 50,
+                computer: parseFloat(document.getElementById('computer').value) || 50,
+                commerce: parseFloat(document.getElementById('commerce').value) || 50,
+                arts: parseFloat(document.getElementById('arts').value) || 50
+            };
+            
+            // Collect subject preferences
+            const subjectCheckboxes = document.querySelectorAll('input[name="subjects"]:checked');
+            const subject_preferences = Array.from(subjectCheckboxes).map(cb => cb.value);
+            
+            // Collect interests
+            const interestCheckboxes = document.querySelectorAll('input[name="interests"]:checked');
+            const interests = Array.from(interestCheckboxes).map(cb => cb.value);
+            
+            // Collect skill ratings
+            const skill_self_ratings = {
+                programming: parseInt(document.getElementById('programming').value),
+                communication: parseInt(document.getElementById('communication').value),
+                creativity: parseInt(document.getElementById('creativity').value),
+                leadership: parseInt(document.getElementById('leadership').value)
+            };
+            
+            // Collect personality answers
+            const personality_answers = [];
+            const q1 = document.querySelector('input[name="q1"]:checked');
+            const q2 = document.querySelector('input[name="q2"]:checked');
+            const q3 = document.querySelector('input[name="q3"]:checked');
+            const q4 = document.querySelector('input[name="q4"]:checked');
+            
+            if (q1) personality_answers.push({scores: {[q1.value]: 2, [q1.value === 'E' ? 'I' : 'E']: 0}});
+            if (q2) personality_answers.push({scores: {[q2.value]: 2, [q2.value === 'T' ? 'F' : 'T']: 0}});
+            if (q3) personality_answers.push({scores: {[q3.value]: 2, [q3.value === 'S' ? 'N' : 'S']: 0}});
+            if (q4) personality_answers.push({scores: {[q4.value]: 2, [q4.value === 'J' ? 'P' : 'J']: 0}});
+            
+            return {
+                name,
+                age,
+                grade,
+                marks_10th: {},
+                marks_12th,
+                subject_preferences,
+                interests,
+                skill_self_ratings,
+                personality_answers,
+                family_budget: budget,
+                budget_currency: 'INR',
+                preferred_locations: location ? [location] : []
+            };
+        }
+        
+        async function submitAssessment() {
+            // Validate all steps before submission
+            for (let step = 1; step <= 4; step++) {
+                if (!validateStep(step)) {
+                    currentStep = step;
+                    updateStepVisibility();
+                    updateProgress();
+                    showValidationError(`Please complete step ${step} before submitting.`);
+                    return;
+                }
+            }
+            
+            document.getElementById('loadingOverlay').classList.remove('hidden');
+            
+            const formData = collectFormData();
+            
+            try {
+                const response = await fetch('/api/analyze', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    displayResults(data.report);
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred. Please try again.');
+            } finally {
+                document.getElementById('loadingOverlay').classList.add('hidden');
+            }
+        }
+        
+        function displayResults(report) {
+            document.getElementById('assessmentForm').classList.add('hidden');
+            document.getElementById('resultsSection').classList.remove('hidden');
+            
+            const resultsContent = document.getElementById('resultsContent');
+            
+            // Build results HTML
+            let html = '';
+            
+            // Personality
+            const personality = report.personality_analysis || {};
+            html += `
+                <div class="mb-8">
+                    <h3 class="text-lg font-semibold mb-4"><i class="fas fa-user-circle text-orange-500 mr-2"></i>Your Personality Type</h3>
+                    <div class="bg-orange-50 rounded-lg p-4">
+                        <div class="text-3xl font-bold text-orange-500 mb-2">${personality.mbti_type || 'INTJ'}</div>
+                        <p class="text-gray-600">${personality.key_strengths?.join(', ') || 'Strategic thinker with strong analytical skills'}</p>
+                    </div>
+                </div>
+            `;
+            
+            // Top Skills
+            const skills = report.skill_analysis || {};
+            html += `
+                <div class="mb-8">
+                    <h3 class="text-lg font-semibold mb-4"><i class="fas fa-chart-bar text-orange-500 mr-2"></i>Your Top Skills</h3>
+                    <div class="space-y-2">
+                        ${(skills.top_skills || ['Analytical: 85%', 'Technical: 80%', 'Problem Solving: 78%']).map(skill => `
+                            <div class="flex items-center">
+                                <span class="text-sm text-gray-600 w-32">${skill.split(':')[0]}</span>
+                                <div class="flex-1 bg-gray-200 rounded-full h-2">
+                                    <div class="bg-orange-500 h-2 rounded-full" style="width: ${skill.split(':')[1]?.trim() || '75%'}"></div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+            
+            // Career Recommendations
+            const careers = report.career_recommendations || [];
+            html += `
+                <div class="mb-8">
+                    <h3 class="text-lg font-semibold mb-4"><i class="fas fa-briefcase text-orange-500 mr-2"></i>Top Career Recommendations</h3>
+                    <div class="space-y-4">
+                        ${careers.slice(0, 3).map((rec, i) => `
+                            <div class="border rounded-lg p-4 ${i === 0 ? 'border-orange-500 bg-orange-50' : ''}">
+                                <div class="flex justify-between items-start mb-2">
+                                    <div>
+                                        <span class="text-xs bg-orange-100 text-orange-500 px-2 py-1 rounded-full">#${rec.rank}</span>
+                                        <h4 class="text-lg font-semibold mt-1">${rec.career_name}</h4>
+                                    </div>
+                                    <div class="text-2xl font-bold text-orange-500">${rec.match_percentage}%</div>
+                                </div>
+                                <p class="text-gray-600 text-sm mb-2">${rec.description?.substring(0, 100) || 'A great career match for your profile'}...</p>
+                                <div class="flex flex-wrap gap-2 text-xs">
+                                    <span class="bg-gray-100 px-2 py-1 rounded">Difficulty: ${rec.difficulty_level}/10</span>
+                                    <span class="bg-gray-100 px-2 py-1 rounded">Automation Risk: ${rec.automation_risk}</span>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+            
+            // Salary Projections
+            const salary = report.salary_projections || {};
+            html += `
+                <div class="mb-8">
+                    <h3 class="text-lg font-semibold mb-4"><i class="fas fa-dollar-sign text-orange-500 mr-2"></i>Salary Projections (Top Career)</h3>
+                    <div class="grid grid-cols-3 gap-4 text-center">
+                        <div class="bg-gray-50 rounded-lg p-4">
+                            <div class="text-sm text-gray-600">Starting</div>
+                            <div class="text-xl font-bold text-gray-800">₹${(salary.starting || 600000).toLocaleString()}</div>
+                        </div>
+                        <div class="bg-gray-50 rounded-lg p-4">
+                            <div class="text-sm text-gray-600">5 Years</div>
+                            <div class="text-xl font-bold text-gray-800">₹${(salary['5_years'] || 1500000).toLocaleString()}</div>
+                        </div>
+                        <div class="bg-gray-50 rounded-lg p-4">
+                            <div class="text-sm text-gray-600">10 Years</div>
+                            <div class="text-xl font-bold text-green-600">₹${(salary['10_years'] || 3000000).toLocaleString()}</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // College Recommendations
+            const colleges = report.college_recommendations || [];
+            html += `
+                <div class="mb-8">
+                    <h3 class="text-lg font-semibold mb-4"><i class="fas fa-university text-orange-500 mr-2"></i>Recommended Colleges</h3>
+                    <div class="space-y-3">
+                        ${colleges.slice(0, 3).map(col => `
+                            <div class="border rounded-lg p-4">
+                                <div class="flex justify-between">
+                                    <div>
+                                        <h4 class="font-semibold">${col.name}</h4>
+                                        <p class="text-sm text-gray-600">${col.location}</p>
+                                    </div>
+                                    <div class="text-right">
+                                        <div class="text-orange-500 font-semibold">${col.suitability_score}% Match</div>
+                                        <div class="text-sm text-gray-600">Placement: ${col.placement_rate}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+            
+            // Next Steps
+            const nextSteps = report.next_steps || [];
+            html += `
+                <div class="mb-8">
+                    <h3 class="text-lg font-semibold mb-4"><i class="fas fa-tasks text-orange-500 mr-2"></i>Recommended Next Steps</h3>
+                    <div class="bg-orange-50 rounded-lg p-4">
+                        <ol class="list-decimal list-inside space-y-2">
+                            ${nextSteps.map(step => `<li class="text-gray-700">${step}</li>`).join('')}
+                        </ol>
+                    </div>
+                </div>
+            `;
+            
+            // Action Buttons
+            html += `
+                <div class="flex flex-col sm:flex-row gap-4 justify-center mt-8">
+                    <a href="/chat" class="bg-orange-500 text-white px-6 py-3 rounded-lg font-semibold text-center hover:bg-orange-600 transition">
+                        <i class="fas fa-robot mr-2"></i>Talk to AI Mentor
+                    </a>
+                    <a href="/careers" class="border border-orange-500 text-orange-500 px-6 py-3 rounded-lg font-semibold text-center hover:bg-orange-50 transition">
+                        <i class="fas fa-search mr-2"></i>Explore All Careers
+                    </a>
+                    <button onclick="window.print()" class="border border-gray-300 text-gray-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-50 transition">
+                        <i class="fas fa-print mr-2"></i>Print Report
+                    </button>
+                </div>
+            `;
+            
+            resultsContent.innerHTML = html;
+            window.scrollTo(0, 0);
+        }
+        
+        // Add selected class to options on click
+        document.querySelectorAll('.option-card').forEach(card => {
+            card.addEventListener('click', function() {
+                const parent = this.closest('.space-y-2');
+                parent.querySelectorAll('.option-card').forEach(c => c.classList.remove('selected'));
+                this.classList.add('selected');
+            });
+        });
+        
+        // Add event listeners for Next buttons with validation
+        document.addEventListener('DOMContentLoaded', function() {
+            // Step 2 Next button
+            document.getElementById('nextBtn2').addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                const math = document.getElementById('math').value.trim();
+                const science = document.getElementById('science').value.trim();
+                const english = document.getElementById('english').value.trim();
+                const subjectPrefs = document.querySelectorAll('input[name="subjects"]:checked');
+                
+                if (math === '') {
+                    alert('Please enter marks for Mathematics');
+                    document.getElementById('math').focus();
+                    return false;
+                }
+                if (science === '') {
+                    alert('Please enter marks for Science/Physics');
+                    document.getElementById('science').focus();
+                    return false;
+                }
+                if (english === '') {
+                    alert('Please enter marks for English');
+                    document.getElementById('english').focus();
+                    return false;
+                }
+                if (subjectPrefs.length === 0) {
+                    alert('Please select at least one subject preference');
+                    return false;
+                }
+                
+                // All valid, go to next step
+                document.getElementById('section2').classList.add('hidden');
+                document.getElementById('section3').classList.remove('hidden');
+                currentStep = 3;
+                updateProgress();
+                window.scrollTo(0, 0);
+            });
+        });
+    </script>
+</body>
+</html>
+
+
+
+

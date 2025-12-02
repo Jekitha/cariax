@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile - AI Career Guidance System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        // Check if logged in via localStorage
+        if (localStorage.getItem('cariax_logged_in') !== 'true') {
+            window.location.href = '/login';
+        }
+    </script>
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+        }
+        .card-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Navigation -->
+    <nav class="gradient-bg text-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 py-4">
+            <div class="flex justify-between items-center">
+                <a href="/dashboard" class="flex items-center space-x-2">
+                    <i class="fas fa-rocket text-2xl"></i>
+                    <span class="text-xl font-bold">AI Career Guide</span>
+                </a>
+                <div class="flex items-center space-x-4">
+                    <a href="/dashboard" class="hover:text-orange-200 transition-colors"><i class="fas fa-home mr-1"></i>Home</a>
+                    <a href="/onboarding" class="hover:text-orange-200 transition-colors"><i class="fas fa-clipboard-list mr-1"></i>Assessment</a>
+                    <a href="/chat" class="hover:text-orange-200 transition-colors"><i class="fas fa-comments mr-1"></i>Chat</a>
+                    <a href="/logout" class="bg-white text-orange-500 px-4 py-2 rounded-lg hover:bg-orange-100 transition-colors">
+                        <i class="fas fa-sign-out-alt mr-1"></i>Logout
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-6xl mx-auto px-4 py-8">
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                <div class="mb-4 p-4 rounded-lg {% if category == 'success' %}bg-green-100 text-green-700{% elif category == 'error' %}bg-red-100 text-red-700{% else %}bg-orange-100 text-orange-700{% endif %}">
+                    <i class="fas {% if category == 'success' %}fa-check-circle{% elif category == 'error' %}fa-exclamation-circle{% else %}fa-info-circle{% endif %} mr-2"></i>
+                    {{ message }}
+                </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <div class="grid lg:grid-cols-3 gap-8">
+            <!-- Profile Card -->
+            <div class="lg:col-span-1">
+                <div class="bg-white rounded-2xl shadow-lg overflow-hidden card-hover transition-all">
+                    <!-- Profile Header -->
+                    <div class="gradient-bg p-6 text-center">
+                        <div class="w-24 h-24 bg-white rounded-full mx-auto flex items-center justify-center shadow-lg">
+                            {% if user.profile_picture %}
+                                <img src="{{ user.profile_picture }}" alt="Profile" class="w-full h-full rounded-full object-cover">
+                            {% else %}
+                                <span class="text-4xl text-orange-500 font-bold">{{ user.name[0].upper() if user.name else 'U' }}</span>
+                            {% endif %}
+                        </div>
+                        <h2 class="mt-4 text-xl font-bold text-white">{{ user.name }}</h2>
+                        <p class="text-orange-200">{{ user.email }}</p>
+                    </div>
+                    
+                    <!-- Profile Details -->
+                    <div class="p-6">
+                        <div class="space-y-4">
+                            <div class="flex items-center text-gray-600">
+                                <i class="fas fa-graduation-cap w-8 text-orange-500"></i>
+                                <span>{{ user.education_level | default('Not specified') | replace('_', ' ') | title }}</span>
+                            </div>
+                            {% if user.phone %}
+                            <div class="flex items-center text-gray-600">
+                                <i class="fas fa-phone w-8 text-orange-500"></i>
+                                <span>{{ user.phone }}</span>
+                            </div>
+                            {% endif %}
+                            {% if user.oauth_provider %}
+                            <div class="flex items-center text-gray-600">
+                                <i class="fab fa-{{ user.oauth_provider }} w-8 text-orange-500"></i>
+                                <span>Connected via {{ user.oauth_provider | title }}</span>
+                            </div>
+                            {% endif %}
+                            <div class="flex items-center text-gray-600">
+                                <i class="fas fa-calendar-alt w-8 text-orange-500"></i>
+                                <span>Member since {{ user.created_at[:10] if user.created_at else 'Recently' }}</span>
+                            </div>
+                        </div>
+                        
+                        <button onclick="openEditModal()" class="w-full mt-6 py-2 px-4 bg-orange-100 text-orange-600 rounded-lg hover:bg-orange-200 transition-colors">
+                            <i class="fas fa-edit mr-2"></i>Edit Profile
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="bg-white rounded-2xl shadow-lg p-6 mt-6">
+                    <h3 class="font-semibold text-gray-800 mb-4">Quick Actions</h3>
+                    <div class="space-y-3">
+                        <a href="/assessment" class="flex items-center p-3 rounded-lg bg-orange-50 text-orange-600 hover:bg-orange-100 transition-colors">
+                            <i class="fas fa-clipboard-list w-8"></i>
+                            <span>Take Assessment</span>
+                        </a>
+                        <a href="/chat" class="flex items-center p-3 rounded-lg bg-orange-50 text-orange-700 hover:bg-orange-100 transition-colors">
+                            <i class="fas fa-comments w-8"></i>
+                            <span>Chat with AI Mentor</span>
+                        </a>
+                        <a href="/careers" class="flex items-center p-3 rounded-lg bg-green-50 text-green-700 hover:bg-green-100 transition-colors">
+                            <i class="fas fa-compass w-8"></i>
+                            <span>Explore Careers</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Assessment History & Progress -->
+            <div class="lg:col-span-2 space-y-6">
+                <!-- Stats Cards -->
+                <div class="grid grid-cols-3 gap-4">
+                    <div class="bg-white rounded-xl shadow p-4 text-center">
+                        <div class="text-3xl font-bold text-orange-500">{{ results | length }}</div>
+                        <div class="text-sm text-gray-500">Assessments Taken</div>
+                    </div>
+                    <div class="bg-white rounded-xl shadow p-4 text-center">
+                        <div class="text-3xl font-bold text-green-600">
+                            {% if results %}{{ (results | map(attribute='scores') | list | first | length) if results else 0 }}{% else %}0{% endif %}
+                        </div>
+                        <div class="text-sm text-gray-500">Skills Analyzed</div>
+                    </div>
+                    <div class="bg-white rounded-xl shadow p-4 text-center">
+                        <div class="text-3xl font-bold text-orange-600">
+                            {% if results and results[0].recommendations %}{{ results[0].recommendations | length }}{% else %}0{% endif %}
+                        </div>
+                        <div class="text-sm text-gray-500">Career Matches</div>
+                    </div>
+                </div>
+
+                <!-- Assessment History -->
+                <div class="bg-white rounded-2xl shadow-lg p-6">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-6 flex items-center">
+                        <i class="fas fa-history text-orange-500 mr-3"></i>
+                        Assessment History
+                    </h3>
+                    
+                    {% if results %}
+                    <div class="space-y-4">
+                        {% for result in results %}
+                        <div class="border border-gray-200 rounded-lg p-4 hover:border-orange-300 transition-colors">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <span class="inline-block px-3 py-1 bg-orange-100 text-orange-600 text-sm rounded-full mb-2">
+                                        {{ result.assessment_type | title }}
+                                    </span>
+                                    <p class="text-gray-600 text-sm">
+                                        <i class="fas fa-calendar mr-1"></i>
+                                        {{ result.created_at[:10] if result.created_at else 'Unknown date' }}
+                                    </p>
+                                </div>
+                                <button onclick="viewResult('{{ result.id }}')" class="text-orange-500 hover:text-orange-700">
+                                    <i class="fas fa-eye"></i> View Details
+                                </button>
+                            </div>
+                            
+                            {% if result.recommendations %}
+                            <div class="mt-3">
+                                <p class="text-sm text-gray-500 mb-2">Top Recommendations:</p>
+                                <div class="flex flex-wrap gap-2">
+                                    {% for rec in result.recommendations[:3] %}
+                                    <span class="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded">
+                                        {{ rec.career if rec.career else rec }}
+                                    </span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="text-center py-12">
+                        <i class="fas fa-clipboard-list text-6xl text-gray-300 mb-4"></i>
+                        <p class="text-gray-500 mb-4">You haven't taken any assessments yet.</p>
+                        <a href="/assessment" class="inline-block px-6 py-3 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors">
+                            Take Your First Assessment
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- Career Roadmap Progress -->
+                <div class="bg-white rounded-2xl shadow-lg p-6">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-6 flex items-center">
+                        <i class="fas fa-road text-green-500 mr-3"></i>
+                        Your Career Roadmap
+                    </h3>
+                    
+                    {% if results and results[0].recommendations %}
+                    <div class="relative">
+                        <div class="absolute left-4 top-0 bottom-0 w-0.5 bg-gray-200"></div>
+                        <div class="space-y-6">
+                            <div class="relative pl-10">
+                                <div class="absolute left-2 w-4 h-4 bg-green-500 rounded-full"></div>
+                                <div class="bg-green-50 rounded-lg p-4">
+                                    <h4 class="font-medium text-green-800">Current Stage</h4>
+                                    <p class="text-sm text-green-600">{{ user.education_level | default('Student') | replace('_', ' ') | title }}</p>
+                                </div>
+                            </div>
+                            <div class="relative pl-10">
+                                <div class="absolute left-2 w-4 h-4 bg-orange-500 rounded-full"></div>
+                                <div class="bg-orange-50 rounded-lg p-4">
+                                    <h4 class="font-medium text-orange-700">Recommended Focus</h4>
+                                    <p class="text-sm text-orange-500">Build skills in your areas of strength</p>
+                                </div>
+                            </div>
+                            <div class="relative pl-10">
+                                <div class="absolute left-2 w-4 h-4 bg-gray-300 rounded-full"></div>
+                                <div class="bg-gray-50 rounded-lg p-4">
+                                    <h4 class="font-medium text-gray-600">Target Career</h4>
+                                    <p class="text-sm text-gray-500">{{ results[0].recommendations[0].career if results[0].recommendations else 'Complete assessment to get recommendations' }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="text-center py-8 text-gray-500">
+                        <p>Complete an assessment to see your personalized career roadmap.</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Populate profile from localStorage if server data is not available
+        document.addEventListener('DOMContentLoaded', function() {
+            const userName = localStorage.getItem('cariax_user_name');
+            const userEmail = localStorage.getItem('cariax_user_email');
+            
+            // Update profile name display if it shows 'None' or is empty
+            const nameElements = document.querySelectorAll('h2');
+            nameElements.forEach(el => {
+                if (el.textContent === 'None' || el.textContent.trim() === '') {
+                    el.textContent = userName || 'User';
+                }
+            });
+            
+            // Update email display
+            const emailElements = document.querySelectorAll('.text-orange-200');
+            emailElements.forEach(el => {
+                if (el.textContent === 'None' || el.textContent.trim() === '') {
+                    el.textContent = userEmail || '';
+                }
+            });
+            
+            // Update avatar initial
+            const avatarInitial = document.querySelector('.text-4xl.text-orange-500.font-bold');
+            if (avatarInitial && userName) {
+                avatarInitial.textContent = userName.charAt(0).toUpperCase();
+            }
+        });
+        
+        function openEditModal() {
+            // Redirect to edit page instead of modal
+            window.location.href = '/profile/edit';
+        }
+        
+        function viewResult(resultId) {
+            window.location.href = '/results?id=' + resultId;
+        }
+    </script>
+</body>
+</html>
+
+
+
+

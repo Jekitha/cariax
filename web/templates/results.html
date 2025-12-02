@@ -1,0 +1,1230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Career Report - Cariax</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary-orange: #f97316;
+            --primary-dark: #ea580c;
+            --primary-light: #fdba74;
+            --accent-orange: #fb923c;
+        }
+        .gradient-bg { background: linear-gradient(135deg, #f97316 0%, #ea580c 50%, #c2410c 100%); }
+        .gradient-card { background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); }
+        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(249, 115, 22, 0.2); }
+        .pulse { animation: pulse 2s infinite; }
+        .glow-effect { box-shadow: 0 0 30px rgba(249, 115, 22, 0.3); }
+        .glass-card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        .float-animation { animation: float 3s ease-in-out infinite; }
+        @keyframes slideIn { from { opacity: 0; transform: translateX(-20px); } to { opacity: 1; transform: translateX(0); } }
+        .slide-in { animation: slideIn 0.5s ease-out forwards; }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -8px;
+            top: 0;
+            width: 16px;
+            height: 16px;
+            background: linear-gradient(135deg, #f97316, #ea580c);
+            border-radius: 50%;
+            border: 3px solid white;
+            box-shadow: 0 0 0 3px #f97316;
+        }
+        .timeline-line {
+            position: absolute;
+            left: 0;
+            top: 16px;
+            bottom: 0;
+            width: 3px;
+            background: linear-gradient(to bottom, #f97316, #fdba74, #fed7aa);
+            border-radius: 2px;
+        }
+        .orange-glow:hover { box-shadow: 0 10px 30px rgba(249, 115, 22, 0.25); }
+        .bg-pattern { background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23f97316' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"); }
+        @media print {
+            .no-print { display: none !important; }
+            .print-break { page-break-after: always; }
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-orange-50 via-white to-orange-50 min-h-screen bg-pattern">
+    <!-- Navigation -->
+    <nav class="bg-white/90 backdrop-blur-lg shadow-lg no-print sticky top-0 z-50 border-b border-orange-100">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <a href="/" class="flex items-center space-x-3 group">
+                    <div class="w-10 h-10 bg-gradient-to-r from-orange-500 to-orange-600 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-orange-300 transition-all">
+                        <i class="fas fa-graduation-cap text-xl text-white"></i>
+                    </div>
+                    <span class="text-2xl font-bold bg-gradient-to-r from-orange-600 to-orange-500 bg-clip-text text-transparent">Cariax</span>
+                </a>
+                <div class="flex items-center space-x-4">
+                    <button onclick="window.print()" class="text-gray-600 hover:text-orange-600 transition-colors px-3 py-2 rounded-lg hover:bg-orange-50">
+                        <i class="fas fa-print mr-1"></i> Print
+                    </button>
+                    <a href="/assessment" class="text-gray-600 hover:text-orange-600 transition-colors px-3 py-2 rounded-lg hover:bg-orange-50">
+                        <i class="fas fa-redo mr-1"></i> Retake
+                    </a>
+                    <a href="/chat" class="bg-gradient-to-r from-orange-500 to-orange-600 text-white px-5 py-2.5 rounded-xl hover:from-orange-600 hover:to-orange-700 shadow-lg hover:shadow-orange-300 transition-all font-medium">
+                        <i class="fas fa-comments mr-2"></i>Ask AI Mentor
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Loading State -->
+    <div id="loadingState" class="max-w-4xl mx-auto px-4 py-20 text-center">
+        <div class="relative mx-auto w-20 h-20 mb-6">
+            <div class="animate-spin rounded-full h-20 w-20 border-4 border-orange-200 border-t-orange-500 absolute"></div>
+            <div class="animate-ping absolute inset-0 rounded-full bg-orange-400 opacity-20"></div>
+            <i class="fas fa-briefcase text-orange-500 text-2xl absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></i>
+        </div>
+        <h2 class="text-2xl font-bold text-gray-800 mb-2">Analyzing Your Profile</h2>
+        <p class="text-gray-500">Preparing your personalized career recommendations...</p>
+    </div>
+
+    <!-- Main Content (Hidden until data loads) -->
+    <div id="mainContent" class="hidden">
+        <!-- Hero Section -->
+        <div class="gradient-bg py-16 px-4 text-white relative overflow-hidden">
+            <div class="absolute inset-0 bg-black/10"></div>
+            <div class="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2"></div>
+            <div class="absolute bottom-0 left-0 w-64 h-64 bg-white/10 rounded-full translate-y-1/2 -translate-x-1/2"></div>
+            <div class="max-w-4xl mx-auto text-center relative z-10">
+                <div class="inline-flex items-center bg-white/20 backdrop-blur-sm px-4 py-1.5 rounded-full text-sm mb-4">
+                    <i class="fas fa-sparkles mr-2"></i>AI-Powered Analysis Complete
+                </div>
+                <h1 class="text-4xl md:text-5xl font-bold mb-3">Your Career Report</h1>
+                <p class="text-orange-100 mb-6 text-lg">Personalized analysis for <span id="userName" class="font-bold text-white">Student</span></p>
+                <div class="flex justify-center items-center space-x-6 text-sm bg-white/10 backdrop-blur-sm rounded-xl py-3 px-6 inline-flex">
+                    <span class="flex items-center"><i class="fas fa-calendar-alt mr-2 text-orange-200"></i> <span id="reportDate"></span></span>
+                    <span class="w-px h-4 bg-white/30"></span>
+                    <span class="flex items-center"><i class="fas fa-fingerprint mr-2 text-orange-200"></i> Report #<span id="reportId"></span></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="max-w-6xl mx-auto px-4 py-8 space-y-8">
+            <!-- Summary Cards -->
+            <div class="grid md:grid-cols-4 gap-4" id="summaryCards">
+                <!-- Cards will be populated dynamically -->
+            </div>
+
+            <!-- Top Career Match -->
+            <div class="bg-white rounded-3xl shadow-xl overflow-hidden glow-effect card-hover transition-all duration-300">
+                <div class="gradient-card p-8 text-white relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2"></div>
+                    <div class="flex items-center justify-between relative z-10">
+                        <div>
+                            <div class="inline-flex items-center bg-white/20 px-3 py-1 rounded-full text-sm mb-2">
+                                <i class="fas fa-crown mr-2 text-yellow-300"></i>Your #1 Career Match
+                            </div>
+                            <h2 class="text-3xl md:text-4xl font-bold" id="topCareerName">Loading...</h2>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-5xl font-bold float-animation" id="topCareerScore">--</div>
+                            <p class="text-orange-200 text-sm font-medium">Match Score</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-8">
+                    <p class="text-gray-600 mb-6 text-lg leading-relaxed" id="topCareerDescription">Loading career description...</p>
+                    <div class="grid md:grid-cols-3 gap-4">
+                        <div class="bg-gradient-to-br from-orange-50 to-orange-100 rounded-2xl p-5 text-center border border-orange-200 orange-glow transition-all">
+                            <div class="w-12 h-12 bg-gradient-to-r from-orange-500 to-orange-600 rounded-xl flex items-center justify-center mx-auto mb-3 shadow-lg">
+                                <i class="fas fa-dollar-sign text-xl text-white"></i>
+                            </div>
+                            <p class="text-sm text-gray-600 font-medium">Starting Salary</p>
+                            <p class="text-2xl font-bold text-gray-800" id="startingSalary">--</p>
+                        </div>
+                        <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-2xl p-5 text-center border border-green-200 hover:shadow-lg transition-all">
+                            <div class="w-12 h-12 bg-gradient-to-r from-green-500 to-green-600 rounded-xl flex items-center justify-center mx-auto mb-3 shadow-lg">
+                                <i class="fas fa-chart-line text-xl text-white"></i>
+                            </div>
+                            <p class="text-sm text-gray-600 font-medium">10-Year Salary</p>
+                            <p class="text-2xl font-bold text-gray-800" id="futureSalary">--</p>
+                        </div>
+                        <div class="bg-gradient-to-br from-orange-50 to-orange-100 rounded-2xl p-5 text-center border border-orange-200 hover:shadow-lg transition-all">
+                            <div class="w-12 h-12 bg-gradient-to-r from-orange-500 to-orange-600 rounded-xl flex items-center justify-center mx-auto mb-3 shadow-lg">
+                                <i class="fas fa-briefcase text-xl text-white"></i>
+                            </div>
+                            <p class="text-sm text-gray-600 font-medium">Job Growth</p>
+                            <p class="text-2xl font-bold text-gray-800" id="jobGrowth">--</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- All Career Recommendations -->
+            <div class="bg-white rounded-3xl shadow-xl p-8 glass-card">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                    <div class="w-10 h-10 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-xl flex items-center justify-center mr-3 shadow-lg">
+                        <i class="fas fa-star text-white"></i>
+                    </div>
+                    All Career Recommendations
+                </h3>
+                <div class="space-y-4" id="allCareers">
+                    <!-- Career cards will be populated dynamically -->
+                </div>
+            </div>
+
+            <!-- Salary Projection Chart -->
+            <div class="bg-white rounded-3xl shadow-xl p-8 glass-card">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                    <div class="w-10 h-10 bg-gradient-to-r from-green-400 to-green-600 rounded-xl flex items-center justify-center mr-3 shadow-lg">
+                        <i class="fas fa-chart-area text-white"></i>
+                    </div>
+                    10-Year Salary Projection
+                </h3>
+                <div class="h-80 bg-gradient-to-br from-green-50 to-white rounded-2xl p-4">
+                    <canvas id="salaryChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Job Market Forecast -->
+            <div class="bg-white rounded-3xl shadow-xl p-8 glass-card">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                    <div class="w-10 h-10 bg-gradient-to-r from-orange-400 to-orange-600 rounded-xl flex items-center justify-center mr-3 shadow-lg">
+                        <i class="fas fa-chart-bar text-white"></i>
+                    </div>
+                    Job Market Forecast (2024-2034)
+                </h3>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="h-64 bg-gradient-to-br from-orange-50 to-white rounded-2xl p-4">
+                        <canvas id="jobDemandChart"></canvas>
+                    </div>
+                    <div id="marketInsights" class="space-y-4">
+                        <!-- Insights will be populated dynamically -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Skills Analysis -->
+            <div class="grid md:grid-cols-2 gap-6">
+                <!-- Current Skills -->
+                <div class="bg-white rounded-3xl shadow-xl p-8 glass-card">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
+                        <div class="w-9 h-9 bg-gradient-to-r from-green-400 to-green-600 rounded-lg flex items-center justify-center mr-3 shadow">
+                            <i class="fas fa-check-circle text-white"></i>
+                        </div>
+                        Your Skills
+                    </h3>
+                    <div class="flex flex-wrap gap-2" id="currentSkills">
+                        <!-- Skills will be populated dynamically -->
+                    </div>
+                </div>
+                
+                <!-- Skills to Develop -->
+                <div class="bg-white rounded-3xl shadow-xl p-8 glass-card">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
+                        <div class="w-9 h-9 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-lg flex items-center justify-center mr-3 shadow">
+                            <i class="fas fa-lightbulb text-white"></i>
+                        </div>
+                        Skills to Develop
+                    </h3>
+                    <div class="flex flex-wrap gap-2" id="skillsToLearn">
+                        <!-- Skills will be populated dynamically -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Career Roadmap -->
+            <div class="bg-white rounded-3xl shadow-xl p-8 glass-card print-break">
+                <h3 class="text-2xl font-bold text-gray-800 mb-2 flex items-center">
+                    <div class="w-10 h-10 bg-gradient-to-r from-orange-400 to-orange-600 rounded-xl flex items-center justify-center mr-3 shadow-lg">
+                        <i class="fas fa-road text-white"></i>
+                    </div>
+                    Your Career Roadmap
+                </h3>
+                <p class="text-gray-500 mb-6 ml-13">Step-by-step guide to achieve your career goals</p>
+                <div class="relative pl-6" id="roadmapTimeline">
+                    <!-- Timeline will be populated dynamically -->
+                </div>
+            </div>
+
+            <!-- Recommended Colleges -->
+            <div class="bg-white rounded-3xl shadow-xl p-8 glass-card">
+                <h3 class="text-2xl font-bold text-gray-800 mb-2 flex items-center">
+                    <div class="w-10 h-10 bg-gradient-to-r from-orange-400 to-orange-500 rounded-xl flex items-center justify-center mr-3 shadow-lg">
+                        <i class="fas fa-university text-white"></i>
+                    </div>
+                    Top 5 Recommended Colleges
+                </h3>
+                <p class="text-gray-500 mb-6 ml-13">Best colleges worldwide for your career path</p>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4" id="collegeRecommendations">
+                    <!-- Colleges will be populated dynamically -->
+                </div>
+            </div>
+
+            <!-- Personality Insights -->
+            <div class="bg-white rounded-2xl shadow-lg p-6">
+                <h3 class="text-xl font-bold text-gray-800 mb-6">
+                    <i class="fas fa-brain text-pink-500 mr-2"></i>Personality Insights
+                </h3>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <div class="bg-orange-50 rounded-xl p-6 text-center mb-4">
+                            <p class="text-sm text-gray-600 mb-2">Your Personality Type</p>
+                            <p class="text-4xl font-bold text-orange-500" id="mbtiType">--</p>
+                            <p class="text-lg text-gray-700 mt-2" id="mbtiTitle">--</p>
+                        </div>
+                        <p class="text-gray-600" id="mbtiDescription">Loading description...</p>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-gray-800 mb-4">Big Five Personality Traits</h4>
+                        <div class="space-y-3" id="bigFiveTraits">
+                            <!-- Traits will be populated dynamically -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Scam Alert Section -->
+            <div class="bg-red-50 border border-red-200 rounded-2xl p-6" id="scamAlertSection">
+                <h3 class="text-xl font-bold text-red-800 mb-4">
+                    <i class="fas fa-exclamation-triangle mr-2"></i>Career Scam Alerts
+                </h3>
+                <p class="text-gray-700 mb-4">Be aware of these common career scams and fake opportunities:</p>
+                <div class="grid md:grid-cols-2 gap-4" id="scamAlerts">
+                    <!-- Alerts will be populated dynamically -->
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex flex-wrap justify-center gap-4 py-6 no-print">
+                <button onclick="window.print()" class="px-6 py-3 bg-gray-800 text-white rounded-lg hover:bg-gray-900 transition">
+                    <i class="fas fa-download mr-2"></i>Download Report
+                </button>
+                <a href="/chat" class="px-6 py-3 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition">
+                    <i class="fas fa-robot mr-2"></i>Chat with AI Mentor
+                </a>
+                <a href="/careers" class="px-6 py-3 border border-orange-500 text-orange-500 rounded-lg hover:bg-orange-50 transition">
+                    <i class="fas fa-compass mr-2"></i>Explore More Careers
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let resultData = null;
+        let salaryChart = null;
+        let jobDemandChart = null;
+
+        // Load data on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            // Try to get data from sessionStorage (check both keys)
+            let storedData = sessionStorage.getItem('careerResults') || sessionStorage.getItem('careerResult');
+            
+            if (storedData) {
+                resultData = JSON.parse(storedData);
+                console.log('Loaded result data:', resultData);
+                renderReport(resultData);
+            } else {
+                // Redirect to assessment if no data
+                console.log('No data found, redirecting to onboarding');
+                window.location.href = '/onboarding';
+            }
+        });
+
+        function renderReport(data) {
+            console.log('Rendering report with data:', data);
+            document.getElementById('loadingState').classList.add('hidden');
+            document.getElementById('mainContent').classList.remove('hidden');
+
+            // Basic Info - handle both formats
+            const userName = data.name || data.profile_analysis?.name || 'Student';
+            document.getElementById('userName').textContent = userName;
+            document.getElementById('reportDate').textContent = new Date().toLocaleDateString();
+            document.getElementById('reportId').textContent = Math.random().toString(36).substr(2, 8).toUpperCase();
+
+            // Get recommendations from different possible locations
+            const recommendations = data.recommendations || data.career_recommendations || [];
+            console.log('Recommendations:', recommendations);
+
+            // Summary Cards
+            renderSummaryCards(data, recommendations);
+
+            // Top Career
+            if (recommendations.length > 0) {
+                const topCareer = recommendations[0];
+                const careerName = topCareer.name || topCareer.career_name || topCareer.career || 'Career';
+                const matchScore = topCareer.match_score || topCareer.match_percentage || topCareer.score || 85;
+                
+                document.getElementById('topCareerName').textContent = careerName;
+                document.getElementById('topCareerScore').textContent = Math.round(matchScore) + '%';
+                document.getElementById('topCareerDescription').textContent = topCareer.description || 'A rewarding career path that matches your skills and interests.';
+                
+                // Salary Info
+                const salary = topCareer.salary || {};
+                if (salary.entry) {
+                    document.getElementById('startingSalary').textContent = '₹' + (salary.entry / 100000).toFixed(1) + ' LPA';
+                }
+                if (salary.senior) {
+                    document.getElementById('futureSalary').textContent = '₹' + (salary.senior / 100000).toFixed(1) + ' LPA';
+                }
+                document.getElementById('jobGrowth').textContent = 'High Demand';
+            }
+
+            // All Careers
+            renderAllCareers(recommendations);
+
+            // Charts - create with available data
+            renderSalaryChart(recommendations[0]?.salary || { entry: 600000, mid: 1200000, senior: 2500000 });
+            renderJobDemandChart({});
+
+            // Skills from recommendations
+            const allSkills = recommendations.flatMap(r => r.required_skills || []);
+            const uniqueSkills = [...new Set(allSkills)];
+            renderSkills(uniqueSkills.slice(0, 5), uniqueSkills.slice(5, 10));
+
+            // Roadmap based on specialization
+            const specialization = data.profile_analysis?.specialization || '';
+            const primaryCareerName = recommendations[0]?.name || '';
+            renderRoadmap(generateRoadmap(specialization, primaryCareerName));
+
+            // Colleges based on career
+            renderColleges([], primaryCareerName);
+
+            // Personality
+            const personalityType = data.profile_analysis?.personality_type || 'INTJ - The Architect';
+            renderPersonality({ mbti_type: personalityType });
+
+            // Scam Alerts
+            renderScamAlerts();
+        }
+        
+        function generateRoadmap(specialization, careerName) {
+            const roadmaps = {
+                'cse': [
+                    { year: 'Year 1', title: 'Foundation', description: 'Master programming fundamentals (C, Python), data structures, algorithms, and discrete mathematics' },
+                    { year: 'Year 2', title: 'Core Development', description: 'Learn OOP, databases (SQL/NoSQL), web development (HTML, CSS, JavaScript), and OS concepts' },
+                    { year: 'Year 3', title: 'Specialization', description: 'Choose focus: Full Stack, AI/ML, Cloud Computing, Cybersecurity, or Mobile Development' },
+                    { year: 'Year 4', title: 'Industry Preparation', description: 'Build portfolio projects, contribute to open source, complete internships at tech companies' },
+                    { year: 'Post-Graduation', title: 'Career Launch', description: 'Apply to product companies, practice DSA for interviews, earn certifications (AWS, GCP)' }
+                ],
+                'civil': [
+                    { year: 'Year 1', title: 'Engineering Basics', description: 'Engineering mechanics, mathematics, engineering drawing, and basic sciences' },
+                    { year: 'Year 2', title: 'Core Civil', description: 'Surveying, strength of materials, fluid mechanics, building materials, and AutoCAD' },
+                    { year: 'Year 3', title: 'Structural & Geo', description: 'Structural analysis, geotechnical engineering, concrete technology, steel structures, STAAD Pro' },
+                    { year: 'Year 4', title: 'Advanced Topics', description: 'Transportation engineering, environmental engineering, construction management, project work' },
+                    { year: 'Post-Graduation', title: 'Career Path', description: 'Join construction firms, prepare for GATE/PSU exams, or pursue M.Tech in Structural/Geo-tech' }
+                ],
+                'mechanical': [
+                    { year: 'Year 1', title: 'Foundation', description: 'Engineering mathematics, physics, basic workshop practice, engineering graphics' },
+                    { year: 'Year 2', title: 'Core Mechanics', description: 'Thermodynamics, fluid mechanics, manufacturing processes, SolidWorks/AutoCAD' },
+                    { year: 'Year 3', title: 'Machine Design', description: 'Machine design, heat transfer, IC engines, industrial automation, ANSYS/CATIA' },
+                    { year: 'Year 4', title: 'Specialization', description: 'Choose: Automotive, Robotics, HVAC, or Manufacturing. Complete industry internship' },
+                    { year: 'Post-Graduation', title: 'Career Launch', description: 'Core companies, GATE for PSUs, or M.Tech in Thermal/Design/Manufacturing' }
+                ],
+                'electrical': [
+                    { year: 'Year 1', title: 'Basics', description: 'Circuit theory, mathematics, basic electronics, engineering physics' },
+                    { year: 'Year 2', title: 'Power Systems', description: 'Electrical machines, power systems, electromagnetic fields, signals & systems' },
+                    { year: 'Year 3', title: 'Advanced Topics', description: 'Power electronics, control systems, electrical drives, PLC/SCADA, MATLAB' },
+                    { year: 'Year 4', title: 'Industry Focus', description: 'Power plant visits, substation internship, renewable energy projects' },
+                    { year: 'Post-Graduation', title: 'Career Path', description: 'Power sector jobs, GATE for PSUs (NTPC, BHEL), or M.Tech in Power Systems' }
+                ],
+                'electronics': [
+                    { year: 'Year 1', title: 'Foundation', description: 'Basic electronics, circuit theory, mathematics, physics' },
+                    { year: 'Year 2', title: 'Core ECE', description: 'Analog & digital electronics, signals & systems, communication systems' },
+                    { year: 'Year 3', title: 'Advanced', description: 'Microprocessors, embedded systems, VLSI design, IoT, wireless communication' },
+                    { year: 'Year 4', title: 'Specialization', description: 'Choose: VLSI, Embedded, Telecom, or Signal Processing. Industry internship' },
+                    { year: 'Post-Graduation', title: 'Career Launch', description: 'Semiconductor companies, GATE, or M.Tech in VLSI/Communication' }
+                ],
+                'chemical': [
+                    { year: 'Year 1', title: 'Basics', description: 'Chemistry, mathematics, physics, introduction to chemical engineering' },
+                    { year: 'Year 2', title: 'Core Subjects', description: 'Chemical process calculations, thermodynamics, fluid mechanics, mass transfer' },
+                    { year: 'Year 3', title: 'Process Engineering', description: 'Reaction engineering, heat transfer, process control, plant design' },
+                    { year: 'Year 4', title: 'Industry Focus', description: 'Petrochemical/pharma internship, process simulation (ASPEN), safety engineering' },
+                    { year: 'Post-Graduation', title: 'Career Path', description: 'Oil & gas, pharmaceuticals, GATE for PSUs, or M.Tech' }
+                ],
+                'aerospace': [
+                    { year: 'Year 1', title: 'Foundation', description: 'Mathematics, physics, engineering mechanics, basics of flight' },
+                    { year: 'Year 2', title: 'Aerodynamics', description: 'Aerodynamics, flight mechanics, aircraft structures, propulsion basics' },
+                    { year: 'Year 3', title: 'Systems', description: 'Aircraft systems, avionics, space mechanics, CFD, wind tunnel testing' },
+                    { year: 'Year 4', title: 'Advanced', description: 'Aircraft design project, spacecraft systems, internship at ISRO/HAL/airlines' },
+                    { year: 'Post-Graduation', title: 'Career Launch', description: 'ISRO, DRDO, HAL, airlines, GATE, or M.Tech in Aerospace' }
+                ],
+                'mbbs': [
+                    { year: 'Year 1', title: 'Pre-clinical I', description: 'Anatomy, Physiology, Biochemistry - understanding human body structure and function' },
+                    { year: 'Year 2', title: 'Pre-clinical II', description: 'Pathology, Pharmacology, Microbiology, Forensic Medicine - disease mechanisms' },
+                    { year: 'Year 3', title: 'Clinical I', description: 'Medicine, Surgery, OBG, Pediatrics - clinical rotations begin' },
+                    { year: 'Year 4', title: 'Clinical II', description: 'Ophthalmology, ENT, Orthopedics, Psychiatry, Dermatology, Community Medicine' },
+                    { year: 'Internship', title: 'CRRI', description: '1-year compulsory rotating internship in all departments' },
+                    { year: 'Post-MBBS', title: 'Specialization', description: 'NEET-PG for MD/MS, or practice as MBBS doctor' }
+                ],
+                'bds': [
+                    { year: 'Year 1', title: 'Foundation', description: 'General Anatomy, Physiology, Biochemistry, Dental Materials' },
+                    { year: 'Year 2', title: 'Dental Anatomy', description: 'Dental Anatomy, Oral Histology, Microbiology, Pharmacology' },
+                    { year: 'Year 3', title: 'Clinical', description: 'Oral Pathology, Oral Surgery, Conservative Dentistry, Prosthodontics' },
+                    { year: 'Year 4', title: 'Advanced', description: 'Orthodontics, Periodontics, Pedodontics, Community Dentistry' },
+                    { year: 'Internship', title: 'Clinical Training', description: '1-year clinical internship in dental hospital' },
+                    { year: 'Post-BDS', title: 'Specialization', description: 'NEET-MDS for specialization, or start dental practice' }
+                ],
+                'nursing': [
+                    { year: 'Year 1', title: 'Foundation', description: 'Anatomy, Physiology, Nutrition, Psychology, Fundamentals of Nursing' },
+                    { year: 'Year 2', title: 'Clinical Basics', description: 'Medical-Surgical Nursing, Pharmacology, Community Health Nursing' },
+                    { year: 'Year 3', title: 'Specialization', description: 'Pediatric Nursing, Obstetric Nursing, Mental Health Nursing' },
+                    { year: 'Year 4', title: 'Advanced Practice', description: 'Critical Care, Research, Management, Clinical rotations' },
+                    { year: 'Post-Graduation', title: 'Career Path', description: 'Hospital nursing, M.Sc Nursing, International nursing (NCLEX), or teaching' }
+                ],
+                'ai_ml': [
+                    { year: 'Year 1', title: 'Foundation', description: 'Programming (Python), Mathematics (Linear Algebra, Calculus, Statistics), Data structures' },
+                    { year: 'Year 2', title: 'Core ML', description: 'Machine Learning algorithms, Data preprocessing, Scikit-learn, Feature engineering' },
+                    { year: 'Year 3', title: 'Deep Learning', description: 'Neural Networks, TensorFlow/PyTorch, CNN, RNN, NLP, Computer Vision' },
+                    { year: 'Year 4', title: 'Advanced AI', description: 'Transformers, GANs, Reinforcement Learning, MLOps, Cloud AI services' },
+                    { year: 'Post-Graduation', title: 'Career Launch', description: 'AI/ML Engineer roles, research, Kaggle competitions, or M.Tech/MS in AI' }
+                ],
+                'data_science': [
+                    { year: 'Year 1', title: 'Foundation', description: 'Python, R, Statistics, Probability, SQL, Basic mathematics' },
+                    { year: 'Year 2', title: 'Data Analysis', description: 'Pandas, NumPy, Data visualization (Matplotlib, Seaborn, Tableau), EDA' },
+                    { year: 'Year 3', title: 'Machine Learning', description: 'Supervised/Unsupervised learning, Feature engineering, Model evaluation' },
+                    { year: 'Year 4', title: 'Advanced Topics', description: 'Deep Learning, Big Data (Spark), Cloud platforms, A/B testing, deployment' },
+                    { year: 'Post-Graduation', title: 'Career Path', description: 'Data Scientist/Analyst roles, certifications, or MS in Data Science' }
+                ],
+                'marketing': [
+                    { year: 'Year 1', title: 'Foundation', description: 'Marketing principles, Consumer behavior, Business communication, Economics' },
+                    { year: 'Year 2', title: 'Core Marketing', description: 'Digital marketing, Market research, Branding, Advertising, Sales management' },
+                    { year: 'Year 3', title: 'Specialization', description: 'Choose: Digital Marketing, Brand Management, Sales, or Marketing Analytics' },
+                    { year: 'Internship', title: 'Industry Experience', description: 'Marketing internship at agency or brand, build campaign portfolio' },
+                    { year: 'Post-Graduation', title: 'Career Launch', description: 'Marketing executive/manager roles, Google/Meta certifications, or MBA' }
+                ],
+                'default': [
+                    { year: 'Year 1', title: 'Foundation Building', description: 'Build core knowledge, understand fundamentals, develop study habits' },
+                    { year: 'Year 2', title: 'Skill Development', description: 'Develop practical skills, start hands-on projects, join relevant clubs' },
+                    { year: 'Year 3', title: 'Specialization', description: 'Choose your focus area, build portfolio, seek mentorship' },
+                    { year: 'Year 4', title: 'Industry Exposure', description: 'Complete internships, network with professionals, work on real projects' },
+                    { year: 'Post-Graduation', title: 'Career Launch', description: 'Apply for jobs, prepare for interviews, continue learning, get certifications' }
+                ]
+            };
+            
+            return roadmaps[specialization] || roadmaps['default'];
+        }
+
+        function renderSummaryCards(data, recommendations) {
+            const container = document.getElementById('summaryCards');
+            
+            // Calculate scores from recommendations
+            const topScore = recommendations[0]?.match_score || recommendations[0]?.match_percentage || 85;
+            const scoreBreakdown = recommendations[0]?.score_breakdown || {};
+            
+            const cards = [
+                { icon: 'fa-bullseye', color: 'orange', label: 'Overall Match', value: Math.round(topScore) + '%' },
+                { icon: 'fa-book', color: 'blue', label: 'Quiz Score', value: Math.round((scoreBreakdown.quiz || 30) / 0.4) + '%' },
+                { icon: 'fa-heart', color: 'pink', label: 'Personality Fit', value: Math.round((scoreBreakdown.personality || 15) / 0.25) + '%' },
+                { icon: 'fa-trophy', color: 'yellow', label: 'Career Options', value: recommendations.length + ' Matches' }
+            ];
+
+            container.innerHTML = cards.map(card => `
+                <div class="bg-white rounded-xl shadow-lg p-6 card-hover transition duration-300">
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="w-10 h-10 bg-${card.color}-100 rounded-lg flex items-center justify-center">
+                            <i class="fas ${card.icon} text-${card.color}-600"></i>
+                        </div>
+                    </div>
+                    <p class="text-2xl font-bold text-gray-800">${card.value}</p>
+                    <p class="text-sm text-gray-500">${card.label}</p>
+                </div>
+            `).join('');
+        }
+
+        function renderAllCareers(careers) {
+            const container = document.getElementById('allCareers');
+            container.innerHTML = careers.slice(0, 5).map((career, index) => {
+                const matchScore = career.match_score || career.score || 85;
+                const scoreBreakdown = career.score_breakdown || null;
+                
+                // Create score breakdown tooltip if available
+                let breakdownHtml = '';
+                if (scoreBreakdown) {
+                    breakdownHtml = `
+                        <div class="mt-3 pt-3 border-t border-gray-200">
+                            <p class="text-xs text-gray-500 mb-2 font-semibold">Score Breakdown:</p>
+                            <div class="grid grid-cols-4 gap-2 text-center">
+                                <div class="bg-orange-50 rounded-lg p-2">
+                                    <div class="text-sm font-bold text-orange-600">${scoreBreakdown.quiz || 0}%</div>
+                                    <div class="text-xs text-gray-500">Quiz</div>
+                                </div>
+                                <div class="bg-orange-50 rounded-lg p-2">
+                                    <div class="text-sm font-bold text-orange-500">${scoreBreakdown.personality || 0}%</div>
+                                    <div class="text-xs text-gray-500">Personality</div>
+                                </div>
+                                <div class="bg-green-50 rounded-lg p-2">
+                                    <div class="text-sm font-bold text-green-600">${scoreBreakdown.skills || 0}%</div>
+                                    <div class="text-xs text-gray-500">Skills</div>
+                                </div>
+                                <div class="bg-orange-50 rounded-lg p-2">
+                                    <div class="text-sm font-bold text-orange-600">${scoreBreakdown.academics || 0}%</div>
+                                    <div class="text-xs text-gray-500">Academics</div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                // Get salary info
+                const salary = career.salary || {};
+                const entrySalary = salary.entry ? '₹' + (salary.entry / 100000).toFixed(1) + 'L' : '--';
+                const seniorSalary = salary.senior ? '₹' + (salary.senior / 100000).toFixed(1) + 'L' : '--';
+                
+                return `
+                    <div class="p-4 bg-gray-50 rounded-xl hover:bg-orange-50 transition border border-gray-100">
+                        <div class="flex items-start justify-between">
+                            <div class="flex items-start space-x-4">
+                                <div class="w-12 h-12 bg-gradient-to-br from-orange-500 to-orange-600 text-white rounded-xl flex items-center justify-center font-bold text-lg shadow-lg">
+                                    ${index + 1}
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-gray-800 text-lg">${career.name || career.career || 'Career'}</h4>
+                                    <p class="text-sm text-gray-600 mt-1">${career.description || 'A great career match for you.'}</p>
+                                    <div class="flex flex-wrap gap-2 mt-3">
+                                        ${(career.required_skills || []).slice(0, 4).map(skill => 
+                                            `<span class="px-2 py-1 bg-orange-100 text-orange-600 rounded-full text-xs font-medium">${skill}</span>`
+                                        ).join('')}
+                                    </div>
+                                    <div class="flex items-center gap-4 mt-3 text-sm text-gray-500">
+                                        <span><i class="fas fa-rupee-sign mr-1"></i>Entry: ${entrySalary}</span>
+                                        <span><i class="fas fa-chart-line mr-1"></i>Senior: ${seniorSalary}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="text-right flex-shrink-0">
+                                <div class="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-orange-600">${Math.round(matchScore)}%</div>
+                                <p class="text-xs text-gray-500">Match Score</p>
+                            </div>
+                        </div>
+                        ${breakdownHtml}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderSalaryChart(salary) {
+            const ctx = document.getElementById('salaryChart').getContext('2d');
+            
+            if (salaryChart) salaryChart.destroy();
+            
+            // Use salary object with entry, mid, senior
+            const entry = salary.entry || 600000;
+            const mid = salary.mid || 1200000;
+            const senior = salary.senior || 2500000;
+            
+            // Calculate intermediate values
+            const year1 = entry * 1.1;
+            const year3 = entry + (mid - entry) * 0.4;
+            const year5 = mid;
+            const year7 = mid + (senior - mid) * 0.5;
+            const year10 = senior;
+            
+            salaryChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Start', '1 Year', '3 Years', '5 Years', '7 Years', '10 Years'],
+                    datasets: [{
+                        label: 'Expected Salary (INR)',
+                        data: [entry, year1, year3, year5, year7, year10],
+                        borderColor: '#f97316',
+                        backgroundColor: 'rgba(249, 115, 22, 0.1)',
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: '#f97316',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 3,
+                        pointRadius: 7,
+                        borderWidth: 3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: (context) => '₹' + (context.raw / 100000).toFixed(1) + ' LPA'
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            ticks: {
+                                callback: (value) => '₹' + (value / 100000).toFixed(0) + 'L'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function renderJobDemandChart(forecast) {
+            const ctx = document.getElementById('jobDemandChart').getContext('2d');
+            
+            if (jobDemandChart) jobDemandChart.destroy();
+            
+            const years = forecast.yearly_projections ? Object.keys(forecast.yearly_projections) : ['2024', '2026', '2028', '2030', '2032', '2034'];
+            const demands = forecast.yearly_projections ? Object.values(forecast.yearly_projections) : [100, 110, 125, 140, 155, 170];
+            
+            jobDemandChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: years,
+                    datasets: [{
+                        label: 'Job Demand Index',
+                        data: demands,
+                        backgroundColor: years.map((_, i) => `rgba(249, 115, 22, ${0.4 + (i * 0.1)})`),
+                        borderColor: '#f97316',
+                        borderWidth: 2,
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { beginAtZero: true }
+                    }
+                }
+            });
+        }
+
+        function renderMarketInsights(forecast) {
+            const container = document.getElementById('marketInsights');
+            const insights = [
+                { icon: 'fa-trending-up', color: 'green', label: '10-Year Outlook', value: forecast['10_year_outlook'] || 'Strong Growth' },
+                { icon: 'fa-robot', color: 'orange', label: 'AI Impact', value: forecast.ai_impact || 'Moderate' },
+                { icon: 'fa-cog', color: 'yellow', label: 'Automation Risk', value: forecast.automation_risk || 'Low' },
+                { icon: 'fa-globe', color: 'blue', label: 'Global Demand', value: forecast.global_demand || 'High' }
+            ];
+
+            container.innerHTML = insights.map(insight => `
+                <div class="flex items-center space-x-4 p-4 bg-gradient-to-r from-${insight.color}-50 to-white rounded-2xl border border-${insight.color}-100 hover:shadow-md transition-all">
+                    <div class="w-12 h-12 bg-gradient-to-r from-${insight.color}-400 to-${insight.color}-500 rounded-xl flex items-center justify-center shadow-lg">
+                        <i class="fas ${insight.icon} text-white text-lg"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-500 font-medium">${insight.label}</p>
+                        <p class="font-bold text-gray-800">${insight.value}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderSkills(currentSkills, skillsToLearn) {
+            document.getElementById('currentSkills').innerHTML = currentSkills.map(skill => `
+                <span class="px-4 py-2 bg-gradient-to-r from-green-100 to-green-50 text-green-700 rounded-xl text-sm font-medium border border-green-200">${skill}</span>
+            `).join('') || '<span class="text-gray-500">No skills recorded</span>';
+
+            document.getElementById('skillsToLearn').innerHTML = skillsToLearn.map(skill => `
+                <span class="px-4 py-2 bg-gradient-to-r from-orange-100 to-orange-50 text-orange-700 rounded-xl text-sm font-medium border border-orange-200">${skill}</span>
+            `).join('') || '<span class="text-gray-500">No skills gaps identified</span>';
+        }
+
+        function renderRoadmap(roadmap) {
+            const container = document.getElementById('roadmapTimeline');
+            
+            // Check if roadmap uses new format (year, title, description) or old format (phase, duration, tasks)
+            if (roadmap.length > 0 && roadmap[0].year) {
+                // New format from generateRoadmap
+                container.innerHTML = `
+                    <div class="timeline-line"></div>
+                    ${roadmap.map((item, index) => `
+                        <div class="timeline-item relative mb-6 pl-10 slide-in" style="animation-delay: ${index * 0.1}s">
+                            <div class="absolute left-0 top-1 w-8 h-8 bg-gradient-to-r from-orange-500 to-orange-600 rounded-xl flex items-center justify-center text-white text-sm font-bold shadow-lg">
+                                ${index + 1}
+                            </div>
+                            <div class="bg-gradient-to-r from-white to-orange-50 border border-orange-100 rounded-2xl p-5 shadow-sm hover:shadow-lg transition-all hover:border-orange-300">
+                                <div class="flex justify-between items-start mb-3">
+                                    <h4 class="font-bold text-gray-800 text-lg">${item.title}</h4>
+                                    <span class="text-sm text-white bg-gradient-to-r from-orange-500 to-orange-600 px-3 py-1 rounded-full whitespace-nowrap ml-2 font-medium shadow">${item.year}</span>
+                                </div>
+                                <p class="text-gray-600">${item.description}</p>
+                            </div>
+                        </div>
+                    `).join('')}
+                `;
+            } else {
+                // Old format or default
+                const defaultRoadmap = [
+                    { phase: 'Phase 1: Foundation', duration: '0-6 months', tasks: ['Complete core courses', 'Build fundamental skills', 'Join relevant communities'] },
+                    { phase: 'Phase 2: Skill Building', duration: '6-12 months', tasks: ['Take specialized courses', 'Work on personal projects', 'Earn certifications'] },
+                    { phase: 'Phase 3: Experience', duration: '1-2 years', tasks: ['Secure internships', 'Contribute to open source', 'Build portfolio'] },
+                    { phase: 'Phase 4: Career Launch', duration: '2-3 years', tasks: ['Apply for entry-level positions', 'Network professionally', 'Continue learning'] },
+                    { phase: 'Phase 5: Growth', duration: '3-5 years', tasks: ['Seek promotions', 'Specialize in niche areas', 'Mentor others'] }
+                ];
+
+                const roadmapData = roadmap.length > 0 ? roadmap : defaultRoadmap;
+
+                container.innerHTML = `
+                    <div class="timeline-line"></div>
+                    ${roadmapData.map((phase, index) => `
+                        <div class="timeline-item relative mb-8 pl-10 slide-in" style="animation-delay: ${index * 0.1}s">
+                            <div class="absolute left-0 top-1 w-8 h-8 bg-gradient-to-r from-orange-500 to-orange-600 rounded-xl flex items-center justify-center text-white text-sm font-bold shadow-lg">
+                                ${index + 1}
+                            </div>
+                            <div class="bg-gradient-to-r from-white to-orange-50 border border-orange-100 rounded-2xl p-5 shadow-sm hover:shadow-lg transition-all hover:border-orange-300">
+                                <div class="flex justify-between items-start mb-3">
+                                    <h4 class="font-bold text-gray-800">${phase.phase}</h4>
+                                    <span class="text-sm text-white bg-gradient-to-r from-orange-500 to-orange-600 px-3 py-1 rounded-full font-medium shadow">${phase.duration}</span>
+                                </div>
+                                <ul class="text-gray-600 space-y-2">
+                                    ${phase.tasks.map(task => `<li class="flex items-start"><i class="fas fa-check-circle text-orange-500 mr-2 mt-1"></i>${task}</li>`).join('')}
+                                </ul>
+                            </div>
+                        </div>
+                    `).join('')}
+                `;
+            }
+        }
+
+        function renderColleges(colleges, careerName) {
+            const container = document.getElementById('collegeRecommendations');
+            
+            // Comprehensive college database by stream - Top 5 colleges with ALL countries
+            const collegeDatabase = {
+                // ENGINEERING STREAMS
+                'cse': [
+                    { name: 'MIT', location: 'Cambridge, Massachusetts', country: '🇺🇸 United States', ranking: '#1 CS', courses: ['AI/ML', 'Systems', 'Theory'] },
+                    { name: 'Stanford University', location: 'California', country: '🇺🇸 United States', ranking: '#2 CS', courses: ['AI', 'HCI', 'Security'] },
+                    { name: 'IIT Bombay', location: 'Mumbai', country: '🇮🇳 India', ranking: '#1 India', courses: ['CSE', 'AI/ML', 'Data Science'] },
+                    { name: 'University of Cambridge', location: 'Cambridge', country: '🇬🇧 United Kingdom', ranking: '#3 World', courses: ['CS', 'AI'] },
+                    { name: 'ETH Zurich', location: 'Zurich', country: '🇨🇭 Switzerland', ranking: '#4 World', courses: ['CS', 'Robotics'] }
+                ],
+                'mechanical': [
+                    { name: 'MIT', location: 'Cambridge', country: '🇺🇸 United States', ranking: '#1 Mech', courses: ['Robotics', 'Manufacturing'] },
+                    { name: 'TU Munich', location: 'Munich', country: '🇩🇪 Germany', ranking: '#1 Europe', courses: ['Automotive', 'Production'] },
+                    { name: 'IIT Delhi', location: 'New Delhi', country: '🇮🇳 India', ranking: '#1 India', courses: ['Thermal', 'Design'] },
+                    { name: 'University of Tokyo', location: 'Tokyo', country: '🇯🇵 Japan', ranking: '#1 Asia', courses: ['Mechanical', 'Robotics'] },
+                    { name: 'RWTH Aachen', location: 'Aachen', country: '🇩🇪 Germany', ranking: '#2 Europe', courses: ['Automotive', 'Manufacturing'] }
+                ],
+                'civil': [
+                    { name: 'MIT', location: 'Cambridge', country: '🇺🇸 United States', ranking: '#1 Civil', courses: ['Structural', 'Transportation'] },
+                    { name: 'IIT Madras', location: 'Chennai', country: '🇮🇳 India', ranking: '#1 India', courses: ['Structural', 'Geo-tech'] },
+                    { name: 'Delft University', location: 'Delft', country: '🇳🇱 Netherlands', ranking: '#1 Europe', courses: ['Civil', 'Water'] },
+                    { name: 'Imperial College', location: 'London', country: '🇬🇧 United Kingdom', ranking: '#2 Europe', courses: ['Structural', 'Environmental'] },
+                    { name: 'University of Tokyo', location: 'Tokyo', country: '🇯🇵 Japan', ranking: '#1 Asia', courses: ['Civil', 'Earthquake'] }
+                ],
+                'electrical': [
+                    { name: 'MIT', location: 'Cambridge', country: '🇺🇸 United States', ranking: '#1 EE', courses: ['Power', 'Electronics'] },
+                    { name: 'Stanford University', location: 'California', country: '🇺🇸 United States', ranking: '#2 EE', courses: ['VLSI', 'Power'] },
+                    { name: 'IIT Kharagpur', location: 'Kharagpur', country: '🇮🇳 India', ranking: '#1 India', courses: ['Power Systems', 'Control'] },
+                    { name: 'ETH Zurich', location: 'Zurich', country: '🇨🇭 Switzerland', ranking: '#1 Europe', courses: ['Electronics', 'Power'] },
+                    { name: 'Tsinghua University', location: 'Beijing', country: '🇨🇳 China', ranking: '#1 Asia', courses: ['EE', 'Power'] }
+                ],
+                'electronics': [
+                    { name: 'MIT', location: 'Cambridge', country: '🇺🇸 United States', ranking: '#1 ECE', courses: ['VLSI', 'Signal Processing'] },
+                    { name: 'Stanford University', location: 'California', country: '🇺🇸 United States', ranking: '#2 ECE', courses: ['Semiconductors', 'VLSI'] },
+                    { name: 'IIT Bombay', location: 'Mumbai', country: '🇮🇳 India', ranking: '#1 India', courses: ['VLSI', 'Embedded'] },
+                    { name: 'KAIST', location: 'Daejeon', country: '🇰🇷 South Korea', ranking: '#1 Korea', courses: ['Semiconductors', 'IoT'] },
+                    { name: 'NUS', location: 'Singapore', country: '🇸🇬 Singapore', ranking: '#1 SE Asia', courses: ['ECE', 'IoT'] }
+                ],
+                'chemical': [
+                    { name: 'MIT', location: 'Cambridge', country: '🇺🇸 United States', ranking: '#1 ChemE', courses: ['Process', 'Biochem'] },
+                    { name: 'Stanford University', location: 'California', country: '🇺🇸 United States', ranking: '#2 ChemE', courses: ['Energy', 'Materials'] },
+                    { name: 'IIT Bombay', location: 'Mumbai', country: '🇮🇳 India', ranking: '#1 India', courses: ['Petrochemical', 'Process'] },
+                    { name: 'ETH Zurich', location: 'Zurich', country: '🇨🇭 Switzerland', ranking: '#1 Europe', courses: ['Chemical', 'Biotech'] },
+                    { name: 'University of Tokyo', location: 'Tokyo', country: '🇯🇵 Japan', ranking: '#1 Asia', courses: ['Chemical', 'Materials'] }
+                ],
+                'aerospace': [
+                    { name: 'MIT', location: 'Cambridge', country: '🇺🇸 United States', ranking: '#1 Aero', courses: ['Aeronautics', 'Astronautics'] },
+                    { name: 'Caltech', location: 'California', country: '🇺🇸 United States', ranking: '#2 Aero', courses: ['Space', 'Propulsion'] },
+                    { name: 'IIT Kanpur', location: 'Kanpur', country: '🇮🇳 India', ranking: '#1 India', courses: ['Aerodynamics', 'Propulsion'] },
+                    { name: 'TU Delft', location: 'Delft', country: '🇳🇱 Netherlands', ranking: '#1 Europe', courses: ['Aerospace', 'Space'] },
+                    { name: 'University of Tokyo', location: 'Tokyo', country: '🇯🇵 Japan', ranking: '#1 Asia', courses: ['Aerospace', 'Space'] }
+                ],
+                'biomedical': [
+                    { name: 'Johns Hopkins', location: 'Baltimore', country: '🇺🇸 United States', ranking: '#1 BME', courses: ['Medical Devices', 'Imaging'] },
+                    { name: 'MIT', location: 'Cambridge', country: '🇺🇸 United States', ranking: '#2 BME', courses: ['Biotech', 'Tissue Eng'] },
+                    { name: 'IIT Delhi', location: 'New Delhi', country: '🇮🇳 India', ranking: '#1 India', courses: ['Biomedical', 'Healthcare'] },
+                    { name: 'Imperial College', location: 'London', country: '🇬🇧 United Kingdom', ranking: '#1 Europe', courses: ['Biomedical', 'Healthcare'] },
+                    { name: 'NUS', location: 'Singapore', country: '🇸🇬 Singapore', ranking: '#1 Asia', courses: ['BME', 'Healthcare Tech'] }
+                ],
+                'robotics': [
+                    { name: 'Carnegie Mellon', location: 'Pittsburgh', country: '🇺🇸 United States', ranking: '#1 Robotics', courses: ['Robotics', 'AI'] },
+                    { name: 'MIT', location: 'Cambridge', country: '🇺🇸 United States', ranking: '#2 Robotics', courses: ['Automation', 'AI'] },
+                    { name: 'ETH Zurich', location: 'Zurich', country: '🇨🇭 Switzerland', ranking: '#1 Europe', courses: ['Robotics', 'Control'] },
+                    { name: 'University of Tokyo', location: 'Tokyo', country: '🇯🇵 Japan', ranking: '#1 Asia', courses: ['Robotics', 'Automation'] },
+                    { name: 'IIT Bombay', location: 'Mumbai', country: '🇮🇳 India', ranking: '#1 India', courses: ['Robotics', 'Mechatronics'] }
+                ],
+                // MEDICAL STREAMS
+                'medical': [
+                    { name: 'Harvard Medical', location: 'Boston', country: '🇺🇸 United States', ranking: '#1 Medical', courses: ['Medicine', 'Research'] },
+                    { name: 'Johns Hopkins', location: 'Baltimore', country: '🇺🇸 United States', ranking: '#2 Medical', courses: ['Medicine', 'Public Health'] },
+                    { name: 'AIIMS Delhi', location: 'New Delhi', country: '🇮🇳 India', ranking: '#1 India', courses: ['MBBS', 'MD/MS'] },
+                    { name: 'University of Oxford', location: 'Oxford', country: '🇬🇧 United Kingdom', ranking: '#1 Europe', courses: ['Medicine', 'Clinical'] },
+                    { name: 'Karolinska Institute', location: 'Stockholm', country: '🇸🇪 Sweden', ranking: '#2 Europe', courses: ['Medicine', 'Research'] }
+                ],
+                'dental': [
+                    { name: 'University of Michigan', location: 'Michigan', country: '🇺🇸 United States', ranking: '#1 Dental', courses: ['DDS', 'Orthodontics'] },
+                    { name: 'Kings College London', location: 'London', country: '🇬🇧 United Kingdom', ranking: '#1 UK', courses: ['BDS', 'Dentistry'] },
+                    { name: 'MAIDS Delhi', location: 'New Delhi', country: '🇮🇳 India', ranking: '#1 India', courses: ['BDS', 'MDS'] },
+                    { name: 'University of Hong Kong', location: 'Hong Kong', country: '🇭🇰 Hong Kong', ranking: '#1 Asia', courses: ['BDS', 'Surgery'] },
+                    { name: 'University of Melbourne', location: 'Melbourne', country: '🇦🇺 Australia', ranking: '#1 Australia', courses: ['Dentistry'] }
+                ],
+                'nursing': [
+                    { name: 'Johns Hopkins', location: 'Baltimore', country: '🇺🇸 United States', ranking: '#1 Nursing', courses: ['BSN', 'MSN'] },
+                    { name: 'University of Pennsylvania', location: 'Philadelphia', country: '🇺🇸 United States', ranking: '#2 Nursing', courses: ['Nursing', 'NP'] },
+                    { name: 'AIIMS Delhi', location: 'New Delhi', country: '🇮🇳 India', ranking: '#1 India', courses: ['BSc Nursing', 'MSc'] },
+                    { name: 'Kings College London', location: 'London', country: '🇬🇧 United Kingdom', ranking: '#1 UK', courses: ['Nursing', 'Midwifery'] },
+                    { name: 'University of Sydney', location: 'Sydney', country: '🇦🇺 Australia', ranking: '#1 Australia', courses: ['Nursing'] }
+                ],
+                'pharmacy': [
+                    { name: 'University of North Carolina', location: 'Chapel Hill', country: '🇺🇸 United States', ranking: '#1 Pharmacy', courses: ['PharmD', 'Research'] },
+                    { name: 'UCL School of Pharmacy', location: 'London', country: '🇬🇧 United Kingdom', ranking: '#1 UK', courses: ['Pharmacy', 'Research'] },
+                    { name: 'NIPER Mohali', location: 'Mohali', country: '🇮🇳 India', ranking: '#1 India', courses: ['B.Pharm', 'M.Pharm'] },
+                    { name: 'Monash University', location: 'Melbourne', country: '🇦🇺 Australia', ranking: '#1 Australia', courses: ['Pharmacy'] },
+                    { name: 'NUS', location: 'Singapore', country: '🇸🇬 Singapore', ranking: '#1 Asia', courses: ['Pharmacy'] }
+                ],
+                'psychology': [
+                    { name: 'Stanford University', location: 'California', country: '🇺🇸 United States', ranking: '#1 Psychology', courses: ['Clinical', 'Cognitive'] },
+                    { name: 'Harvard University', location: 'Cambridge', country: '🇺🇸 United States', ranking: '#2 Psychology', courses: ['Psychology', 'Neuroscience'] },
+                    { name: 'University of Oxford', location: 'Oxford', country: '🇬🇧 United Kingdom', ranking: '#1 Europe', courses: ['Psychology', 'Research'] },
+                    { name: 'University of Delhi', location: 'New Delhi', country: '🇮🇳 India', ranking: '#1 India', courses: ['Psychology', 'Clinical'] },
+                    { name: 'University of Melbourne', location: 'Melbourne', country: '🇦🇺 Australia', ranking: '#1 Australia', courses: ['Psychology'] }
+                ],
+                // BUSINESS STREAMS
+                'business': [
+                    { name: 'Harvard Business School', location: 'Boston', country: '🇺🇸 United States', ranking: '#1 MBA', courses: ['MBA', 'Management'] },
+                    { name: 'Stanford GSB', location: 'California', country: '🇺🇸 United States', ranking: '#2 MBA', courses: ['MBA', 'Entrepreneurship'] },
+                    { name: 'IIM Ahmedabad', location: 'Ahmedabad', country: '🇮🇳 India', ranking: '#1 India', courses: ['MBA', 'PGDM'] },
+                    { name: 'London Business School', location: 'London', country: '🇬🇧 United Kingdom', ranking: '#1 Europe', courses: ['MBA', 'Finance'] },
+                    { name: 'INSEAD', location: 'Fontainebleau', country: '🇫🇷 France', ranking: '#2 Europe', courses: ['MBA', 'EMBA'] }
+                ],
+                'marketing': [
+                    { name: 'Kellogg School', location: 'Chicago', country: '🇺🇸 United States', ranking: '#1 Marketing', courses: ['Marketing', 'MBA'] },
+                    { name: 'Wharton School', location: 'Philadelphia', country: '🇺🇸 United States', ranking: '#2 Marketing', courses: ['Marketing', 'Analytics'] },
+                    { name: 'IIM Bangalore', location: 'Bangalore', country: '🇮🇳 India', ranking: '#1 India', courses: ['Marketing', 'Digital'] },
+                    { name: 'HEC Paris', location: 'Paris', country: '🇫🇷 France', ranking: '#1 Europe', courses: ['Marketing', 'Luxury'] },
+                    { name: 'NUS Business', location: 'Singapore', country: '🇸🇬 Singapore', ranking: '#1 Asia', courses: ['Marketing', 'Digital'] }
+                ],
+                'finance': [
+                    { name: 'Wharton School', location: 'Philadelphia', country: '🇺🇸 United States', ranking: '#1 Finance', courses: ['Finance', 'Investment'] },
+                    { name: 'London Business School', location: 'London', country: '🇬🇧 United Kingdom', ranking: '#1 Europe', courses: ['Finance', 'Banking'] },
+                    { name: 'IIM Calcutta', location: 'Kolkata', country: '🇮🇳 India', ranking: '#1 India', courses: ['Finance', 'Banking'] },
+                    { name: 'INSEAD', location: 'Fontainebleau', country: '🇫🇷 France', ranking: '#2 Europe', courses: ['Finance', 'Global'] },
+                    { name: 'HKUST', location: 'Hong Kong', country: '🇭🇰 Hong Kong', ranking: '#1 Asia', courses: ['Finance', 'Banking'] }
+                ],
+                'accounting': [
+                    { name: 'University of Texas Austin', location: 'Austin', country: '🇺🇸 United States', ranking: '#1 Accounting', courses: ['Accounting', 'CPA'] },
+                    { name: 'University of Illinois', location: 'Urbana-Champaign', country: '🇺🇸 United States', ranking: '#2 Accounting', courses: ['Accounting', 'Audit'] },
+                    { name: 'ICAI Delhi', location: 'New Delhi', country: '🇮🇳 India', ranking: '#1 India', courses: ['CA', 'Accounting'] },
+                    { name: 'London School of Economics', location: 'London', country: '🇬🇧 United Kingdom', ranking: '#1 Europe', courses: ['Accounting', 'Finance'] },
+                    { name: 'University of Melbourne', location: 'Melbourne', country: '🇦🇺 Australia', ranking: '#1 Australia', courses: ['Accounting'] }
+                ],
+                // TECHNOLOGY STREAMS
+                'ai_ml': [
+                    { name: 'Stanford University', location: 'California', country: '🇺🇸 United States', ranking: '#1 AI', courses: ['AI', 'Deep Learning'] },
+                    { name: 'MIT', location: 'Cambridge', country: '🇺🇸 United States', ranking: '#2 AI', courses: ['ML', 'Robotics'] },
+                    { name: 'Carnegie Mellon', location: 'Pittsburgh', country: '🇺🇸 United States', ranking: '#3 AI', courses: ['AI', 'NLP'] },
+                    { name: 'IIT Madras', location: 'Chennai', country: '🇮🇳 India', ranking: '#1 India', courses: ['AI/ML', 'Data Science'] },
+                    { name: 'University of Toronto', location: 'Toronto', country: '🇨🇦 Canada', ranking: '#1 Canada', courses: ['AI', 'ML'] }
+                ],
+                'data_science': [
+                    { name: 'MIT', location: 'Cambridge', country: '🇺🇸 United States', ranking: '#1 Data Sci', courses: ['Data Science', 'Analytics'] },
+                    { name: 'Stanford University', location: 'California', country: '🇺🇸 United States', ranking: '#2 Data Sci', courses: ['Statistics', 'ML'] },
+                    { name: 'UC Berkeley', location: 'Berkeley', country: '🇺🇸 United States', ranking: '#3 Data Sci', courses: ['Data Eng', 'Analytics'] },
+                    { name: 'IIT Hyderabad', location: 'Hyderabad', country: '🇮🇳 India', ranking: '#1 India', courses: ['Data Science', 'AI'] },
+                    { name: 'ETH Zurich', location: 'Zurich', country: '🇨🇭 Switzerland', ranking: '#1 Europe', courses: ['Data Science', 'ML'] }
+                ],
+                'cybersecurity': [
+                    { name: 'Carnegie Mellon', location: 'Pittsburgh', country: '🇺🇸 United States', ranking: '#1 Security', courses: ['Cybersecurity', 'InfoSec'] },
+                    { name: 'MIT', location: 'Cambridge', country: '🇺🇸 United States', ranking: '#2 Security', courses: ['Security', 'Cryptography'] },
+                    { name: 'Georgia Tech', location: 'Atlanta', country: '🇺🇸 United States', ranking: '#3 Security', courses: ['Cybersecurity', 'Privacy'] },
+                    { name: 'IIT Kanpur', location: 'Kanpur', country: '🇮🇳 India', ranking: '#1 India', courses: ['Security', 'Cryptography'] },
+                    { name: 'ETH Zurich', location: 'Zurich', country: '🇨🇭 Switzerland', ranking: '#1 Europe', courses: ['Security', 'Privacy'] }
+                ],
+                // ARTS & HUMANITIES
+                'law': [
+                    { name: 'Harvard Law School', location: 'Cambridge', country: '🇺🇸 United States', ranking: '#1 Law', courses: ['JD', 'LLM'] },
+                    { name: 'Yale Law School', location: 'New Haven', country: '🇺🇸 United States', ranking: '#2 Law', courses: ['Law', 'Constitutional'] },
+                    { name: 'NLU Delhi', location: 'New Delhi', country: '🇮🇳 India', ranking: '#1 India', courses: ['LLB', 'LLM'] },
+                    { name: 'University of Oxford', location: 'Oxford', country: '🇬🇧 United Kingdom', ranking: '#1 Europe', courses: ['Law', 'International'] },
+                    { name: 'University of Melbourne', location: 'Melbourne', country: '🇦🇺 Australia', ranking: '#1 Australia', courses: ['Law'] }
+                ],
+                'journalism': [
+                    { name: 'Columbia Journalism', location: 'New York', country: '🇺🇸 United States', ranking: '#1 Journalism', courses: ['Journalism', 'Digital Media'] },
+                    { name: 'Northwestern Medill', location: 'Chicago', country: '🇺🇸 United States', ranking: '#2 Journalism', courses: ['Journalism', 'Media'] },
+                    { name: 'IIMC Delhi', location: 'New Delhi', country: '🇮🇳 India', ranking: '#1 India', courses: ['Journalism', 'Mass Comm'] },
+                    { name: 'City University London', location: 'London', country: '🇬🇧 United Kingdom', ranking: '#1 UK', courses: ['Journalism', 'Media'] },
+                    { name: 'University of Sydney', location: 'Sydney', country: '🇦🇺 Australia', ranking: '#1 Australia', courses: ['Journalism', 'Media'] }
+                ],
+                'design': [
+                    { name: 'Rhode Island School of Design', location: 'Providence', country: '🇺🇸 United States', ranking: '#1 Design', courses: ['Design', 'Visual Arts'] },
+                    { name: 'Parsons School of Design', location: 'New York', country: '🇺🇸 United States', ranking: '#2 Design', courses: ['Fashion', 'Product'] },
+                    { name: 'NID Ahmedabad', location: 'Ahmedabad', country: '🇮🇳 India', ranking: '#1 India', courses: ['Product Design', 'UX'] },
+                    { name: 'Royal College of Art', location: 'London', country: '🇬🇧 United Kingdom', ranking: '#1 Europe', courses: ['Design', 'Art'] },
+                    { name: 'Politecnico di Milano', location: 'Milan', country: '🇮🇹 Italy', ranking: '#2 Europe', courses: ['Design', 'Fashion'] }
+                ],
+                'architecture': [
+                    { name: 'MIT', location: 'Cambridge', country: '🇺🇸 United States', ranking: '#1 Architecture', courses: ['Architecture', 'Urban'] },
+                    { name: 'Harvard GSD', location: 'Cambridge', country: '🇺🇸 United States', ranking: '#2 Architecture', courses: ['Architecture', 'Landscape'] },
+                    { name: 'SPA Delhi', location: 'New Delhi', country: '🇮🇳 India', ranking: '#1 India', courses: ['B.Arch', 'M.Arch'] },
+                    { name: 'UCL Bartlett', location: 'London', country: '🇬🇧 United Kingdom', ranking: '#1 Europe', courses: ['Architecture', 'Urban'] },
+                    { name: 'ETH Zurich', location: 'Zurich', country: '🇨🇭 Switzerland', ranking: '#2 Europe', courses: ['Architecture'] }
+                ],
+                'music': [
+                    { name: 'Juilliard School', location: 'New York', country: '🇺🇸 United States', ranking: '#1 Music', courses: ['Music Performance', 'Composition'] },
+                    { name: 'Berklee College of Music', location: 'Boston', country: '🇺🇸 United States', ranking: '#2 Music', courses: ['Music Production', 'Jazz'] },
+                    { name: 'KM Music Conservatory', location: 'Chennai', country: '🇮🇳 India', ranking: '#1 India', courses: ['Music', 'Film Scoring'] },
+                    { name: 'Royal Academy of Music', location: 'London', country: '🇬🇧 United Kingdom', ranking: '#1 UK', courses: ['Classical', 'Composition'] },
+                    { name: 'Vienna Conservatory', location: 'Vienna', country: '🇦🇹 Austria', ranking: '#1 Europe', courses: ['Classical', 'Orchestra'] }
+                ],
+                'film': [
+                    { name: 'USC School of Cinematic Arts', location: 'Los Angeles', country: '🇺🇸 United States', ranking: '#1 Film', courses: ['Film Production', 'Directing'] },
+                    { name: 'NYU Tisch', location: 'New York', country: '🇺🇸 United States', ranking: '#2 Film', courses: ['Film', 'Drama'] },
+                    { name: 'FTII Pune', location: 'Pune', country: '🇮🇳 India', ranking: '#1 India', courses: ['Direction', 'Cinematography'] },
+                    { name: 'London Film School', location: 'London', country: '🇬🇧 United Kingdom', ranking: '#1 UK', courses: ['Filmmaking', 'Screenwriting'] },
+                    { name: 'Beijing Film Academy', location: 'Beijing', country: '🇨🇳 China', ranking: '#1 Asia', courses: ['Film', 'Animation'] }
+                ],
+                // SCIENCE STREAMS
+                'physics': [
+                    { name: 'MIT', location: 'Cambridge', country: '🇺🇸 United States', ranking: '#1 Physics', courses: ['Physics', 'Quantum'] },
+                    { name: 'Caltech', location: 'California', country: '🇺🇸 United States', ranking: '#2 Physics', courses: ['Astrophysics', 'Particle'] },
+                    { name: 'IISc Bangalore', location: 'Bangalore', country: '🇮🇳 India', ranking: '#1 India', courses: ['Physics', 'Research'] },
+                    { name: 'Cambridge', location: 'Cambridge', country: '🇬🇧 United Kingdom', ranking: '#1 Europe', courses: ['Theoretical', 'Experimental'] },
+                    { name: 'ETH Zurich', location: 'Zurich', country: '🇨🇭 Switzerland', ranking: '#2 Europe', courses: ['Physics', 'Quantum'] }
+                ],
+                'chemistry': [
+                    { name: 'MIT', location: 'Cambridge', country: '🇺🇸 United States', ranking: '#1 Chemistry', courses: ['Chemistry', 'Biochem'] },
+                    { name: 'Caltech', location: 'California', country: '🇺🇸 United States', ranking: '#2 Chemistry', courses: ['Chemistry', 'Materials'] },
+                    { name: 'IISc Bangalore', location: 'Bangalore', country: '🇮🇳 India', ranking: '#1 India', courses: ['Chemistry', 'Research'] },
+                    { name: 'Cambridge', location: 'Cambridge', country: '🇬🇧 United Kingdom', ranking: '#1 Europe', courses: ['Chemistry', 'Organic'] },
+                    { name: 'ETH Zurich', location: 'Zurich', country: '🇨🇭 Switzerland', ranking: '#2 Europe', courses: ['Chemistry'] }
+                ],
+                'biology': [
+                    { name: 'Harvard University', location: 'Cambridge', country: '🇺🇸 United States', ranking: '#1 Biology', courses: ['Biology', 'Genetics'] },
+                    { name: 'MIT', location: 'Cambridge', country: '🇺🇸 United States', ranking: '#2 Biology', courses: ['Molecular Bio', 'Biotech'] },
+                    { name: 'IISc Bangalore', location: 'Bangalore', country: '🇮🇳 India', ranking: '#1 India', courses: ['Biology', 'Biotech'] },
+                    { name: 'Cambridge', location: 'Cambridge', country: '🇬🇧 United Kingdom', ranking: '#1 Europe', courses: ['Biology', 'Genetics'] },
+                    { name: 'ETH Zurich', location: 'Zurich', country: '🇨🇭 Switzerland', ranking: '#2 Europe', courses: ['Biology', 'Biochem'] }
+                ],
+                'mathematics': [
+                    { name: 'MIT', location: 'Cambridge', country: '🇺🇸 United States', ranking: '#1 Math', courses: ['Pure Math', 'Applied'] },
+                    { name: 'Princeton', location: 'New Jersey', country: '🇺🇸 United States', ranking: '#2 Math', courses: ['Mathematics', 'Theory'] },
+                    { name: 'CMI Chennai', location: 'Chennai', country: '🇮🇳 India', ranking: '#1 India', courses: ['Mathematics', 'Statistics'] },
+                    { name: 'Cambridge', location: 'Cambridge', country: '🇬🇧 United Kingdom', ranking: '#1 Europe', courses: ['Mathematics', 'Theory'] },
+                    { name: 'ENS Paris', location: 'Paris', country: '🇫🇷 France', ranking: '#2 Europe', courses: ['Mathematics'] }
+                ],
+                // HOSPITALITY & TOURISM
+                'hotel_management': [
+                    { name: 'Cornell SHA', location: 'Ithaca', country: '🇺🇸 United States', ranking: '#1 Hospitality', courses: ['Hotel Management', 'F&B'] },
+                    { name: 'EHL Lausanne', location: 'Lausanne', country: '🇨🇭 Switzerland', ranking: '#1 World', courses: ['Hospitality', 'Luxury'] },
+                    { name: 'IHM Pusa', location: 'New Delhi', country: '🇮🇳 India', ranking: '#1 India', courses: ['Hotel Management', 'Culinary'] },
+                    { name: 'Les Roches', location: 'Crans-Montana', country: '🇨🇭 Switzerland', ranking: '#2 World', courses: ['Hospitality', 'Events'] },
+                    { name: 'Glion', location: 'Montreux', country: '🇨🇭 Switzerland', ranking: '#3 World', courses: ['Luxury', 'Events'] }
+                ],
+                // AGRICULTURE
+                'agriculture': [
+                    { name: 'Wageningen University', location: 'Wageningen', country: '🇳🇱 Netherlands', ranking: '#1 Agri', courses: ['Agriculture', 'Food Science'] },
+                    { name: 'UC Davis', location: 'Davis', country: '🇺🇸 United States', ranking: '#2 Agri', courses: ['Agriculture', 'Viticulture'] },
+                    { name: 'IARI Delhi', location: 'New Delhi', country: '🇮🇳 India', ranking: '#1 India', courses: ['Agriculture', 'Horticulture'] },
+                    { name: 'University of Queensland', location: 'Brisbane', country: '🇦🇺 Australia', ranking: '#1 Australia', courses: ['Agriculture', 'Environment'] },
+                    { name: 'AgroParisTech', location: 'Paris', country: '🇫🇷 France', ranking: '#1 France', courses: ['Agriculture', 'Food'] }
+                ],
+                // DEFAULT
+                'default': [
+                    { name: 'Harvard University', location: 'Cambridge', country: '🇺🇸 United States', ranking: '#1 World', courses: ['Various Programs'] },
+                    { name: 'University of Oxford', location: 'Oxford', country: '🇬🇧 United Kingdom', ranking: '#2 World', courses: ['Arts', 'Science'] },
+                    { name: 'University of Cambridge', location: 'Cambridge', country: '🇬🇧 United Kingdom', ranking: '#3 World', courses: ['Arts', 'Science'] },
+                    { name: 'University of Delhi', location: 'New Delhi', country: '🇮🇳 India', ranking: '#1 India', courses: ['Arts', 'Commerce', 'Science'] },
+                    { name: 'University of Tokyo', location: 'Tokyo', country: '🇯🇵 Japan', ranking: '#1 Japan', courses: ['Various'] }
+                ]
+            };
+            
+            // Determine which college list to use based on career
+            let selectedColleges = collegeDatabase.default;
+            const careerLower = (careerName || '').toLowerCase();
+            
+            // Engineering
+            if (careerLower.includes('software') || careerLower.includes('developer') || careerLower.includes('programmer') || careerLower.includes('computer') || careerLower.includes('cse') || careerLower.includes('it ')) {
+                selectedColleges = collegeDatabase.cse;
+            } else if (careerLower.includes('mechanical') || careerLower.includes('automobile') || careerLower.includes('manufacturing') || careerLower.includes('production')) {
+                selectedColleges = collegeDatabase.mechanical;
+            } else if (careerLower.includes('civil') || careerLower.includes('construction') || careerLower.includes('structural')) {
+                selectedColleges = collegeDatabase.civil;
+            } else if (careerLower.includes('electrical') || careerLower.includes('power')) {
+                selectedColleges = collegeDatabase.electrical;
+            } else if (careerLower.includes('electronics') || careerLower.includes('ece') || careerLower.includes('vlsi') || careerLower.includes('embedded')) {
+                selectedColleges = collegeDatabase.electronics;
+            } else if (careerLower.includes('chemical') || careerLower.includes('petrochemical')) {
+                selectedColleges = collegeDatabase.chemical;
+            } else if (careerLower.includes('aerospace') || careerLower.includes('aeronautical') || careerLower.includes('aviation')) {
+                selectedColleges = collegeDatabase.aerospace;
+            } else if (careerLower.includes('biomedical') || careerLower.includes('biomed')) {
+                selectedColleges = collegeDatabase.biomedical;
+            } else if (careerLower.includes('robot') || careerLower.includes('automation') || careerLower.includes('mechatronics')) {
+                selectedColleges = collegeDatabase.robotics;
+            }
+            // Medical
+            else if (careerLower.includes('doctor') || careerLower.includes('mbbs') || careerLower.includes('physician') || careerLower.includes('surgeon') || careerLower.includes('medical')) {
+                selectedColleges = collegeDatabase.medical;
+            } else if (careerLower.includes('dental') || careerLower.includes('dentist') || careerLower.includes('bds')) {
+                selectedColleges = collegeDatabase.dental;
+            } else if (careerLower.includes('nurse') || careerLower.includes('nursing')) {
+                selectedColleges = collegeDatabase.nursing;
+            } else if (careerLower.includes('pharma') || careerLower.includes('pharmacy') || careerLower.includes('pharmacist')) {
+                selectedColleges = collegeDatabase.pharmacy;
+            } else if (careerLower.includes('psycholog') || careerLower.includes('therapist') || careerLower.includes('counselor')) {
+                selectedColleges = collegeDatabase.psychology;
+            }
+            // Business
+            else if (careerLower.includes('mba') || careerLower.includes('business') || careerLower.includes('management') || careerLower.includes('entrepreneur')) {
+                selectedColleges = collegeDatabase.business;
+            } else if (careerLower.includes('marketing') || careerLower.includes('brand') || careerLower.includes('advertising')) {
+                selectedColleges = collegeDatabase.marketing;
+            } else if (careerLower.includes('finance') || careerLower.includes('investment') || careerLower.includes('banking')) {
+                selectedColleges = collegeDatabase.finance;
+            } else if (careerLower.includes('account') || careerLower.includes('audit') || careerLower.includes('ca ') || careerLower.includes('cpa')) {
+                selectedColleges = collegeDatabase.accounting;
+            }
+            // Technology
+            else if (careerLower.includes('ai') || careerLower.includes('machine learning') || careerLower.includes('ml') || careerLower.includes('artificial')) {
+                selectedColleges = collegeDatabase.ai_ml;
+            } else if (careerLower.includes('data scien') || careerLower.includes('data analy') || careerLower.includes('analytics')) {
+                selectedColleges = collegeDatabase.data_science;
+            } else if (careerLower.includes('cyber') || careerLower.includes('security') || careerLower.includes('ethical hack')) {
+                selectedColleges = collegeDatabase.cybersecurity;
+            }
+            // Arts & Humanities
+            else if (careerLower.includes('law') || careerLower.includes('lawyer') || careerLower.includes('advocate') || careerLower.includes('attorney')) {
+                selectedColleges = collegeDatabase.law;
+            } else if (careerLower.includes('journalist') || careerLower.includes('journalism') || careerLower.includes('media') || careerLower.includes('reporter')) {
+                selectedColleges = collegeDatabase.journalism;
+            } else if (careerLower.includes('design') || careerLower.includes('ux') || careerLower.includes('ui') || careerLower.includes('graphic')) {
+                selectedColleges = collegeDatabase.design;
+            } else if (careerLower.includes('architect') && !careerLower.includes('software')) {
+                selectedColleges = collegeDatabase.architecture;
+            } else if (careerLower.includes('music') || careerLower.includes('musician') || careerLower.includes('composer')) {
+                selectedColleges = collegeDatabase.music;
+            } else if (careerLower.includes('film') || careerLower.includes('director') || careerLower.includes('cinema') || careerLower.includes('actor')) {
+                selectedColleges = collegeDatabase.film;
+            }
+            // Science
+            else if (careerLower.includes('physicist') || careerLower.includes('physics')) {
+                selectedColleges = collegeDatabase.physics;
+            } else if (careerLower.includes('chemist') || careerLower.includes('chemistry')) {
+                selectedColleges = collegeDatabase.chemistry;
+            } else if (careerLower.includes('biolog') || careerLower.includes('biotech') || careerLower.includes('genetics')) {
+                selectedColleges = collegeDatabase.biology;
+            } else if (careerLower.includes('mathematic') || careerLower.includes('statistician')) {
+                selectedColleges = collegeDatabase.mathematics;
+            }
+            // Others
+            else if (careerLower.includes('hotel') || careerLower.includes('hospitality') || careerLower.includes('chef') || careerLower.includes('culinary')) {
+                selectedColleges = collegeDatabase.hotel_management;
+            } else if (careerLower.includes('agriculture') || careerLower.includes('farming') || careerLower.includes('agri')) {
+                selectedColleges = collegeDatabase.agriculture;
+            }
+            
+            // Use API colleges if available, otherwise use database
+            const collegeData = colleges.length > 0 ? colleges : selectedColleges;
+
+            container.innerHTML = collegeData.slice(0, 5).map((college, index) => `
+                <div class="bg-gradient-to-br from-white to-orange-50 rounded-2xl p-5 hover:shadow-xl transition-all duration-300 border border-orange-100 hover:border-orange-300 orange-glow group">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="w-8 h-8 bg-gradient-to-r from-orange-500 to-orange-600 rounded-lg flex items-center justify-center text-white font-bold text-sm shadow">
+                            #${index + 1}
+                        </div>
+                        <span class="text-xs bg-gradient-to-r from-orange-100 to-orange-200 text-orange-700 px-2 py-1 rounded-full font-medium">${college.ranking || 'Top'}</span>
+                    </div>
+                    <h4 class="font-bold text-gray-800 text-sm mb-2 group-hover:text-orange-600 transition-colors">${college.name}</h4>
+                    <p class="text-xs text-gray-500 mb-1"><i class="fas fa-map-marker-alt mr-1 text-orange-400\"></i>${college.location}</p>
+                    <p class="text-xs font-medium text-gray-600 mb-3">${college.country || 'International'}</p>
+                    <div class="flex flex-wrap gap-1">
+                        ${(college.courses || []).slice(0, 2).map(course => `
+                            <span class="text-xs bg-white text-orange-600 px-2 py-1 rounded-full border border-orange-200">${course}</span>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderPersonality(personality) {
+            const mbtiType = personality.mbti_type || 'INTJ';
+            const mbtiDescriptions = {
+                'INTJ': { title: 'The Architect', description: 'Strategic, logical, and always planning several moves ahead. You excel in roles that require long-term thinking and complex problem-solving.' },
+                'INTP': { title: 'The Logician', description: 'Innovative inventors with an unquenchable thirst for knowledge. You thrive in analytical and research-oriented careers.' },
+                'ENTJ': { title: 'The Commander', description: 'Bold, imaginative, and strong-willed leaders. You excel in management and leadership positions.' },
+                'ENTP': { title: 'The Debater', description: 'Smart and curious thinkers. You thrive in careers that involve innovation and challenging the status quo.' },
+                'INFJ': { title: 'The Advocate', description: 'Quiet and mystical, yet inspiring. You excel in counseling, writing, and helping professions.' },
+                'INFP': { title: 'The Mediator', description: 'Poetic, kind, and altruistic. You thrive in creative and humanitarian careers.' },
+                'ENFJ': { title: 'The Protagonist', description: 'Charismatic and inspiring leaders. You excel in teaching, coaching, and leadership roles.' },
+                'ENFP': { title: 'The Campaigner', description: 'Enthusiastic, creative, and sociable. You thrive in marketing, counseling, and creative fields.' },
+                'ISTJ': { title: 'The Logistician', description: 'Practical and fact-minded. You excel in administrative, financial, and law enforcement careers.' },
+                'ISFJ': { title: 'The Defender', description: 'Very dedicated and warm protectors. You thrive in healthcare, education, and social work.' },
+                'ESTJ': { title: 'The Executive', description: 'Excellent administrators. You excel in management, law, and business careers.' },
+                'ESFJ': { title: 'The Consul', description: 'Extraordinarily caring and social. You thrive in healthcare, education, and human resources.' },
+                'ISTP': { title: 'The Virtuoso', description: 'Bold and practical experimenters. You excel in technical, mechanical, and engineering careers.' },
+                'ISFP': { title: 'The Adventurer', description: 'Flexible and charming artists. You thrive in design, healthcare, and artistic fields.' },
+                'ESTP': { title: 'The Entrepreneur', description: 'Smart, energetic, and perceptive. You excel in sales, marketing, and business careers.' },
+                'ESFP': { title: 'The Entertainer', description: 'Spontaneous, energetic, and enthusiastic entertainers. You thrive in performing arts and sales.' }
+            };
+
+            const mbtiInfo = mbtiDescriptions[mbtiType] || { title: 'Unique Type', description: 'Your personality combination is unique and valuable.' };
+
+            document.getElementById('mbtiType').textContent = mbtiType;
+            document.getElementById('mbtiTitle').textContent = mbtiInfo.title;
+            document.getElementById('mbtiDescription').textContent = mbtiInfo.description;
+
+            const bigFive = personality.big_five || {
+                openness: 7,
+                conscientiousness: 6,
+                extraversion: 5,
+                agreeableness: 7,
+                emotional_stability: 6
+            };
+
+            const traitLabels = {
+                openness: 'Openness',
+                conscientiousness: 'Conscientiousness',
+                extraversion: 'Extraversion',
+                agreeableness: 'Agreeableness',
+                emotional_stability: 'Emotional Stability'
+            };
+
+            document.getElementById('bigFiveTraits').innerHTML = Object.entries(bigFive).map(([trait, value]) => `
+                <div>
+                    <div class="flex justify-between text-sm mb-1">
+                        <span class="text-gray-600">${traitLabels[trait] || trait}</span>
+                        <span class="text-orange-500 font-semibold">${value}/10</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2">
+                        <div class="bg-orange-500 h-2 rounded-full" style="width: ${value * 10}%"></div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderScamAlerts() {
+            const alerts = [
+                { title: 'Work-from-Home Scams', description: 'Beware of jobs promising high pay for minimal work from home.' },
+                { title: 'Upfront Fee Jobs', description: 'Legitimate employers never ask for money upfront.' },
+                { title: 'Fake Training Programs', description: 'Research any training program before paying fees.' },
+                { title: 'Multi-Level Marketing', description: 'MLM schemes often disguise as career opportunities.' }
+            ];
+
+            document.getElementById('scamAlerts').innerHTML = alerts.map(alert => `
+                <div class="flex items-start space-x-3 p-3 bg-white rounded-lg">
+                    <i class="fas fa-shield-alt text-red-500 mt-1"></i>
+                    <div>
+                        <h4 class="font-semibold text-gray-800">${alert.title}</h4>
+                        <p class="text-sm text-gray-600">${alert.description}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+    </script>
+</body>
+</html>
+
+
+
+
