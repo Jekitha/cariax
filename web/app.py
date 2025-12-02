@@ -25,10 +25,37 @@ try:
 except ImportError:
     pass  # dotenv not installed, will use environment variables directly
 
-from main import CareerGuidanceSystem
-from utils.data_processor import StudentProfile
-from chatbot.mentor_chatbot import create_chatbot, SimpleChatbot
-from auth.models import User, Session as UserSession, AssessmentResult, init_database
+# Try to import components with error handling for deployment
+try:
+    from main import CareerGuidanceSystem
+    CAREER_SYSTEM_AVAILABLE = True
+except Exception as e:
+    print(f"Warning: Could not import CareerGuidanceSystem: {e}")
+    CAREER_SYSTEM_AVAILABLE = False
+    CareerGuidanceSystem = None
+
+try:
+    from utils.data_processor import StudentProfile
+except Exception as e:
+    print(f"Warning: Could not import StudentProfile: {e}")
+    StudentProfile = None
+
+try:
+    from chatbot.mentor_chatbot import create_chatbot, SimpleChatbot
+except Exception as e:
+    print(f"Warning: Could not import chatbot: {e}")
+    create_chatbot = None
+    SimpleChatbot = None
+
+try:
+    from auth.models import User, Session as UserSession, AssessmentResult, init_database
+except Exception as e:
+    print(f"Warning: Could not import auth models: {e}")
+    User = None
+    UserSession = None
+    AssessmentResult = None
+    def init_database():
+        pass
 
 # Initialize Flask app
 app = Flask(__name__, 
@@ -38,7 +65,11 @@ app.secret_key = os.environ.get('SECRET_KEY', secrets.token_hex(32))
 CORS(app)
 
 # Initialize the authentication database
-init_database()
+try:
+    init_database()
+    print("✓ Database initialized successfully!")
+except Exception as e:
+    print(f"Warning: Database init failed: {e}")
 
 # OAuth Configuration (set these in environment variables for production)
 OAUTH_CONFIG = {
@@ -88,10 +119,27 @@ def inject_now():
     return {'now': datetime.now}
 
 # Initialize the career guidance system
-career_system = CareerGuidanceSystem(data_dir=str(PROJECT_ROOT / 'data'))
+try:
+    if CAREER_SYSTEM_AVAILABLE:
+        career_system = CareerGuidanceSystem(data_dir=str(PROJECT_ROOT / 'data'))
+        print("✓ Career Guidance System initialized!")
+    else:
+        career_system = None
+        print("Warning: Career system not available")
+except Exception as e:
+    print(f"Warning: Could not initialize career system: {e}")
+    career_system = None
 
 # Initialize chatbot (will use simple chatbot if no API key)
-chatbot = create_chatbot(use_ai=True)
+try:
+    if create_chatbot:
+        chatbot = create_chatbot(use_ai=True)
+        print("✓ Chatbot initialized!")
+    else:
+        chatbot = None
+except Exception as e:
+    print(f"Warning: Could not initialize chatbot: {e}")
+    chatbot = None
 
 
 # ============== API Routes ==============
