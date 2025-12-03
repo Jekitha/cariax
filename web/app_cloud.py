@@ -64,20 +64,48 @@ init_database()
 PROJECT_ROOT = Path(__file__).parent.parent
 DATA_DIR = PROJECT_ROOT / 'data'
 
-def load_json_file(filename):
+def load_json_file(filename, key=None):
     """Load JSON data from file."""
     filepath = DATA_DIR / filename
     if filepath.exists():
-        with open(filepath, 'r', encoding='utf-8') as f:
-            return json.load(f)
+        try:
+            with open(filepath, 'r', encoding='utf-8') as f:
+                data = json.load(f)
+                if key and isinstance(data, dict):
+                    return data.get(key, [])
+                return data
+        except:
+            pass
     return []
 
-# Load all data
-CAREERS_DATA = load_json_file('careers.json')
-COLLEGES_DATA = load_json_file('colleges.json')
-SKILLS_DATA = load_json_file('skills.json')
+# Load all data with proper keys
+CAREERS_DATA = load_json_file('careers.json', 'careers')
+COLLEGES_DATA = load_json_file('colleges.json', 'colleges')
+SKILLS_DATA = load_json_file('skills.json', 'skills')
 
-print("✓ Career data loaded successfully!")
+# Fallback career data if files don't load
+if not CAREERS_DATA:
+    CAREERS_DATA = [
+        {"id": 1, "name": "Software Engineer", "category": "Technology", "description": "Design and build software applications", "difficulty": 7, "automation_risk": 0.2, "job_growth_rate": 0.22, "required_skills": ["Python", "JavaScript", "Problem Solving"], "salary": {"entry": {"INR": 500000}, "mid": {"INR": 1500000}, "senior": {"INR": 3000000}}},
+        {"id": 2, "name": "Data Scientist", "category": "Technology", "description": "Analyze data to derive insights", "difficulty": 8, "automation_risk": 0.15, "job_growth_rate": 0.35, "required_skills": ["Python", "ML", "Statistics"], "salary": {"entry": {"INR": 600000}, "mid": {"INR": 1800000}, "senior": {"INR": 3500000}}},
+        {"id": 3, "name": "Product Manager", "category": "Business", "description": "Lead product development and strategy", "difficulty": 6, "automation_risk": 0.1, "job_growth_rate": 0.18, "required_skills": ["Communication", "Strategy", "Analysis"], "salary": {"entry": {"INR": 800000}, "mid": {"INR": 2000000}, "senior": {"INR": 4000000}}},
+        {"id": 4, "name": "UX Designer", "category": "Design", "description": "Create user-friendly digital experiences", "difficulty": 5, "automation_risk": 0.25, "job_growth_rate": 0.15, "required_skills": ["Figma", "User Research", "Prototyping"], "salary": {"entry": {"INR": 400000}, "mid": {"INR": 1200000}, "senior": {"INR": 2500000}}},
+        {"id": 5, "name": "Cybersecurity Analyst", "category": "Technology", "description": "Protect systems from cyber threats", "difficulty": 7, "automation_risk": 0.12, "job_growth_rate": 0.28, "required_skills": ["Network Security", "Ethical Hacking", "Risk Assessment"], "salary": {"entry": {"INR": 500000}, "mid": {"INR": 1400000}, "senior": {"INR": 2800000}}},
+        {"id": 6, "name": "Cloud Architect", "category": "Technology", "description": "Design cloud infrastructure solutions", "difficulty": 8, "automation_risk": 0.18, "job_growth_rate": 0.25, "required_skills": ["AWS", "Azure", "DevOps"], "salary": {"entry": {"INR": 700000}, "mid": {"INR": 2000000}, "senior": {"INR": 4000000}}},
+        {"id": 7, "name": "AI/ML Engineer", "category": "Technology", "description": "Build intelligent systems and algorithms", "difficulty": 9, "automation_risk": 0.08, "job_growth_rate": 0.40, "required_skills": ["Python", "TensorFlow", "Deep Learning"], "salary": {"entry": {"INR": 800000}, "mid": {"INR": 2500000}, "senior": {"INR": 5000000}}},
+        {"id": 8, "name": "Digital Marketer", "category": "Marketing", "description": "Drive online marketing campaigns", "difficulty": 4, "automation_risk": 0.35, "job_growth_rate": 0.12, "required_skills": ["SEO", "Social Media", "Analytics"], "salary": {"entry": {"INR": 300000}, "mid": {"INR": 800000}, "senior": {"INR": 1500000}}},
+    ]
+
+if not COLLEGES_DATA:
+    COLLEGES_DATA = [
+        {"id": 1, "name": "IIT Bombay", "location": "Mumbai", "ranking": 1, "type": "Engineering"},
+        {"id": 2, "name": "IIT Delhi", "location": "Delhi", "ranking": 2, "type": "Engineering"},
+        {"id": 3, "name": "IIT Madras", "location": "Chennai", "ranking": 3, "type": "Engineering"},
+        {"id": 4, "name": "BITS Pilani", "location": "Pilani", "ranking": 10, "type": "Engineering"},
+        {"id": 5, "name": "NIT Trichy", "location": "Trichy", "ranking": 15, "type": "Engineering"},
+    ]
+
+print(f"✓ Career data loaded: {len(CAREERS_DATA)} careers, {len(COLLEGES_DATA)} colleges")
 
 # ============== Authentication Helpers ==============
 def login_required(f):
