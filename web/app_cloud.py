@@ -60,52 +60,72 @@ def init_database():
 # Initialize database on startup
 init_database()
 
-# ============== Load Career Data ==============
-PROJECT_ROOT = Path(__file__).parent.parent
-DATA_DIR = PROJECT_ROOT / 'data'
+# ============== Built-in Career & College Data ==============
+# This data is embedded directly so it works on cloud deployment
 
-def load_json_file(filename, key=None):
-    """Load JSON data from file."""
-    filepath = DATA_DIR / filename
-    if filepath.exists():
-        try:
-            with open(filepath, 'r', encoding='utf-8') as f:
-                data = json.load(f)
-                if key and isinstance(data, dict):
-                    return data.get(key, [])
-                return data
-        except:
-            pass
-    return []
+CAREERS_DATA = [
+    {"id": 1, "name": "Software Engineer", "category": "Technology", "description": "Design, develop, and maintain software applications and systems", "difficulty": 7, "automation_risk": 0.20, "job_growth_rate": 0.22, "required_skills": ["Python", "JavaScript", "Problem Solving", "Git", "System Design"], "education": "B.Tech/B.E. in Computer Science", "personality_fit": ["INTJ", "INTP", "ISTJ"], "salary": {"entry": {"INR": 500000, "USD": 70000}, "mid": {"INR": 1500000, "USD": 120000}, "senior": {"INR": 3000000, "USD": 180000}}},
+    {"id": 2, "name": "Data Scientist", "category": "Technology", "description": "Analyze complex data to help organizations make better decisions", "difficulty": 8, "automation_risk": 0.15, "job_growth_rate": 0.35, "required_skills": ["Python", "Machine Learning", "Statistics", "SQL", "Data Visualization"], "education": "B.Tech/M.Tech in CS or Statistics", "personality_fit": ["INTJ", "INTP", "ENTJ"], "salary": {"entry": {"INR": 600000, "USD": 80000}, "mid": {"INR": 1800000, "USD": 130000}, "senior": {"INR": 3500000, "USD": 200000}}},
+    {"id": 3, "name": "Product Manager", "category": "Business", "description": "Lead product development and define product strategy", "difficulty": 6, "automation_risk": 0.10, "job_growth_rate": 0.18, "required_skills": ["Communication", "Strategy", "Analysis", "Leadership", "User Research"], "education": "MBA or B.Tech + Experience", "personality_fit": ["ENTJ", "ENFJ", "ENTP"], "salary": {"entry": {"INR": 800000, "USD": 90000}, "mid": {"INR": 2000000, "USD": 150000}, "senior": {"INR": 4000000, "USD": 250000}}},
+    {"id": 4, "name": "UX Designer", "category": "Design", "description": "Create user-friendly and intuitive digital experiences", "difficulty": 5, "automation_risk": 0.25, "job_growth_rate": 0.15, "required_skills": ["Figma", "User Research", "Prototyping", "Visual Design", "Wireframing"], "education": "B.Des or Self-taught with portfolio", "personality_fit": ["INFP", "ENFP", "ISFP"], "salary": {"entry": {"INR": 400000, "USD": 60000}, "mid": {"INR": 1200000, "USD": 100000}, "senior": {"INR": 2500000, "USD": 150000}}},
+    {"id": 5, "name": "Cybersecurity Analyst", "category": "Technology", "description": "Protect organizations from cyber threats and security breaches", "difficulty": 7, "automation_risk": 0.12, "job_growth_rate": 0.28, "required_skills": ["Network Security", "Ethical Hacking", "Risk Assessment", "SIEM", "Incident Response"], "education": "B.Tech in CS + Security Certifications", "personality_fit": ["ISTJ", "INTJ", "ISTP"], "salary": {"entry": {"INR": 500000, "USD": 75000}, "mid": {"INR": 1400000, "USD": 110000}, "senior": {"INR": 2800000, "USD": 160000}}},
+    {"id": 6, "name": "Cloud Architect", "category": "Technology", "description": "Design and implement cloud infrastructure solutions", "difficulty": 8, "automation_risk": 0.18, "job_growth_rate": 0.25, "required_skills": ["AWS", "Azure", "DevOps", "Kubernetes", "Terraform"], "education": "B.Tech + Cloud Certifications", "personality_fit": ["INTJ", "ISTJ", "ENTJ"], "salary": {"entry": {"INR": 700000, "USD": 85000}, "mid": {"INR": 2000000, "USD": 140000}, "senior": {"INR": 4000000, "USD": 200000}}},
+    {"id": 7, "name": "AI/ML Engineer", "category": "Technology", "description": "Build intelligent systems using artificial intelligence and machine learning", "difficulty": 9, "automation_risk": 0.08, "job_growth_rate": 0.40, "required_skills": ["Python", "TensorFlow", "Deep Learning", "NLP", "Computer Vision"], "education": "M.Tech/PhD in AI/ML or CS", "personality_fit": ["INTJ", "INTP", "ENTP"], "salary": {"entry": {"INR": 800000, "USD": 100000}, "mid": {"INR": 2500000, "USD": 180000}, "senior": {"INR": 5000000, "USD": 300000}}},
+    {"id": 8, "name": "Digital Marketer", "category": "Marketing", "description": "Plan and execute online marketing campaigns", "difficulty": 4, "automation_risk": 0.35, "job_growth_rate": 0.12, "required_skills": ["SEO", "Social Media", "Google Ads", "Content Marketing", "Analytics"], "education": "BBA/MBA in Marketing or Certifications", "personality_fit": ["ENFP", "ENTP", "ESFP"], "salary": {"entry": {"INR": 300000, "USD": 45000}, "mid": {"INR": 800000, "USD": 80000}, "senior": {"INR": 1500000, "USD": 120000}}},
+    {"id": 9, "name": "Financial Analyst", "category": "Finance", "description": "Analyze financial data and provide investment recommendations", "difficulty": 6, "automation_risk": 0.30, "job_growth_rate": 0.10, "required_skills": ["Excel", "Financial Modeling", "Valuation", "SQL", "Accounting"], "education": "B.Com/MBA Finance + CFA", "personality_fit": ["ISTJ", "ESTJ", "INTJ"], "salary": {"entry": {"INR": 500000, "USD": 65000}, "mid": {"INR": 1200000, "USD": 100000}, "senior": {"INR": 2500000, "USD": 150000}}},
+    {"id": 10, "name": "Doctor (MBBS)", "category": "Healthcare", "description": "Diagnose and treat patients, provide medical care", "difficulty": 10, "automation_risk": 0.05, "job_growth_rate": 0.08, "required_skills": ["Medical Knowledge", "Diagnosis", "Patient Care", "Communication", "Decision Making"], "education": "MBBS + MD/MS Specialization", "personality_fit": ["ISFJ", "INFJ", "ENFJ"], "salary": {"entry": {"INR": 600000, "USD": 60000}, "mid": {"INR": 1500000, "USD": 150000}, "senior": {"INR": 4000000, "USD": 300000}}},
+    {"id": 11, "name": "Civil Engineer", "category": "Engineering", "description": "Design and oversee construction of infrastructure projects", "difficulty": 6, "automation_risk": 0.20, "job_growth_rate": 0.08, "required_skills": ["AutoCAD", "Structural Analysis", "Project Management", "Surveying", "Construction"], "education": "B.Tech in Civil Engineering", "personality_fit": ["ISTJ", "ESTJ", "ISTP"], "salary": {"entry": {"INR": 350000, "USD": 55000}, "mid": {"INR": 900000, "USD": 85000}, "senior": {"INR": 2000000, "USD": 130000}}},
+    {"id": 12, "name": "Mechanical Engineer", "category": "Engineering", "description": "Design and develop mechanical systems and products", "difficulty": 6, "automation_risk": 0.22, "job_growth_rate": 0.06, "required_skills": ["SolidWorks", "AutoCAD", "Thermodynamics", "Manufacturing", "FEA"], "education": "B.Tech in Mechanical Engineering", "personality_fit": ["ISTP", "ISTJ", "INTP"], "salary": {"entry": {"INR": 400000, "USD": 60000}, "mid": {"INR": 1000000, "USD": 90000}, "senior": {"INR": 2200000, "USD": 140000}}},
+    {"id": 13, "name": "Lawyer", "category": "Law", "description": "Represent clients in legal matters and provide legal advice", "difficulty": 8, "automation_risk": 0.15, "job_growth_rate": 0.06, "required_skills": ["Legal Research", "Argumentation", "Writing", "Negotiation", "Critical Thinking"], "education": "LLB + Bar Council Registration", "personality_fit": ["ENTJ", "INTJ", "ESTJ"], "salary": {"entry": {"INR": 400000, "USD": 70000}, "mid": {"INR": 1500000, "USD": 150000}, "senior": {"INR": 5000000, "USD": 300000}}},
+    {"id": 14, "name": "Chartered Accountant", "category": "Finance", "description": "Handle accounting, auditing, and financial compliance", "difficulty": 8, "automation_risk": 0.25, "job_growth_rate": 0.07, "required_skills": ["Accounting", "Taxation", "Auditing", "GST", "Financial Reporting"], "education": "CA Certification", "personality_fit": ["ISTJ", "ESTJ", "INTJ"], "salary": {"entry": {"INR": 600000, "USD": 55000}, "mid": {"INR": 1500000, "USD": 100000}, "senior": {"INR": 3500000, "USD": 180000}}},
+    {"id": 15, "name": "Graphic Designer", "category": "Design", "description": "Create visual content for digital and print media", "difficulty": 4, "automation_risk": 0.30, "job_growth_rate": 0.05, "required_skills": ["Photoshop", "Illustrator", "Typography", "Branding", "Color Theory"], "education": "B.Des or Diploma in Design", "personality_fit": ["ISFP", "INFP", "ENFP"], "salary": {"entry": {"INR": 250000, "USD": 40000}, "mid": {"INR": 600000, "USD": 65000}, "senior": {"INR": 1200000, "USD": 100000}}},
+]
 
-# Load all data with proper keys
-CAREERS_DATA = load_json_file('careers.json', 'careers')
-COLLEGES_DATA = load_json_file('colleges.json', 'colleges')
-SKILLS_DATA = load_json_file('skills.json', 'skills')
+COLLEGES_DATA = [
+    # India - IITs
+    {"id": 1, "name": "IIT Bombay", "location": "Mumbai, India", "country": "India", "ranking": 1, "type": "Engineering", "cutoff": "JEE Rank < 500", "fees": "₹2.5 Lakhs/year", "courses": ["B.Tech", "M.Tech", "PhD"]},
+    {"id": 2, "name": "IIT Delhi", "location": "Delhi, India", "country": "India", "ranking": 2, "type": "Engineering", "cutoff": "JEE Rank < 800", "fees": "₹2.5 Lakhs/year", "courses": ["B.Tech", "M.Tech", "MBA"]},
+    {"id": 3, "name": "IIT Madras", "location": "Chennai, India", "country": "India", "ranking": 3, "type": "Engineering", "cutoff": "JEE Rank < 1000", "fees": "₹2.5 Lakhs/year", "courses": ["B.Tech", "M.Tech", "MS"]},
+    {"id": 4, "name": "IIT Kanpur", "location": "Kanpur, India", "country": "India", "ranking": 4, "type": "Engineering", "cutoff": "JEE Rank < 1500", "fees": "₹2.5 Lakhs/year", "courses": ["B.Tech", "M.Tech"]},
+    {"id": 5, "name": "IIT Kharagpur", "location": "Kharagpur, India", "country": "India", "ranking": 5, "type": "Engineering", "cutoff": "JEE Rank < 2000", "fees": "₹2.5 Lakhs/year", "courses": ["B.Tech", "M.Tech"]},
+    # India - NITs
+    {"id": 6, "name": "NIT Trichy", "location": "Trichy, India", "country": "India", "ranking": 10, "type": "Engineering", "cutoff": "JEE Rank < 5000", "fees": "₹1.5 Lakhs/year", "courses": ["B.Tech", "M.Tech"]},
+    {"id": 7, "name": "NIT Warangal", "location": "Warangal, India", "country": "India", "ranking": 12, "type": "Engineering", "cutoff": "JEE Rank < 6000", "fees": "₹1.5 Lakhs/year", "courses": ["B.Tech", "M.Tech"]},
+    # India - Private
+    {"id": 8, "name": "BITS Pilani", "location": "Pilani, India", "country": "India", "ranking": 8, "type": "Engineering", "cutoff": "BITSAT 350+", "fees": "₹5 Lakhs/year", "courses": ["B.E.", "M.E.", "PhD"]},
+    {"id": 9, "name": "VIT Vellore", "location": "Vellore, India", "country": "India", "ranking": 15, "type": "Engineering", "cutoff": "VITEEE Rank", "fees": "₹2 Lakhs/year", "courses": ["B.Tech", "M.Tech"]},
+    {"id": 10, "name": "SRM Chennai", "location": "Chennai, India", "country": "India", "ranking": 20, "type": "Engineering", "cutoff": "SRMJEEE", "fees": "₹2.5 Lakhs/year", "courses": ["B.Tech", "M.Tech"]},
+    # India - IIMs for MBA
+    {"id": 11, "name": "IIM Ahmedabad", "location": "Ahmedabad, India", "country": "India", "ranking": 1, "type": "Management", "cutoff": "CAT 99%ile+", "fees": "₹25 Lakhs total", "courses": ["MBA", "PGDM", "PhD"]},
+    {"id": 12, "name": "IIM Bangalore", "location": "Bangalore, India", "country": "India", "ranking": 2, "type": "Management", "cutoff": "CAT 99%ile+", "fees": "₹25 Lakhs total", "courses": ["MBA", "PGDM"]},
+    # India - Medical
+    {"id": 13, "name": "AIIMS Delhi", "location": "Delhi, India", "country": "India", "ranking": 1, "type": "Medical", "cutoff": "NEET Rank < 100", "fees": "₹5,000/year", "courses": ["MBBS", "MD", "MS"]},
+    {"id": 14, "name": "CMC Vellore", "location": "Vellore, India", "country": "India", "ranking": 2, "type": "Medical", "cutoff": "NEET Rank < 500", "fees": "₹50,000/year", "courses": ["MBBS", "MD"]},
+    # USA
+    {"id": 15, "name": "MIT", "location": "Cambridge, USA", "country": "USA", "ranking": 1, "type": "Engineering", "cutoff": "SAT 1550+, GPA 4.0", "fees": "$55,000/year", "courses": ["BS", "MS", "PhD"]},
+    {"id": 16, "name": "Stanford University", "location": "California, USA", "country": "USA", "ranking": 2, "type": "Engineering", "cutoff": "SAT 1550+, GPA 3.9+", "fees": "$56,000/year", "courses": ["BS", "MS", "PhD"]},
+    {"id": 17, "name": "Harvard University", "location": "Cambridge, USA", "country": "USA", "ranking": 1, "type": "Business", "cutoff": "GMAT 730+", "fees": "$75,000/year", "courses": ["MBA", "PhD"]},
+    {"id": 18, "name": "Carnegie Mellon", "location": "Pittsburgh, USA", "country": "USA", "ranking": 5, "type": "Engineering", "cutoff": "GRE 330+", "fees": "$50,000/year", "courses": ["MS", "PhD"]},
+    # UK
+    {"id": 19, "name": "Oxford University", "location": "Oxford, UK", "country": "UK", "ranking": 1, "type": "General", "cutoff": "A-Levels AAA", "fees": "£30,000/year", "courses": ["BA", "MA", "PhD"]},
+    {"id": 20, "name": "Cambridge University", "location": "Cambridge, UK", "country": "UK", "ranking": 2, "type": "General", "cutoff": "A-Levels AAA", "fees": "£30,000/year", "courses": ["BA", "MA", "PhD"]},
+    {"id": 21, "name": "Imperial College London", "location": "London, UK", "country": "UK", "ranking": 3, "type": "Engineering", "cutoff": "A-Levels AAA", "fees": "£35,000/year", "courses": ["BEng", "MEng", "PhD"]},
+    # Canada
+    {"id": 22, "name": "University of Toronto", "location": "Toronto, Canada", "country": "Canada", "ranking": 1, "type": "Engineering", "cutoff": "GPA 3.5+", "fees": "CAD 45,000/year", "courses": ["BASc", "MASc", "PhD"]},
+    {"id": 23, "name": "UBC", "location": "Vancouver, Canada", "country": "Canada", "ranking": 2, "type": "Engineering", "cutoff": "GPA 3.4+", "fees": "CAD 40,000/year", "courses": ["BASc", "MASc"]},
+    # Australia
+    {"id": 24, "name": "University of Melbourne", "location": "Melbourne, Australia", "country": "Australia", "ranking": 1, "type": "General", "cutoff": "ATAR 95+", "fees": "AUD 45,000/year", "courses": ["Bachelor", "Master", "PhD"]},
+    {"id": 25, "name": "University of Sydney", "location": "Sydney, Australia", "country": "Australia", "ranking": 2, "type": "General", "cutoff": "ATAR 93+", "fees": "AUD 42,000/year", "courses": ["Bachelor", "Master"]},
+]
 
-# Fallback career data if files don't load
-if not CAREERS_DATA:
-    CAREERS_DATA = [
-        {"id": 1, "name": "Software Engineer", "category": "Technology", "description": "Design and build software applications", "difficulty": 7, "automation_risk": 0.2, "job_growth_rate": 0.22, "required_skills": ["Python", "JavaScript", "Problem Solving"], "salary": {"entry": {"INR": 500000}, "mid": {"INR": 1500000}, "senior": {"INR": 3000000}}},
-        {"id": 2, "name": "Data Scientist", "category": "Technology", "description": "Analyze data to derive insights", "difficulty": 8, "automation_risk": 0.15, "job_growth_rate": 0.35, "required_skills": ["Python", "ML", "Statistics"], "salary": {"entry": {"INR": 600000}, "mid": {"INR": 1800000}, "senior": {"INR": 3500000}}},
-        {"id": 3, "name": "Product Manager", "category": "Business", "description": "Lead product development and strategy", "difficulty": 6, "automation_risk": 0.1, "job_growth_rate": 0.18, "required_skills": ["Communication", "Strategy", "Analysis"], "salary": {"entry": {"INR": 800000}, "mid": {"INR": 2000000}, "senior": {"INR": 4000000}}},
-        {"id": 4, "name": "UX Designer", "category": "Design", "description": "Create user-friendly digital experiences", "difficulty": 5, "automation_risk": 0.25, "job_growth_rate": 0.15, "required_skills": ["Figma", "User Research", "Prototyping"], "salary": {"entry": {"INR": 400000}, "mid": {"INR": 1200000}, "senior": {"INR": 2500000}}},
-        {"id": 5, "name": "Cybersecurity Analyst", "category": "Technology", "description": "Protect systems from cyber threats", "difficulty": 7, "automation_risk": 0.12, "job_growth_rate": 0.28, "required_skills": ["Network Security", "Ethical Hacking", "Risk Assessment"], "salary": {"entry": {"INR": 500000}, "mid": {"INR": 1400000}, "senior": {"INR": 2800000}}},
-        {"id": 6, "name": "Cloud Architect", "category": "Technology", "description": "Design cloud infrastructure solutions", "difficulty": 8, "automation_risk": 0.18, "job_growth_rate": 0.25, "required_skills": ["AWS", "Azure", "DevOps"], "salary": {"entry": {"INR": 700000}, "mid": {"INR": 2000000}, "senior": {"INR": 4000000}}},
-        {"id": 7, "name": "AI/ML Engineer", "category": "Technology", "description": "Build intelligent systems and algorithms", "difficulty": 9, "automation_risk": 0.08, "job_growth_rate": 0.40, "required_skills": ["Python", "TensorFlow", "Deep Learning"], "salary": {"entry": {"INR": 800000}, "mid": {"INR": 2500000}, "senior": {"INR": 5000000}}},
-        {"id": 8, "name": "Digital Marketer", "category": "Marketing", "description": "Drive online marketing campaigns", "difficulty": 4, "automation_risk": 0.35, "job_growth_rate": 0.12, "required_skills": ["SEO", "Social Media", "Analytics"], "salary": {"entry": {"INR": 300000}, "mid": {"INR": 800000}, "senior": {"INR": 1500000}}},
-    ]
+# Skills mapping for assessment
+SKILLS_DATA = {
+    "technical": ["Python", "JavaScript", "Java", "SQL", "AWS", "Machine Learning", "Data Analysis"],
+    "soft": ["Communication", "Leadership", "Problem Solving", "Teamwork", "Critical Thinking"],
+    "creative": ["Design Thinking", "UI/UX", "Content Creation", "Branding", "Innovation"]
+}
 
-if not COLLEGES_DATA:
-    COLLEGES_DATA = [
-        {"id": 1, "name": "IIT Bombay", "location": "Mumbai", "ranking": 1, "type": "Engineering"},
-        {"id": 2, "name": "IIT Delhi", "location": "Delhi", "ranking": 2, "type": "Engineering"},
-        {"id": 3, "name": "IIT Madras", "location": "Chennai", "ranking": 3, "type": "Engineering"},
-        {"id": 4, "name": "BITS Pilani", "location": "Pilani", "ranking": 10, "type": "Engineering"},
-        {"id": 5, "name": "NIT Trichy", "location": "Trichy", "ranking": 15, "type": "Engineering"},
-    ]
-
-print(f"✓ Career data loaded: {len(CAREERS_DATA)} careers, {len(COLLEGES_DATA)} colleges")
+print(f"✓ Data loaded: {len(CAREERS_DATA)} careers, {len(COLLEGES_DATA)} colleges")
 
 # ============== Authentication Helpers ==============
 def login_required(f):
@@ -295,11 +315,22 @@ def get_career_details(career_name):
 
 @app.route('/api/colleges', methods=['GET'])
 def get_colleges():
-    """Get all colleges."""
+    """Get all colleges with optional filtering."""
+    country = request.args.get('country', '').strip()
+    type_filter = request.args.get('type', '').strip()
+    
+    filtered = COLLEGES_DATA
+    
+    if country:
+        filtered = [c for c in filtered if c.get('country', '').lower() == country.lower()]
+    
+    if type_filter:
+        filtered = [c for c in filtered if c.get('type', '').lower() == type_filter.lower()]
+    
     return jsonify({
         'success': True,
-        'count': len(COLLEGES_DATA),
-        'colleges': COLLEGES_DATA
+        'count': len(filtered),
+        'colleges': filtered
     })
 
 @app.route('/api/submit-assessment', methods=['POST'])
