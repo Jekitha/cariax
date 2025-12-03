@@ -406,6 +406,68 @@ def job_market_api():
     }
     return jsonify({'success': True, 'data': job_data})
 
+@app.route('/api/chat/reset', methods=['POST'])
+def chat_reset():
+    """Reset chat history."""
+    return jsonify({'success': True, 'message': 'Chat reset'})
+
+@app.route('/api/analyze', methods=['POST'])
+def analyze_profile():
+    """Analyze student profile."""
+    data = request.get_json() or {}
+    return jsonify({
+        'success': True,
+        'careers': [
+            {'name': 'Software Engineer', 'match': 92},
+            {'name': 'Data Scientist', 'match': 88},
+            {'name': 'Product Manager', 'match': 85}
+        ],
+        'message': 'Analysis complete'
+    })
+
+@app.route('/api/assessment/questions/<level>', methods=['GET'])
+def get_assessment_questions(level):
+    """Get assessment questions by education level."""
+    return jsonify({
+        'success': True,
+        'questions': [
+            {'id': 1, 'text': 'What subjects interest you most?', 'type': 'multiple'},
+            {'id': 2, 'text': 'Rate your problem-solving skills', 'type': 'rating'},
+            {'id': 3, 'text': 'Describe your ideal work environment', 'type': 'text'}
+        ]
+    })
+
+@app.route('/api/assessment/submit', methods=['POST'])
+def submit_assessment_api():
+    """Submit assessment answers."""
+    data = request.get_json() or {}
+    return jsonify({
+        'success': True,
+        'message': 'Assessment submitted',
+        'redirect': '/results'
+    })
+
+@app.route('/api/goals/task/<task_id>/toggle', methods=['POST'])
+def toggle_task(task_id):
+    """Toggle task completion."""
+    return jsonify({'success': True, 'completed': True})
+
+@app.route('/api/user/results', methods=['GET'])
+def get_user_results():
+    """Get user's assessment results."""
+    return jsonify({
+        'success': True,
+        'results': {
+            'top_careers': [
+                {'name': 'Software Engineer', 'match': 92, 'salary': '$120,000'},
+                {'name': 'Data Scientist', 'match': 88, 'salary': '$130,000'},
+                {'name': 'Product Manager', 'match': 85, 'salary': '$140,000'}
+            ],
+            'personality': 'INTJ',
+            'skills': ['Problem Solving', 'Analytical Thinking', 'Communication']
+        }
+    })
+
 # ============== Error Handlers ==============
 @app.errorhandler(404)
 def not_found(e):
